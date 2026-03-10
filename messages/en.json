@@ -15,6 +15,7 @@
         "wrong_password": "Password must be at least 6 characters long",
         "please_sign_up": "Please, Sign Up",
         "greeting": "Welcome! Create an account to continue",
-        "have_an_account": "I have an account"
+        "have_an_account": "I have an account",
+        "create_an_account": "Create an account"
     }
 }

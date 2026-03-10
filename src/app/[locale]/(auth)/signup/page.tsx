@@ -1,8 +1,8 @@
-import { LoginForm } from "@/components/features/auth/LoginForm";
+import { SignupForm } from "@/components/features/auth/SignupForm";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { Header } from "@/components/features/auth/Header";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 
 export default function SignupPage() {
     const t = useTranslations("Auth");
@@ -19,11 +19,11 @@ export default function SignupPage() {
                         <p className="text-basic-text text-center">{t("greeting")}</p>
                     </div>
                     <div className="pb-2">
-                        <LoginForm />
+                        <SignupForm />
                     </div>
                     <div className="flex w-full justify-center">
                         <Button asChild variant="transparent" size="redButton">
-                            <Link className="text-light-gray" href="/forgot-password">
+                            <Link className="text-light-gray" href="/login">
                                 {t("have_an_account")}
                             </Link>
                         </Button>

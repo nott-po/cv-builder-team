@@ -2,7 +2,7 @@ import { LoginForm } from "@/components/features/auth/LoginForm";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { Header } from "@/components/features/auth/Header";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 
 export default function LoginPage() {
     const t = useTranslations("Auth");
@@ -23,8 +23,8 @@ export default function LoginPage() {
                     </div>
                     <div className="flex w-full justify-center">
                         <Button asChild variant="transparent" size="redButton">
-                            <Link className="text-light-gray" href="/forgot-password">
-                                {t("forgot_password")}
+                            <Link className="text-light-gray" href="/signup">
+                                {t("create_an_account")}
                             </Link>
                         </Button>
                     </div>
