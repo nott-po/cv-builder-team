@@ -4,5 +4,14 @@
     "tabWidth": 4,
     "trailingComma": "all",
     "printWidth": 100,
-    "plugins": ["prettier-plugin-tailwindcss"]
+    "importOrder": [
+        "^(react|react-dom)(.*)$",
+        "^(next|next-intl|next-themes)(.*)$",
+        "<THIRD_PARTY_MODULES>",
+        "^@/(.*)$",
+        "^[./]"
+    ],
+    "importOrderSeparation": true,
+    "importOrderCaseInsensitive": true,
+    "plugins": ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"]
 }
