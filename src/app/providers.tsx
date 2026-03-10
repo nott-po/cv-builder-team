@@ -1,9 +1,12 @@
 "use client";
 
-import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
-import { ThemeProvider } from "next-themes";
+import { type ReactNode, useState } from "react";
+
 import { NextIntlClientProvider } from "next-intl";
-import { ReactNode, useState } from "react";
+import { ThemeProvider } from "next-themes";
+
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
+
 import { CURRENT_USER_KEY, fetchCurrentUser } from "@/lib/hooks/useCurrentUser";
 
 type Props = {
@@ -27,7 +30,7 @@ export function Providers({ children, locale, messages }: Props) {
 
     return (
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <NextIntlClientProvider locale={locale} messages={messages}>
+            <NextIntlClientProvider locale={locale} messages={messages} timeZone="UTC">
                 <QueryClientProvider client={queryClient}>
                     <SessionHydrator />
                     {children}

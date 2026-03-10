@@ -15,6 +15,9 @@
         "wrong_password": "Hasło musi zawierać co najmniej 6 znaków",
         "please_sign_up": "Proszę, zarejestruj się",
         "greeting": "Witaj! Utwórz konto, aby kontynuować",
+        "confirm_password": "Potwierdź hasło",
+        "passwords_do_not_match": "Hasła nie są identyczne",
+        "loading": "Ładowanie...",
         "have_an_account": "Mam konto",
         "create_an_account": "Utwórz konto"
     }
