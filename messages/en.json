@@ -11,7 +11,10 @@
         "forgot_password": "Forgot Password?",
         "welcome_back": "Welcome Back",
         "glad_to_see_you": "We are glad to see you! Log in to continue",
-        "wrong_email": "Please enter a valid email address.",
-        "wrong_password": "Password must be at least 6 characters long."
+        "wrong_email": "Please enter a valid email address",
+        "wrong_password": "Password must be at least 6 characters long",
+        "please_sign_up": "Please, Sign Up",
+        "greeting": "Welcome! Create an account to continue",
+        "have_an_account": "I have an account"
     }
 }
