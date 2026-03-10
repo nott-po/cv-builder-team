@@ -1,5 +1,5 @@
+import { createNavigation } from "next-intl/navigation";
 import { defineRouting } from "next-intl/routing";
-import { createNavigation } from "next-intl/navigation"
 
 export const routing = defineRouting({
     locales: ["en", "pl"],
@@ -8,4 +8,4 @@ export const routing = defineRouting({
     localeDetection: false,
 });
 
-export const { Link } = createNavigation(routing);
+export const { Link, useRouter } = createNavigation(routing);

@@ -1,10 +1,12 @@
 import createIntlMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
+
 import { unsealData } from "iron-session";
+
 import { routing } from "@/i18n/routing";
 import { isPublicPath, canAccess } from "@/lib/auth/permissions";
-import { ROLE_HOME } from "@/lib/constants/roles";
 import { SESSION_OPTIONS } from "@/lib/auth/tokens";
+import { ROLE_HOME } from "@/lib/constants/roles";
 import type { SessionData } from "@/types/auth";
 
 const intlMiddleware = createIntlMiddleware(routing);
@@ -30,7 +32,7 @@ export async function proxy(request: NextRequest) {
     if (cookieValue) {
         try {
             session = await unsealData<SessionData>(cookieValue, {
-                password: process.env.SESSION_SECRET!,
+                password: SESSION_OPTIONS.password as string,
             });
         } catch {}
     }

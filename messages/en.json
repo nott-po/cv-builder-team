@@ -19,6 +19,7 @@
         "passwords_do_not_match": "Passwords do not match",
         "loading": "Loading...",
         "have_an_account": "I have an account",
-        "create_an_account": "Create an account"
+        "create_an_account": "Create an account",
+        "server_error": "Something went wrong. Please try again."
     }
 }

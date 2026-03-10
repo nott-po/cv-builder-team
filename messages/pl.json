@@ -19,6 +19,7 @@
         "passwords_do_not_match": "Hasła nie są identyczne",
         "loading": "Ładowanie...",
         "have_an_account": "Mam konto",
-        "create_an_account": "Utwórz konto"
+        "create_an_account": "Utwórz konto",
+        "server_error": "Coś poszło nie tak. Spróbuj ponownie."
     }
 }

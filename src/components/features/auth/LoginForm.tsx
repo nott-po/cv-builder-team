@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { useTranslations } from "next-intl";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { isAxiosError } from "axios";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,11 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "@/i18n/routing";
+import apiClient from "@/lib/api/client";
+import { ROLE_HOME } from "@/lib/constants/roles";
+import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
+import type { SessionUser } from "@/types/auth";
 
 type LoginFormValues = {
     email: string;
@@ -26,6 +32,8 @@ type LoginFormValues = {
 
 export function LoginForm() {
     const t = useTranslations("Auth");
+    const router = useRouter();
+    const { setUser } = useCurrentUser();
 
     const formSchema = useMemo(() => {
         return z.object({
@@ -46,8 +54,21 @@ export function LoginForm() {
         },
     });
 
-    function onSubmit(values: LoginFormValues) {
-        console.log("Data:", values);
+    async function onSubmit(values: LoginFormValues) {
+        try {
+            const { data } = await apiClient.post<{ user: SessionUser }>("/auth/login", {
+                email: values.email,
+                password: values.password,
+            });
+            setUser(data.user);
+            router.push(ROLE_HOME[data.user.role]);
+        } catch (err) {
+            const message =
+                isAxiosError(err) && err.response?.data?.error
+                    ? err.response.data.error
+                    : t("server_error");
+            form.setError("root", { message });
+        }
     }
 
     return (
@@ -97,6 +118,12 @@ export function LoginForm() {
                             )}
                         />
                     </div>
+
+                    {form.formState.errors.root && (
+                        <p className="text-destructive pb-4 text-center text-sm">
+                            {form.formState.errors.root.message}
+                        </p>
+                    )}
 
                     <div className="flex w-full justify-center">
                         <Button

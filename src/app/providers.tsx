@@ -5,9 +5,9 @@ import { type ReactNode, useState } from "react";
 import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "next-themes";
 
-import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { CURRENT_USER_KEY, fetchCurrentUser } from "@/lib/hooks/useCurrentUser";
+import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 
 type Props = {
     children: ReactNode;
@@ -16,12 +16,7 @@ type Props = {
 };
 
 function SessionHydrator() {
-    useQuery({
-        queryKey: CURRENT_USER_KEY,
-        queryFn: fetchCurrentUser,
-        staleTime: Infinity,
-        retry: false,
-    });
+    useCurrentUser();
     return null;
 }
 
