@@ -7,11 +7,11 @@ jest.mock("@/i18n/routing", () => ({
 
 import { getSignupFormSchema } from "@/components/features/auth/SignupForm";
 
-describe("Валидация формы регистрации (Zod Schema)", () => {
+describe("Registration Form Validation (Zod Schema)", () => {
   const mockT = (key: string) => `translated_${key}`;
   const schema = getSignupFormSchema(mockT);
 
-  it("должен выдавать ошибку, если email некорректный", () => {
+  it("should return error if email is invalid", () => {
     const result = schema.safeParse({
       email: "bad-email",
       password: "password123",
@@ -24,7 +24,7 @@ describe("Валидация формы регистрации (Zod Schema)", ()
     }
   });
 
-  it("должен выдавать ошибку, если пароли НЕ совпадают", () => {
+  it("should return error if passwords do NOT match", () => {
     const result = schema.safeParse({
       email: "test@example.com",
       password: "password123",
@@ -38,7 +38,7 @@ describe("Валидация формы регистрации (Zod Schema)", ()
     }
   });
 
-  it("должен успешно проходить валидацию с правильными данными", () => {
+  it("should successfully validate with correct data", () => {
     const result = schema.safeParse({
       email: "test@example.com",
       password: "SuperSecret123!",
