@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
@@ -17,10 +18,14 @@ const buttonVariants = cva(
                 secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
                 ghost: "hover:bg-accent hover:text-accent-foreground",
                 link: "text-primary underline-offset-4 hover:underline",
-                redPrimary: "bg-red-primary rounded-full text-3.5 text-white uppercase border-none",
-                transparent: "bg-transparent text-light-gray text-3.5 uppercase rounded-full border-0",
-                redUnderline_inactive: "bg-transparent uppercase text-red-underline-text border-0",
-                redUnderline_active: "bg-transparent border-0 border-b border-red-primary border-b-2 rounded-[0] uppercase text-red-primary "
+                redPrimary:
+                    "bg-red-primary rounded-full text-3.5 text-white uppercase border-none cursor-pointer hover:bg-red-primary/85 hover:shadow-md",
+                transparent:
+                    "bg-transparent text-light-gray text-3.5 uppercase rounded-full border-0",
+                redUnderline_inactive:
+                    "bg-transparent uppercase text-red-underline-text border-0 cursor-pointer hover:text-red-primary transition-colors",
+                redUnderline_active:
+                    "bg-transparent border-0 border-b border-red-primary border-b-2 rounded-[0] uppercase text-red-primary cursor-pointer hover:opacity-80 transition-opacity",
             },
             size: {
                 default: "h-9 px-4 py-2",
@@ -28,7 +33,7 @@ const buttonVariants = cva(
                 lg: "h-10 rounded-md px-8",
                 icon: "h-9 w-9",
                 redButton: "py-4 w-55",
-                headerButtons: "py-4 w-37.5"
+                headerButtons: "py-4 w-37.5",
             },
         },
         defaultVariants: {
