@@ -1,3 +1,1 @@
-export function EmployeeTable() {
-    return null;
-}
+export { EmployeeTable } from "@/components/shared/EmployeeTable";

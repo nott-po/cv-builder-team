@@ -21,5 +21,22 @@
         "have_an_account": "I have an account",
         "create_an_account": "Create an account",
         "server_error": "Something went wrong. Please try again."
+    },
+    "User": {
+        "employees": "Employees",
+        "skills": "Skills",
+        "languages": "Languages",
+        "cvs": "CVs",
+        "search": "Search",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "email": "Email",
+        "department": "Department",
+        "position": "Position",
+        "no_employees": "No employees found",
+        "loading": "Loading...",
+        "error": "Something went wrong",
+        "rows_per_page": "Rows per page",
+        "page_of": "Page {page} of {total}"
     }
 }
