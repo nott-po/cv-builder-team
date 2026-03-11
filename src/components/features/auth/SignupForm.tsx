@@ -31,27 +31,29 @@ type SignupFormValues = {
     confirmPassword: string;
 };
 
+export const getSignupFormSchema = (t: (key: string) => string) => {
+  return z
+    .object({
+      email: z.string().email({
+        message: t("wrong_email"),
+      }),
+      password: z.string().min(6, {
+        message: t("wrong_password"),
+      }),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("passwords_do_not_match"),
+      path: ["confirmPassword"], // Ошибка прикрепится к полю подтверждения пароля
+    });
+};
+
 export function SignupForm() {
     const t = useTranslations("Auth");
     const router = useRouter();
     const { setUser } = useCurrentUser();
 
-    const formSchema = useMemo(() => {
-        return z
-            .object({
-                email: z.string().email({
-                    message: t("wrong_email"),
-                }),
-                password: z.string().min(6, {
-                    message: t("wrong_password"),
-                }),
-                confirmPassword: z.string(),
-            })
-            .refine((data) => data.password === data.confirmPassword, {
-                message: t("passwords_do_not_match"),
-                path: ["confirmPassword"],
-            });
-    }, [t]);
+    const formSchema = useMemo(() => getSignupFormSchema(t), [t]);
 
     const form = useForm<SignupFormValues>({
         resolver: zodResolver(formSchema),
