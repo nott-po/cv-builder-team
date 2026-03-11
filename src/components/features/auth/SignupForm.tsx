@@ -44,7 +44,7 @@ export const getSignupFormSchema = (t: (key: string) => string) => {
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: t("passwords_do_not_match"),
-      path: ["confirmPassword"], // Ошибка прикрепится к полю подтверждения пароля
+      path: ["confirmPassword"],
     });
 };
 
