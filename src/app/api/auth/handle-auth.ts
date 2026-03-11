@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
+
+import type { AuthResult } from "@/generated/graphql";
 import { gqlRequest } from "@/lib/api/backend";
 import { getSession } from "@/lib/auth/tokens";
-import type { AuthResult } from "@/generated/graphql";
 
 type AuthConfig = {
     query: string;
@@ -44,7 +45,14 @@ export function createAuthHandler(config: AuthConfig) {
             );
         }
 
-        const { access_token, refresh_token, user } = result.data.data![config.resultKey];
+        const authResult = result.data.data?.[config.resultKey];
+        if (!authResult) {
+            return NextResponse.json(
+                { error: "Authentication failed" },
+                { status: config.errorStatus },
+            );
+        }
+        const { access_token, refresh_token, user } = authResult;
 
         const session = await getSession();
         session.user = { id: user.id, email: user.email, role: user.role };

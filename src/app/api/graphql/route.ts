@@ -1,10 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getIronSession } from "iron-session";
-import { cookies } from "next/headers";
-import { gqlRequest, type GqlResponse } from "@/lib/api/backend";
-import { SESSION_OPTIONS } from "@/lib/auth/tokens";
-import type { SessionData } from "@/types/auth";
+import { type NextRequest, NextResponse } from "next/server";
+
 import type { UpdateTokenResult } from "@/generated/graphql";
+import { gqlRequest, type GqlResponse } from "@/lib/api/backend";
+import { getSession } from "@/lib/auth/tokens";
 import { REFRESH_MUTATION } from "@/lib/graphql/operations/auth";
 
 function isTokenExpiredError(status: number, body: GqlResponse): boolean {
@@ -18,9 +16,14 @@ function isTokenExpiredError(status: number, body: GqlResponse): boolean {
 
 export async function POST(request: NextRequest) {
     const body = await request.json();
-    const session = await getIronSession<SessionData>(await cookies(), SESSION_OPTIONS);
+    const session = await getSession();
 
-    let { status, data } = await gqlRequest(body, session.accessToken);
+    let status: number, data: GqlResponse;
+    try {
+        ({ status, data } = await gqlRequest(body, session.accessToken));
+    } catch {
+        return NextResponse.json({ errors: [{ message: "Service unavailable" }] }, { status: 503 });
+    }
 
     if (isTokenExpiredError(status, data) && session.refreshToken) {
         let refreshResult: { updateToken?: UpdateTokenResult };
@@ -44,7 +47,14 @@ export async function POST(request: NextRequest) {
             session.refreshToken = tokens.refresh_token;
             await session.save();
 
-            ({ status, data } = await gqlRequest(body, tokens.access_token));
+            try {
+                ({ status, data } = await gqlRequest(body, tokens.access_token));
+            } catch {
+                return NextResponse.json(
+                    { errors: [{ message: "Service unavailable" }] },
+                    { status: 503 },
+                );
+            }
         } else {
             session.destroy();
             return NextResponse.json(

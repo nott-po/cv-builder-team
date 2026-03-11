@@ -11,7 +11,15 @@
         "forgot_password": "Zapomniałeś hasła?",
         "welcome_back": "Witaj ponownie",
         "glad_to_see_you": "Cieszymy się, że jesteś z nami! Zaloguj się, aby kontynuować",
-        "wrong_email": "Wprowadź poprawny adres email.",
-        "wrong_password": "Hasło musi zawierać co najmniej 6 znaków."
+        "wrong_email": "Wprowadź poprawny adres email",
+        "wrong_password": "Hasło musi zawierać co najmniej 6 znaków",
+        "please_sign_up": "Proszę, zarejestruj się",
+        "greeting": "Witaj! Utwórz konto, aby kontynuować",
+        "confirm_password": "Potwierdź hasło",
+        "passwords_do_not_match": "Hasła nie są identyczne",
+        "loading": "Ładowanie...",
+        "have_an_account": "Mam konto",
+        "create_an_account": "Utwórz konto",
+        "server_error": "Coś poszło nie tak. Spróbuj ponownie."
     }
 }
