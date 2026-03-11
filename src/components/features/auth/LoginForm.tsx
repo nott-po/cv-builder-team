@@ -30,21 +30,23 @@ type LoginFormValues = {
     password: string;
 };
 
+export const getLoginFormSchema = (t: (key: string) => string) => {
+    return z.object({
+        email: z.string().email({
+            message: t("wrong_email"),
+        }),
+        password: z.string().min(6, {
+            message: t("wrong_password"),
+        }),
+    });
+};
+
 export function LoginForm() {
     const t = useTranslations("Auth");
     const router = useRouter();
     const { setUser } = useCurrentUser();
 
-    const formSchema = useMemo(() => {
-        return z.object({
-            email: z.string().email({
-                message: t("wrong_email"),
-            }),
-            password: z.string().min(6, {
-                message: t("wrong_password"),
-            }),
-        });
-    }, [t]);
+    const formSchema = useMemo(() => getLoginFormSchema(t), [t]);
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(formSchema),
