@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import {useMemo, useState} from "react";
 import { useForm } from "react-hook-form";
 
 import { useTranslations } from "next-intl";
@@ -24,6 +24,7 @@ import apiClient from "@/lib/api/client";
 import { ROLE_HOME } from "@/lib/constants/roles";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import type { SessionUser } from "@/types/auth";
+import {PasswordEyeClosed, PasswordEyeOpen} from "@/components/ui/icon";
 
 type SignupFormValues = {
     email: string;
@@ -35,6 +36,8 @@ export function SignupForm() {
     const t = useTranslations("Auth");
     const router = useRouter();
     const { setUser } = useCurrentUser();
+    const [showPassword, setShowPassword] = useState(false)
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
 
     const formSchema = useMemo(() => {
         return z
@@ -112,14 +115,25 @@ export function SignupForm() {
                                 <FormItem>
                                     <FormLabel className="sr-only">{t("password")}</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            size="default"
-                                            variant="default"
-                                            type="password"
-                                            autoComplete="new-password"
-                                            placeholder={t("password")}
-                                            {...field}
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                size="default"
+                                                variant="default"
+                                                type={showPassword ? "text" : "password"}
+                                                autoComplete="current-password"
+                                                placeholder={t("password")}
+                                                {...field}
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute right-5 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent [&_svg]:size-6"
+                                            >
+                                                {showPassword ? <PasswordEyeClosed className="text-password-eye" /> : <PasswordEyeOpen className="text-password-eye" />}
+                                            </Button>
+                                        </div>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -135,14 +149,25 @@ export function SignupForm() {
                                         {t("confirm_password")}
                                     </FormLabel>
                                     <FormControl>
-                                        <Input
-                                            size="default"
-                                            variant="default"
-                                            type="password"
-                                            autoComplete="new-password"
-                                            placeholder={t("confirm_password")}
-                                            {...field}
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                size="default"
+                                                variant="default"
+                                                type={showPasswordConfirm ? "text" : "password"}
+                                                autoComplete="current-password"
+                                                placeholder={t("password")}
+                                                {...field}
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                                                className="absolute right-5 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent [&_svg]:size-6"
+                                            >
+                                                {showPasswordConfirm ? <PasswordEyeClosed className="text-password-eye" /> : <PasswordEyeOpen className="text-password-eye" />}
+                                            </Button>
+                                        </div>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
