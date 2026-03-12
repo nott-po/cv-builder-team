@@ -32,20 +32,20 @@ type SignupFormValues = {
 };
 
 export const getSignupFormSchema = (t: (key: string) => string) => {
-  return z
-    .object({
-      email: z.string().email({
-        message: t("wrong_email"),
-      }),
-      password: z.string().min(6, {
-        message: t("wrong_password"),
-      }),
-      confirmPassword: z.string(),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: t("passwords_do_not_match"),
-      path: ["confirmPassword"],
-    });
+    return z
+        .object({
+            email: z.string().email({
+                message: t("wrong_email"),
+            }),
+            password: z.string().min(6, {
+                message: t("wrong_password"),
+            }),
+            confirmPassword: z.string(),
+        })
+        .refine((data) => data.password === data.confirmPassword, {
+            message: t("passwords_do_not_match"),
+            path: ["confirmPassword"],
+        });
 };
 
 export function SignupForm() {
