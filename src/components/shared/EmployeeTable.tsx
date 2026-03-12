@@ -18,8 +18,6 @@ import { USERS_QUERY } from "@/lib/graphql/operations/employees";
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
 
-const usersQueryFn = fetcher<UsersQueryResult, Record<string, never>>(USERS_QUERY);
-
 type EmployeeRow = {
     id: string;
     email: string;
@@ -81,7 +79,7 @@ export function EmployeeTable() {
 
     const { data, isLoading, isError } = useQuery<UsersQueryResult>({
         queryKey: ["employees", "list"],
-        queryFn: usersQueryFn,
+        queryFn: () => fetcher<UsersQueryResult, Record<string, never>>(USERS_QUERY)(),
     });
 
     const employees = useMemo(() => {
@@ -195,9 +193,7 @@ export function EmployeeTable() {
                                 <tr
                                     key={employee.id}
                                     className="border-divider hover:bg-hover-xs cursor-pointer border-b transition-colors"
-                                    onClick={() =>
-                                        router.push(`/employees/${employee.id}` as string)
-                                    }
+                                    onClick={() => router.push(`/employees/${employee.id}`)}
                                 >
                                     <td className="w-20 py-4 pl-4">
                                         <EmployeeAvatar
@@ -231,7 +227,7 @@ export function EmployeeTable() {
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                router.push(`/employees/${employee.id}` as string);
+                                                router.push(`/employees/${employee.id}`);
                                             }}
                                             className="hover:bg-hover-md ml-4 flex size-10 items-center justify-center rounded-full transition-colors"
                                             aria-label="View employee"
@@ -256,6 +252,8 @@ export function EmployeeTable() {
                     setPageSize(size);
                     setPage(1);
                 }}
+                rowsPerPageLabel={t("rows_per_page")}
+                pageLabel={t("page_of", { page, total: totalPages })}
             />
         </div>
     );

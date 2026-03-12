@@ -1,7 +1,5 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -25,6 +23,8 @@ type PaginationProps = {
     pageSizeOptions: readonly number[];
     onPageChange: (page: number) => void;
     onPageSizeChange: (pageSize: number) => void;
+    rowsPerPageLabel: string;
+    pageLabel: string;
 };
 
 export function Pagination({
@@ -34,14 +34,14 @@ export function Pagination({
     pageSizeOptions,
     onPageChange,
     onPageSizeChange,
+    rowsPerPageLabel,
+    pageLabel,
 }: PaginationProps) {
-    const t = useTranslations("User");
-
     return (
         <div className="border-divider flex items-center justify-end gap-6 border-t px-6 py-3">
             <div className="flex items-center gap-2">
                 <span className="text-small text-text-secondary tracking-standard whitespace-nowrap">
-                    {t("rows_per_page")}
+                    {rowsPerPageLabel}
                 </span>
                 <Select value={String(pageSize)} onValueChange={(v) => onPageSizeChange(Number(v))}>
                     <SelectTrigger className="text-small h-8 w-18">
@@ -58,7 +58,7 @@ export function Pagination({
             </div>
 
             <span className="text-small text-text-secondary tracking-standard whitespace-nowrap">
-                {t("page_of", { page, total: totalPages })}
+                {pageLabel}
             </span>
 
             <PaginationNav className="mx-0 w-auto">

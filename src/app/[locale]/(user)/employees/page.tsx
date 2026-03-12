@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-import { EmployeeTable } from "@/components/shared/EmployeeTable";
+import { EmployeeTable } from "@/components/features/employees/EmployeeTable";
 
 export default async function EmployeesPage() {
     const t = await getTranslations("User");
