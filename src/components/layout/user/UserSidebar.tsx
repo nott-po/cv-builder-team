@@ -26,7 +26,6 @@ export function UserSidebar() {
 
     return (
         <aside className="bg-surface flex h-screen w-50 shrink-0 flex-col pb-4">
-            {/* Nav */}
             <nav className="mt-11 flex flex-col gap-3.5">
                 {NAV_ITEMS.map(({ href, labelKey, Icon }) => {
                     const isActive = pathname === href || pathname.startsWith(href + "/");
@@ -52,7 +51,6 @@ export function UserSidebar() {
 
             <div className="flex-1" />
 
-            {/* User profile */}
             <div className="flex h-14 items-center overflow-hidden rounded-tr-full rounded-br-full">
                 <div className="bg-red-primary ml-2 flex size-10 shrink-0 items-center justify-center rounded-full">
                     <span className="text-title text-surface leading-none font-medium uppercase">
