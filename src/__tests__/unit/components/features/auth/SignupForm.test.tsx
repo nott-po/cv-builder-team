@@ -1,13 +1,12 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+
 import { getSignupFormSchema, SignupForm } from "@/components/features/auth/SignupForm";
 import { useRouter } from "@/i18n/routing";
 import apiClient from "@/lib/api/client";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 
-jest.mock("next-intl", () => ({
-    useTranslations: () => (key: string) => key,
-}));
+jest.mock("next-intl");
 
 jest.mock("@/i18n/routing", () => ({
     useRouter: jest.fn(),
@@ -57,6 +56,30 @@ describe("getSignupFormSchema (Validation)", () => {
         });
         expect(result.success).toBe(true);
     });
+
+    it("should return an error for invalid email", () => {
+        const result = schema.safeParse({
+            email: "not-an-email",
+            password: "Password123!",
+            confirmPassword: "Password123!",
+        });
+        expect(result.success).toBe(false);
+        if (!result.success) {
+            expect(result.error.issues[0].message).toBe("wrong_email");
+        }
+    });
+
+    it("should return an error if password is less than 6 characters", () => {
+        const result = schema.safeParse({
+            email: "test@test.com",
+            password: "123",
+            confirmPassword: "123",
+        });
+        expect(result.success).toBe(false);
+        if (!result.success) {
+            expect(result.error.issues[0].message).toBe("wrong_password");
+        }
+    });
 });
 
 describe("SignupForm Component (UI)", () => {
@@ -70,7 +93,7 @@ describe("SignupForm Component (UI)", () => {
         (useCurrentUser as jest.Mock).mockReturnValue({ setUser: mockSetUser });
     });
 
-    it("1. renders all fields and submit button", () => {
+    it("renders all fields and submit button", () => {
         render(<SignupForm />);
 
         expect(screen.getByPlaceholderText("email")).toBeInTheDocument();
@@ -79,7 +102,7 @@ describe("SignupForm Component (UI)", () => {
         expect(screen.getByRole("button", { name: "sign_up" })).toBeInTheDocument();
     });
 
-    it("2. shows validation errors when submitting empty form", async () => {
+    it("shows validation errors when submitting empty form", async () => {
         const user = userEvent.setup();
         render(<SignupForm />);
 
@@ -93,7 +116,7 @@ describe("SignupForm Component (UI)", () => {
         expect(apiClient.post).not.toHaveBeenCalled();
     });
 
-    it("3. shows error if passwords do not match on input", async () => {
+    it("shows error if passwords do not match on input", async () => {
         const user = userEvent.setup();
         render(<SignupForm />);
 
@@ -109,7 +132,7 @@ describe("SignupForm Component (UI)", () => {
         expect(apiClient.post).not.toHaveBeenCalled();
     });
 
-    it("4. successfully submits data, updates user and redirects", async () => {
+    it("successfully submits data, updates user and redirects", async () => {
         const user = userEvent.setup();
 
         const mockUser = { id: "1", role: "ADMIN", email: "test@test.com" };
@@ -135,7 +158,7 @@ describe("SignupForm Component (UI)", () => {
         });
     });
 
-    it("5. shows server error on failed registration", async () => {
+    it("shows server error on failed registration", async () => {
         const user = userEvent.setup();
 
         const mockAxiosError = {
@@ -157,5 +180,24 @@ describe("SignupForm Component (UI)", () => {
         });
 
         expect(mockPush).not.toHaveBeenCalled();
+    });
+
+    it("should switch the password visibility when clicking on the 'eye' icon", async () => {
+        const user = userEvent.setup();
+        render(<SignupForm />);
+
+        const passwordInput = screen.getByPlaceholderText("password");
+
+        expect(passwordInput).toHaveAttribute("type", "password");
+
+        const allButtons = screen.getAllByRole("button");
+        const togglePasswordButton = allButtons[0];
+
+        await user.click(togglePasswordButton);
+
+        expect(passwordInput).toHaveAttribute("type", "text");
+
+        await user.click(togglePasswordButton);
+        expect(passwordInput).toHaveAttribute("type", "password");
     });
 });

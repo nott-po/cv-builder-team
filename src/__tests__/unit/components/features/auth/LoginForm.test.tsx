@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+
 import { getLoginFormSchema, LoginForm } from "@/components/features/auth/LoginForm";
 import { useRouter } from "@/i18n/routing";
 import apiClient from "@/lib/api/client";
@@ -77,7 +78,7 @@ describe("LoginForm Component (UI)", () => {
         (useCurrentUser as jest.Mock).mockReturnValue({ setUser: mockSetUser });
     });
 
-    it("1. renders email input, password input and login button", () => {
+    it("renders email input, password input and login button", () => {
         render(<LoginForm />);
 
         expect(screen.getByPlaceholderText("email")).toBeInTheDocument();
@@ -85,7 +86,7 @@ describe("LoginForm Component (UI)", () => {
         expect(screen.getByRole("button", { name: "log_in" })).toBeInTheDocument();
     });
 
-    it("2. shows validation errors when submitting empty form", async () => {
+    it("shows validation errors when submitting empty form", async () => {
         const user = userEvent.setup();
         render(<LoginForm />);
 
@@ -99,7 +100,7 @@ describe("LoginForm Component (UI)", () => {
         expect(apiClient.post).not.toHaveBeenCalled();
     });
 
-    it("3. successfully submits data, updates user and redirects", async () => {
+    it("successfully submits data, updates user and redirects", async () => {
         const user = userEvent.setup();
 
         const mockUser = { id: "1", role: "USER", email: "user@test.com" };
@@ -124,7 +125,7 @@ describe("LoginForm Component (UI)", () => {
         });
     });
 
-    it("4. shows server error (e.g., invalid password)", async () => {
+    it("shows server error (e.g., invalid password)", async () => {
         const user = userEvent.setup();
 
         const mockAxiosError = {
@@ -145,5 +146,24 @@ describe("LoginForm Component (UI)", () => {
         });
 
         expect(mockPush).not.toHaveBeenCalled();
+    });
+
+    it("should switch the password visibility when clicking on the 'eye' icon", async () => {
+        const user = userEvent.setup();
+        render(<LoginForm />);
+
+        const passwordInput = screen.getByPlaceholderText("password");
+
+        expect(passwordInput).toHaveAttribute("type", "password");
+
+        const allButtons = screen.getAllByRole("button");
+        const togglePasswordButton = allButtons[0];
+
+        await user.click(togglePasswordButton);
+
+        expect(passwordInput).toHaveAttribute("type", "text");
+
+        await user.click(togglePasswordButton);
+        expect(passwordInput).toHaveAttribute("type", "password");
     });
 });
