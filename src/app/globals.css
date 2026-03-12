@@ -31,6 +31,7 @@
     --color-border-input-default: var(--default-input-border);
     --color-input-default: var(--input-default-text);
     --color-basic-text: var(--basic-text-color);
+    --color-password-eye: var(--password-eye-color);
 
     --color-surface: var(--surface);
     --color-text-secondary: var(--text-secondary);
@@ -78,6 +79,7 @@
         --default-input-border: oklch(0.796 0.003 286.336);
         --input-default-text: oklch(0.496 0.002 286.343);
         --basic-text-color: oklch(0.301 0 89.876);
+        --password-eye-color: oklch(0.545 0.002 286.349);
 
         --surface: #f5f5f7;
         --text-secondary: rgba(0, 0, 0, 0.6);
@@ -115,6 +117,7 @@
         --default-input-border: oklch(0.796 0.003 286.336);
         --input-default-text: oklch(0.814 0 89.876);
         --basic-text-color: oklch(1 0 89.876);
+        --password-eye-color: oklch(1 0 89.876);
 
         --surface: #1e1e24;
         --text-secondary: rgba(255, 255, 255, 0.6);

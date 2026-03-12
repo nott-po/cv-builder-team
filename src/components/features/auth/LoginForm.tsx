@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useTranslations } from "next-intl";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
+import { Eye, EyeOff } from "lucide-react";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,7 @@ export function LoginForm() {
     const t = useTranslations("Auth");
     const router = useRouter();
     const { setUser } = useCurrentUser();
+    const [showPassword, setShowPassword] = useState(false);
 
     const formSchema = useMemo(() => {
         return z.object({
@@ -104,14 +106,29 @@ export function LoginForm() {
                                 <FormItem>
                                     <FormLabel className="sr-only">{t("password")}</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            size="default"
-                                            variant="default"
-                                            type="password"
-                                            autoComplete="current-password"
-                                            placeholder={t("password")}
-                                            {...field}
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                size="default"
+                                                variant="default"
+                                                type={showPassword ? "text" : "password"}
+                                                autoComplete="current-password"
+                                                placeholder={t("password")}
+                                                {...field}
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute top-1/2 right-5 h-8 w-8 -translate-y-1/2 p-0 hover:bg-transparent [&_svg]:size-6"
+                                            >
+                                                {showPassword ? (
+                                                    <EyeOff className="text-password-eye" />
+                                                ) : (
+                                                    <Eye className="text-password-eye" />
+                                                )}
+                                            </Button>
+                                        </div>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
