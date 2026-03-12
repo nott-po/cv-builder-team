@@ -8,8 +8,8 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
 
+import { EmployeeTableSkeleton } from "@/components/shared/EmployeeTableSkeleton";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
-import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { Pagination } from "@/components/shared/Pagination";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { useRouter } from "@/i18n/routing";
@@ -110,7 +110,7 @@ export function EmployeeTable() {
     const totalPages = Math.max(1, Math.ceil(employees.length / pageSize));
     const paginatedEmployees = employees.slice((page - 1) * pageSize, page * pageSize);
 
-    if (isLoading) return <LoadingSpinner message={t("loading")} />;
+    if (isLoading) return <EmployeeTableSkeleton rows={pageSize} />;
     if (isError) return <ErrorMessage message={t("error")} />;
 
     return (
