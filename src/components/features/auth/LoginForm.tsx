@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
+import { Eye, EyeOff } from "lucide-react";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,6 @@ import apiClient from "@/lib/api/client";
 import { ROLE_HOME } from "@/lib/constants/roles";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import type { SessionUser } from "@/types/auth";
-import { PasswordEyeOpen, PasswordEyeClosed } from "@/components/ui/icon"
 
 type LoginFormValues = {
     email: string;
@@ -35,7 +35,7 @@ export function LoginForm() {
     const t = useTranslations("Auth");
     const router = useRouter();
     const { setUser } = useCurrentUser();
-    const [showPassword, setShowPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
 
     const formSchema = useMemo(() => {
         return z.object({
@@ -120,9 +120,13 @@ export function LoginForm() {
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-5 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent [&_svg]:size-6"
+                                                className="absolute top-1/2 right-5 h-8 w-8 -translate-y-1/2 p-0 hover:bg-transparent [&_svg]:size-6"
                                             >
-                                                {showPassword ? <PasswordEyeClosed className="text-password-eye" /> : <PasswordEyeOpen className="text-password-eye" />}
+                                                {showPassword ? (
+                                                    <EyeOff className="text-password-eye" />
+                                                ) : (
+                                                    <Eye className="text-password-eye" />
+                                                )}
                                             </Button>
                                         </div>
                                     </FormControl>

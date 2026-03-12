@@ -31,7 +31,7 @@
     --color-border-input-default: var(--default-input-border);
     --color-input-default: var(--input-default-text);
     --color-basic-text: var(--basic-text-color);
-    --color-password-eye: var(--password-eye-color)
+    --color-password-eye: var(--password-eye-color);
 }
 
 @layer base {
