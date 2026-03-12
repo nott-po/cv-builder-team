@@ -22,6 +22,18 @@
         "create_an_account": "Create an account",
         "server_error": "Something went wrong. Please try again."
     },
+    "Common": {
+        "log_out": "Log out"
+    },
+    "Admin": {
+        "employees": "Employees",
+        "departments": "Departments",
+        "positions": "Positions",
+        "skills": "Skills",
+        "languages": "Languages",
+        "projects": "Projects",
+        "cvs": "CVs"
+    },
     "User": {
         "employees": "Employees",
         "skills": "Skills",

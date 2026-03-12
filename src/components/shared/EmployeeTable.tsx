@@ -1,114 +1,33 @@
 "use client";
 
-import { useMemo, useState } from "react";
-
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 
-import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
 
+import { EmployeeAvatar } from "@/components/shared/EmployeeAvatar";
 import { EmployeeTableSkeleton } from "@/components/shared/EmployeeTableSkeleton";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { Pagination } from "@/components/shared/Pagination";
 import { SearchInput } from "@/components/shared/SearchInput";
-import { useRouter } from "@/i18n/routing";
-import { fetcher } from "@/lib/graphql/fetcher";
-import { USERS_QUERY } from "@/lib/graphql/operations/employees";
-
-const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
-
-type EmployeeRow = {
-    id: string;
-    email: string;
-    department_name: string | null;
-    position_name: string | null;
-    profile: {
-        first_name: string | null;
-        last_name: string | null;
-        avatar: string | null;
-    };
-};
-
-type UsersQueryResult = {
-    users: EmployeeRow[];
-};
-
-type SortDir = "asc" | "desc";
-
-function EmployeeAvatar({
-    avatar,
-    firstName,
-    email,
-}: {
-    avatar?: string | null;
-    firstName?: string | null;
-    email: string;
-}) {
-    const initial = (firstName?.[0] ?? email?.[0] ?? "?").toUpperCase();
-
-    if (avatar) {
-        return (
-            <Image
-                src={avatar}
-                alt=""
-                width={40}
-                height={40}
-                className="size-10 rounded-full object-cover"
-            />
-        );
-    }
-
-    return (
-        <div className="bg-avatar-default flex size-10 shrink-0 items-center justify-center rounded-full">
-            <span className="text-title text-surface leading-none font-normal uppercase">
-                {initial}
-            </span>
-        </div>
-    );
-}
+import { PAGE_SIZE_OPTIONS, useEmployeeTable } from "@/lib/hooks/useEmployeeTable";
 
 export function EmployeeTable() {
     const t = useTranslations("User");
-    const router = useRouter();
-
-    const [search, setSearch] = useState("");
-    const [sortDir, setSortDir] = useState<SortDir>("asc");
-    const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState<number>(10);
-
-    const { data, isLoading, isError } = useQuery<UsersQueryResult>({
-        queryKey: ["employees", "list"],
-        queryFn: () => fetcher<UsersQueryResult, Record<string, never>>(USERS_QUERY)(),
-    });
-
-    const employees = useMemo(() => {
-        if (!data?.users) return [];
-
-        let result = data.users;
-
-        if (search.trim()) {
-            const lower = search.toLowerCase();
-            result = result.filter((u) =>
-                [
-                    u.profile.first_name,
-                    u.profile.last_name,
-                    u.email,
-                    u.department_name,
-                    u.position_name,
-                ].some((v) => v?.toLowerCase().includes(lower)),
-            );
-        }
-
-        return [...result].sort((a, b) => {
-            const aDept = a.department_name ?? "";
-            const bDept = b.department_name ?? "";
-            return sortDir === "asc" ? aDept.localeCompare(bDept) : bDept.localeCompare(aDept);
-        });
-    }, [data, search, sortDir]);
-
-    const totalPages = Math.max(1, Math.ceil(employees.length / pageSize));
-    const paginatedEmployees = employees.slice((page - 1) * pageSize, page * pageSize);
+    const {
+        paginatedEmployees,
+        isLoading,
+        isError,
+        search,
+        handleSearchChange,
+        sortDir,
+        handleSortToggle,
+        page,
+        pageSize,
+        totalPages,
+        setPage,
+        handlePageSizeChange,
+        handleRowClick,
+    } = useEmployeeTable();
 
     if (isLoading) return <EmployeeTableSkeleton rows={pageSize} />;
     if (isError) return <ErrorMessage message={t("error")} />;
@@ -119,10 +38,7 @@ export function EmployeeTable() {
             <div className="flex h-14 items-center px-6">
                 <SearchInput
                     value={search}
-                    onChange={(v) => {
-                        setSearch(v);
-                        setPage(1);
-                    }}
+                    onChange={handleSearchChange}
                     placeholder={t("search")}
                 />
             </div>
@@ -154,10 +70,7 @@ export function EmployeeTable() {
 
                             <th className="py-4 text-left">
                                 <button
-                                    onClick={() => {
-                                        setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-                                        setPage(1);
-                                    }}
+                                    onClick={handleSortToggle}
                                     className="text-small text-basic-text tracking-standard flex cursor-pointer items-center gap-1 px-4 font-medium transition-opacity hover:opacity-70"
                                 >
                                     {t("department")}
@@ -193,13 +106,16 @@ export function EmployeeTable() {
                                 <tr
                                     key={employee.id}
                                     className="border-divider hover:bg-hover-xs cursor-pointer border-b transition-colors"
-                                    onClick={() => router.push(`/employees/${employee.id}`)}
+                                    onClick={() => handleRowClick(employee.id)}
                                 >
                                     <td className="w-20 py-4 pl-4">
                                         <EmployeeAvatar
                                             avatar={employee.profile.avatar}
-                                            firstName={employee.profile.first_name}
-                                            email={employee.email}
+                                            initial={(
+                                                employee.profile.first_name?.[0] ??
+                                                employee.email?.[0] ??
+                                                "?"
+                                            ).toUpperCase()}
                                         />
                                     </td>
 
@@ -227,7 +143,7 @@ export function EmployeeTable() {
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                router.push(`/employees/${employee.id}`);
+                                                handleRowClick(employee.id);
                                             }}
                                             className="hover:bg-hover-md ml-4 flex size-10 items-center justify-center rounded-full transition-colors"
                                             aria-label="View employee"
@@ -248,10 +164,7 @@ export function EmployeeTable() {
                 pageSize={pageSize}
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
                 onPageChange={setPage}
-                onPageSizeChange={(size) => {
-                    setPageSize(size);
-                    setPage(1);
-                }}
+                onPageSizeChange={handlePageSizeChange}
                 rowsPerPageLabel={t("rows_per_page")}
                 pageLabel={t("page_of", { page, total: totalPages })}
             />

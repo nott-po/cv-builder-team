@@ -22,6 +22,18 @@
         "create_an_account": "Utwórz konto",
         "server_error": "Coś poszło nie tak. Spróbuj ponownie."
     },
+    "Common": {
+        "log_out": "Wyloguj się"
+    },
+    "Admin": {
+        "employees": "Pracownicy",
+        "departments": "Działy",
+        "positions": "Stanowiska",
+        "skills": "Umiejętności",
+        "languages": "Języki",
+        "projects": "Projekty",
+        "cvs": "CV"
+    },
     "User": {
         "employees": "Pracownicy",
         "skills": "Umiejętności",
