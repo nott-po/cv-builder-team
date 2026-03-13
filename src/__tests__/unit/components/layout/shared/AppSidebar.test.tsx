@@ -10,7 +10,15 @@ jest.mock("next-intl");
 jest.mock("@/i18n/routing", () => ({
     useRouter: jest.fn(),
     usePathname: jest.fn(() => "/dashboard"),
-    Link: ({ children, href, className }: any) => (
+    Link: ({
+        children,
+        href,
+        className,
+    }: {
+        children: React.ReactNode;
+        href: string;
+        className?: string;
+    }) => (
         <a href={href} className={className} data-testid="mock-link">
             {children}
         </a>
