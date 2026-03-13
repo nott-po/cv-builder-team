@@ -1,7 +1,8 @@
+import { useTranslations } from "next-intl";
+
+import { Header } from "@/components/features/auth/Header";
 import { SignupForm } from "@/components/features/auth/SignupForm";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
-import { Header } from "@/components/features/auth/Header";
 import { Link } from "@/i18n/routing";
 
 export default function SignupPage() {
@@ -13,7 +14,7 @@ export default function SignupPage() {
             <main className="flex h-full items-center justify-center">
                 <div className="w-full max-w-140 p-5">
                     <div className="pb-8.75">
-                        <h1 className="text-basic-text pb-6.5 text-center text-[34px]">
+                        <h1 className="text-basic-text text-heading pb-6.5 text-center">
                             {t("please_sign_up")}
                         </h1>
                         <p className="text-basic-text text-center">{t("greeting")}</p>
