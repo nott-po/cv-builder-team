@@ -4,26 +4,18 @@ import { EmployeeTableSkeleton } from "@/components/shared/EmployeeTableSkeleton
 
 jest.mock("next-intl");
 
-// Intercept next-intl/routing to prevent undefined function crash during imports
-jest.mock("next-intl/routing", () => ({
-    defineRouting: jest.fn(),
-}));
-
-jest.mock("@/i18n/routing", () => ({
-    useRouter: jest.fn(),
-    usePathname: jest.fn(),
+jest.mock("@/lib/hooks/useEmployeeTable", () => ({
+    PAGE_SIZE_OPTIONS: [10, 20, 50],
 }));
 
 describe("EmployeeTableSkeleton Component", () => {
     it("renders without crashing with default props", () => {
         const { container } = render(<EmployeeTableSkeleton rows={10} />);
-
         expect(container).toBeInTheDocument();
     });
 
     it("renders with a different number of rows", () => {
         const { container } = render(<EmployeeTableSkeleton rows={5} />);
-
         expect(container).toBeInTheDocument();
     });
 });
