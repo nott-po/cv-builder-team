@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 import { useTranslations } from "next-intl";
 
 import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
@@ -11,7 +13,12 @@ import { Pagination } from "@/components/shared/Pagination";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { PAGE_SIZE_OPTIONS, useEmployeeTable } from "@/lib/hooks/useEmployeeTable";
 
-export function EmployeeTable() {
+type EmployeeTableProps = {
+    basePath?: string;
+    actions?: React.ReactNode;
+};
+
+export function EmployeeTable({ basePath, actions }: EmployeeTableProps) {
     const t = useTranslations("User");
     const {
         paginatedEmployees,
@@ -27,7 +34,7 @@ export function EmployeeTable() {
         setPage,
         handlePageSizeChange,
         handleRowClick,
-    } = useEmployeeTable();
+    } = useEmployeeTable(basePath);
 
     if (isLoading) return <EmployeeTableSkeleton rows={pageSize} />;
     if (isError) return <ErrorMessage message={t("error")} />;
@@ -35,12 +42,13 @@ export function EmployeeTable() {
     return (
         <div>
             {/* Search */}
-            <div className="flex h-14 items-center px-6">
+            <div className="flex h-14 items-center justify-between px-6">
                 <SearchInput
                     value={search}
                     onChange={handleSearchChange}
                     placeholder={t("search")}
                 />
+                {actions}
             </div>
 
             {/* Table */}

@@ -31,7 +31,7 @@ type SortDir = "asc" | "desc";
 export const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
 export const DEFAULT_PAGE_SIZE = 10;
 
-export function useEmployeeTable() {
+export function useEmployeeTable(basePath = "/employees") {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -86,12 +86,12 @@ export function useEmployeeTable() {
     function handlePageSizeChange(size: number) {
         const params = new URLSearchParams(searchParams.toString());
         params.set("pageSize", String(size));
-        router.push(`/employees?${params.toString()}`);
+        router.push(`${basePath}?${params.toString()}`);
         setPage(1);
     }
 
     function handleRowClick(id: string) {
-        router.push(`/employees/${id}`);
+        router.push(`${basePath}/${id}`);
     }
 
     return {

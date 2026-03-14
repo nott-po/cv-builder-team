@@ -27,6 +27,7 @@
     },
     "Admin": {
         "employees": "Employees",
+        "create_user": "Create User",
         "departments": "Departments",
         "positions": "Positions",
         "skills": "Skills",

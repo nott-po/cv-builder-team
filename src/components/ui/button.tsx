@@ -22,6 +22,8 @@ const buttonVariants = cva(
                     "bg-red-primary rounded-full text-3.5 text-white uppercase border-none cursor-pointer hover:bg-red-primary/85 hover:shadow-md",
                 transparent:
                     "bg-transparent text-light-gray text-3.5 uppercase rounded-full border-0",
+                redText:
+                    "bg-transparent border-0 text-red-primary uppercase cursor-pointer hover:opacity-70 transition-opacity",
                 redUnderline_inactive:
                     "bg-transparent uppercase text-red-underline-text border-0 cursor-pointer hover:text-red-primary transition-colors",
                 redUnderline_active:

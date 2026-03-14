@@ -27,6 +27,7 @@
     },
     "Admin": {
         "employees": "Pracownicy",
+        "create_user": "Utwórz użytkownika",
         "departments": "Działy",
         "positions": "Stanowiska",
         "skills": "Umiejętności",
