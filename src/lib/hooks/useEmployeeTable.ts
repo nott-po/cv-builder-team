@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 import { useQuery } from "@tanstack/react-query";
 
+import type { UserRole } from "@/generated/graphql";
 import { useRouter } from "@/i18n/routing";
 import { fetcher } from "@/lib/graphql/fetcher";
 import { USERS_QUERY } from "@/lib/graphql/operations/employees";
@@ -13,8 +14,11 @@ import { USERS_QUERY } from "@/lib/graphql/operations/employees";
 export type EmployeeRow = {
     id: string;
     email: string;
+    role: UserRole;
     department_name: string | null;
+    department?: { id: string } | null;
     position_name: string | null;
+    position?: { id: string } | null;
     profile: {
         first_name: string | null;
         last_name: string | null;

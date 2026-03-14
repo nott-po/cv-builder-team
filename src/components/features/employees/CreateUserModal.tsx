@@ -96,7 +96,7 @@ export function CreateUserModal({ open, onOpenChange }: CreateUserModalProps) {
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
-            <DialogContent className="sm:max-w-4xl">
+            <DialogContent className="sm:max-w-4xl" aria-describedby={undefined}>
                 <DialogTitle>{t("create_user_title")}</DialogTitle>
                 <EmployeeForm
                     onSubmit={handleSubmit}

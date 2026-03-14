@@ -19,9 +19,9 @@ import {
 } from "@/components/ui/select";
 import { UserRole } from "@/generated/graphql";
 
-const schema = z.object({
-    email: z.string().email(),
-    password: z.string().min(6),
+const baseSchema = z.object({
+    email: z.string(),
+    password: z.string(),
     first_name: z.string().optional(),
     last_name: z.string().optional(),
     departmentId: z.string().optional(),
@@ -29,7 +29,20 @@ const schema = z.object({
     role: z.nativeEnum(UserRole),
 });
 
-export type CreateUserFormData = z.infer<typeof schema>;
+const createSchema = baseSchema.extend({
+    email: z.string().email(),
+    password: z.string().min(6),
+});
+
+export type CreateUserFormData = z.infer<typeof createSchema>;
+
+export interface EditInitialData {
+    first_name?: string | null;
+    last_name?: string | null;
+    departmentId?: string | null;
+    positionId?: string | null;
+    role: UserRole;
+}
 
 interface Option {
     id: string;
@@ -37,84 +50,93 @@ interface Option {
 }
 
 interface EmployeeFormProps {
+    mode?: "create" | "edit";
     onSubmit: (data: CreateUserFormData) => Promise<void>;
     onCancel: () => void;
     departments: Option[];
     positions: Option[];
     isSubmitting: boolean;
     error?: string | null;
+    initialData?: EditInitialData;
 }
 
 const selectTriggerClass =
     "rounded-none border-border-input-default h-auto py-4 shadow-none focus:ring-0 text-input-default";
 
 export function EmployeeForm({
+    mode = "create",
     onSubmit,
     onCancel,
     departments,
     positions,
     isSubmitting,
     error,
+    initialData,
 }: EmployeeFormProps) {
     const t = useTranslations("Admin");
+    const isEdit = mode === "edit";
 
     const form = useForm<CreateUserFormData>({
-        resolver: zodResolver(schema),
+        resolver: zodResolver(isEdit ? baseSchema : createSchema),
         defaultValues: {
             email: "",
             password: "",
-            first_name: "",
-            last_name: "",
-            departmentId: undefined,
-            positionId: undefined,
-            role: UserRole.Employee,
+            first_name: initialData?.first_name ?? "",
+            last_name: initialData?.last_name ?? "",
+            departmentId: initialData?.departmentId ?? undefined,
+            positionId: initialData?.positionId ?? undefined,
+            role: initialData?.role ?? UserRole.Employee,
         },
     });
 
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                {!isEdit && (
+                    <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input
+                                            variant="default"
+                                            size="default"
+                                            type="email"
+                                            placeholder={t("email")}
+                                            autoComplete="off"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input
+                                            variant="default"
+                                            size="default"
+                                            type="password"
+                                            placeholder={t("password")}
+                                            autoComplete="new-password"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                )}
+
                 <div className="grid grid-cols-2 gap-4">
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormControl>
-                                    <Input
-                                        variant="default"
-                                        size="default"
-                                        type="email"
-                                        placeholder={t("email")}
-                                        autoComplete="off"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormControl>
-                                    <Input
-                                        variant="default"
-                                        size="default"
-                                        type="password"
-                                        placeholder={t("password")}
-                                        autoComplete="new-password"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
                     <FormField
                         control={form.control}
                         name="first_name"
@@ -257,7 +279,7 @@ export function EmployeeForm({
                         size="redButton"
                         disabled={isSubmitting}
                     >
-                        {t("create")}
+                        {isEdit ? t("save") : t("create")}
                     </Button>
                 </div>
             </form>
