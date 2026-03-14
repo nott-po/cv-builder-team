@@ -40,7 +40,7 @@ export function useEmployeeTable(basePath = "/employees") {
     const searchParams = useSearchParams();
 
     const [search, setSearch] = useState("");
-    const [sortDir, setSortDir] = useState<SortDir>("asc");
+    const [sortDir, setSortDir] = useState<SortDir>("desc");
     const [page, setPage] = useState(1);
     const pageSize = Number(searchParams.get("pageSize")) || 10;
 
