@@ -93,7 +93,7 @@ export function EmployeeForm({
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 {!isEdit && (
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <FormField
                             control={form.control}
                             name="email"
@@ -136,7 +136,7 @@ export function EmployeeForm({
                     </div>
                 )}
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <FormField
                         control={form.control}
                         name="first_name"
@@ -230,7 +230,7 @@ export function EmployeeForm({
                     />
                 </div>
 
-                <div className="w-1/2 pr-2">
+                <div className="w-full sm:w-1/2 sm:pr-2">
                     <FormField
                         control={form.control}
                         name="role"
@@ -267,7 +267,7 @@ export function EmployeeForm({
                     <Button
                         type="button"
                         variant="transparent"
-                        size="redButton"
+                        className="px-8 py-4"
                         onClick={onCancel}
                         disabled={isSubmitting}
                     >
@@ -276,7 +276,7 @@ export function EmployeeForm({
                     <Button
                         type="submit"
                         variant="redPrimary"
-                        size="redButton"
+                        className="px-8 py-4"
                         disabled={isSubmitting}
                     >
                         {isEdit ? t("save") : t("create")}

@@ -57,20 +57,20 @@ export function EmployeeTable({ basePath, actions, renderRowActions }: EmployeeT
             </div>
 
             {/* Table */}
-            <div className="px-6">
-                <table className="w-full border-collapse">
+            <div className="overflow-x-auto px-6">
+                <table className="w-full min-w-[640px] border-collapse">
                     <thead>
                         <tr className="border-divider border-b">
                             <th className="w-20 py-4" />
 
                             <th className="py-4 text-left">
-                                <span className="text-small text-basic-text tracking-standard px-4 font-medium">
+                                <span className="text-small text-basic-text tracking-standard px-4 font-medium whitespace-nowrap">
                                     {t("first_name")}
                                 </span>
                             </th>
 
                             <th className="py-4 text-left">
-                                <span className="text-small text-basic-text tracking-standard px-4 font-medium">
+                                <span className="text-small text-basic-text tracking-standard px-4 font-medium whitespace-nowrap">
                                     {t("last_name")}
                                 </span>
                             </th>
