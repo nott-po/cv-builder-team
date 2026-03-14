@@ -45,9 +45,13 @@ export function SignupForm() {
                 email: z.string().email({
                     message: t("wrong_email"),
                 }),
-                password: z.string().min(6, {
-                    message: t("wrong_password"),
-                }),
+                password: z
+                    .string()
+                    .min(8, { message: t("password_weak") })
+                    .regex(/[A-Z]/, { message: t("password_weak") })
+                    .regex(/[a-z]/, { message: t("password_weak") })
+                    .regex(/[0-9]/, { message: t("password_weak") })
+                    .regex(/[^A-Za-z0-9]/, { message: t("password_weak") }),
                 confirmPassword: z.string(),
             })
             .refine((data) => data.password === data.confirmPassword, {

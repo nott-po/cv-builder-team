@@ -13,6 +13,7 @@
         "glad_to_see_you": "Cieszymy się, że jesteś z nami! Zaloguj się, aby kontynuować",
         "wrong_email": "Wprowadź poprawny adres email",
         "wrong_password": "Hasło musi zawierać co najmniej 6 znaków",
+        "password_weak": "Hasło musi mieć co najmniej 8 znaków oraz zawierać wielką literę, małą literę, cyfrę i znak specjalny",
         "please_sign_up": "Proszę, zarejestruj się",
         "greeting": "Witaj! Utwórz konto, aby kontynuować",
         "confirm_password": "Potwierdź hasło",
