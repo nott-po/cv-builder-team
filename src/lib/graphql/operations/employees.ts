@@ -13,3 +13,30 @@ export const USERS_QUERY = `
         }
     }
 `;
+
+export const DEPARTMENTS_QUERY = `
+    query Departments {
+        departments {
+            id
+            name
+        }
+    }
+`;
+
+export const POSITIONS_QUERY = `
+    query Positions {
+        positions {
+            id
+            name
+        }
+    }
+`;
+
+export const CREATE_USER_MUTATION = `
+    mutation CreateUser($user: CreateUserInput!) {
+        createUser(user: $user) {
+            id
+            email
+        }
+    }
+`;
