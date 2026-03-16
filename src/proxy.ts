@@ -115,7 +115,7 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL(`${localePrefix}/login`, request.url));
     }
 
-    if (isAuthenticated && isPublic) {
+    if (isAuthenticated && (isPublic || pathnameWithoutLocale === "/")) {
         const home = ROLE_HOME[session.user!.role];
         return NextResponse.redirect(new URL(`${localePrefix}${home}`, request.url));
     }
