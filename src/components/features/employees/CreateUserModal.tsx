@@ -65,11 +65,11 @@ export function CreateUserModal({ open, onOpenChange }: CreateUserModalProps) {
             await mutateAsync({
                 auth: { email: data.email, password: data.password },
                 cvsIds: [],
-                departmentId: data.departmentId ?? undefined,
-                positionId: data.positionId ?? undefined,
+                departmentId: data.departmentId || "",
+                positionId: data.positionId || "",
                 profile: {
-                    first_name: data.first_name || undefined,
-                    last_name: data.last_name || undefined,
+                    first_name: data.first_name || "",
+                    last_name: data.last_name || "",
                 },
                 role: data.role,
             });
