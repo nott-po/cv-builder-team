@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 import { useQuery } from "@tanstack/react-query";
 
+import type { UserRole } from "@/generated/graphql";
 import { useRouter } from "@/i18n/routing";
 import { fetcher } from "@/lib/graphql/fetcher";
 import { USERS_QUERY } from "@/lib/graphql/operations/employees";
@@ -13,8 +14,11 @@ import { USERS_QUERY } from "@/lib/graphql/operations/employees";
 export type EmployeeRow = {
     id: string;
     email: string;
+    role: UserRole;
     department_name: string | null;
+    department?: { id: string } | null;
     position_name: string | null;
+    position?: { id: string } | null;
     profile: {
         first_name: string | null;
         last_name: string | null;
@@ -31,12 +35,12 @@ type SortDir = "asc" | "desc";
 export const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
 export const DEFAULT_PAGE_SIZE = 10;
 
-export function useEmployeeTable() {
+export function useEmployeeTable(basePath = "/employees") {
     const router = useRouter();
     const searchParams = useSearchParams();
 
     const [search, setSearch] = useState("");
-    const [sortDir, setSortDir] = useState<SortDir>("asc");
+    const [sortDir, setSortDir] = useState<SortDir>("desc");
     const [page, setPage] = useState(1);
     const pageSize = Number(searchParams.get("pageSize")) || 10;
 
@@ -86,12 +90,12 @@ export function useEmployeeTable() {
     function handlePageSizeChange(size: number) {
         const params = new URLSearchParams(searchParams.toString());
         params.set("pageSize", String(size));
-        router.push(`/employees?${params.toString()}`);
+        router.push(`${basePath}?${params.toString()}`);
         setPage(1);
     }
 
     function handleRowClick(id: string) {
-        router.push(`/employees/${id}`);
+        router.push(`${basePath}/${id}`);
     }
 
     return {
