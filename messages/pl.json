@@ -72,6 +72,11 @@
         "loading": "Ładowanie...",
         "error": "Coś poszło nie tak",
         "rows_per_page": "Wierszy na stronę",
-        "page_of": "Strona {page} z {total}"
+        "page_of": "Strona {page} z {total}",
+        "update": "Aktualizuj",
+        "profile": "Profil",
+        "member_since": "Użytkownik od",
+        "upload_avatar": "Prześlij obraz avatara",
+        "Upload_avatar_rules": "png, jpg lub gif, nie więcej niż 0,5 MB"
     }
 }
