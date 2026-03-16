@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 import { useTranslations } from "next-intl";
 
 import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
@@ -9,9 +11,19 @@ import { EmployeeTableSkeleton } from "@/components/shared/EmployeeTableSkeleton
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { Pagination } from "@/components/shared/Pagination";
 import { SearchInput } from "@/components/shared/SearchInput";
-import { PAGE_SIZE_OPTIONS, useEmployeeTable } from "@/lib/hooks/useEmployeeTable";
+import {
+    PAGE_SIZE_OPTIONS,
+    useEmployeeTable,
+    type EmployeeRow,
+} from "@/lib/hooks/useEmployeeTable";
 
-export function EmployeeTable() {
+type EmployeeTableProps = {
+    basePath?: string;
+    actions?: React.ReactNode;
+    renderRowActions?: (employee: EmployeeRow) => React.ReactNode;
+};
+
+export function EmployeeTable({ basePath, actions, renderRowActions }: EmployeeTableProps) {
     const t = useTranslations("User");
     const {
         paginatedEmployees,
@@ -27,7 +39,7 @@ export function EmployeeTable() {
         setPage,
         handlePageSizeChange,
         handleRowClick,
-    } = useEmployeeTable();
+    } = useEmployeeTable(basePath);
 
     if (isLoading) return <EmployeeTableSkeleton rows={pageSize} />;
     if (isError) return <ErrorMessage message={t("error")} />;
@@ -35,29 +47,30 @@ export function EmployeeTable() {
     return (
         <div>
             {/* Search */}
-            <div className="flex h-14 items-center px-6">
+            <div className="flex h-14 items-center justify-between px-6">
                 <SearchInput
                     value={search}
                     onChange={handleSearchChange}
                     placeholder={t("search")}
                 />
+                {actions}
             </div>
 
             {/* Table */}
-            <div className="px-6">
-                <table className="w-full border-collapse">
+            <div className="overflow-x-auto px-6">
+                <table className="w-full min-w-[640px] border-collapse">
                     <thead>
                         <tr className="border-divider border-b">
                             <th className="w-20 py-4" />
 
                             <th className="py-4 text-left">
-                                <span className="text-small text-basic-text tracking-standard px-4 font-medium">
+                                <span className="text-small text-basic-text tracking-standard px-4 font-medium whitespace-nowrap">
                                     {t("first_name")}
                                 </span>
                             </th>
 
                             <th className="py-4 text-left">
-                                <span className="text-small text-basic-text tracking-standard px-4 font-medium">
+                                <span className="text-small text-basic-text tracking-standard px-4 font-medium whitespace-nowrap">
                                     {t("last_name")}
                                 </span>
                             </th>
@@ -140,16 +153,20 @@ export function EmployeeTable() {
                                     </td>
 
                                     <td className="w-18 py-4">
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleRowClick(employee.id);
-                                            }}
-                                            className="hover:bg-hover-md ml-4 flex size-10 items-center justify-center rounded-full transition-colors"
-                                            aria-label="View employee"
-                                        >
-                                            <ChevronRight className="text-text-hint size-6" />
-                                        </button>
+                                        {renderRowActions ? (
+                                            renderRowActions(employee)
+                                        ) : (
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleRowClick(employee.id);
+                                                }}
+                                                className="hover:bg-hover-md ml-4 flex size-10 items-center justify-center rounded-full transition-colors"
+                                                aria-label="View employee"
+                                            >
+                                                <ChevronRight className="text-text-hint size-6" />
+                                            </button>
+                                        )}
                                     </td>
                                 </tr>
                             ))
