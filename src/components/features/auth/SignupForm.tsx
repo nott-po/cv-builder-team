@@ -94,13 +94,17 @@ export function SignupForm() {
                         <FormField
                             control={form.control}
                             name="email"
-                            render={({ field }) => (
+                            render={({ field, fieldState }) => (
                                 <FormItem>
                                     <FormLabel className="sr-only">{t("email")}</FormLabel>
                                     <FormControl>
                                         <Input
                                             size="default"
-                                            variant="default"
+                                            variant={
+                                                fieldState.error || form.formState.errors.root
+                                                    ? "error"
+                                                    : "default"
+                                            }
                                             type="email"
                                             autoComplete="email"
                                             placeholder={t("email")}
@@ -115,14 +119,18 @@ export function SignupForm() {
                         <FormField
                             control={form.control}
                             name="password"
-                            render={({ field }) => (
+                            render={({ field, fieldState }) => (
                                 <FormItem>
                                     <FormLabel className="sr-only">{t("password")}</FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                             <Input
                                                 size="default"
-                                                variant="default"
+                                                variant={
+                                                    fieldState.error || form.formState.errors.root
+                                                        ? "error"
+                                                        : "default"
+                                                }
                                                 type={showPassword ? "text" : "password"}
                                                 autoComplete="new-password"
                                                 placeholder={t("password")}
@@ -151,7 +159,7 @@ export function SignupForm() {
                         <FormField
                             control={form.control}
                             name="confirmPassword"
-                            render={({ field }) => (
+                            render={({ field, fieldState }) => (
                                 <FormItem>
                                     <FormLabel className="sr-only">
                                         {t("confirm_password")}
@@ -160,7 +168,11 @@ export function SignupForm() {
                                         <div className="relative">
                                             <Input
                                                 size="default"
-                                                variant="default"
+                                                variant={
+                                                    fieldState.error || form.formState.errors.root
+                                                        ? "error"
+                                                        : "default"
+                                                }
                                                 type={showPasswordConfirm ? "text" : "password"}
                                                 autoComplete="new-password"
                                                 placeholder={t("confirm_password")}
