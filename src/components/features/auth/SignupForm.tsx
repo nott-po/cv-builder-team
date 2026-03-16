@@ -45,9 +45,13 @@ export function SignupForm() {
                 email: z.string().email({
                     message: t("wrong_email"),
                 }),
-                password: z.string().min(6, {
-                    message: t("wrong_password"),
-                }),
+                password: z
+                    .string()
+                    .min(8, { message: t("password_weak") })
+                    .regex(/[A-Z]/, { message: t("password_weak") })
+                    .regex(/[a-z]/, { message: t("password_weak") })
+                    .regex(/[0-9]/, { message: t("password_weak") })
+                    .regex(/[^A-Za-z0-9]/, { message: t("password_weak") }),
                 confirmPassword: z.string(),
             })
             .refine((data) => data.password === data.confirmPassword, {
@@ -90,13 +94,17 @@ export function SignupForm() {
                         <FormField
                             control={form.control}
                             name="email"
-                            render={({ field }) => (
+                            render={({ field, fieldState }) => (
                                 <FormItem>
                                     <FormLabel className="sr-only">{t("email")}</FormLabel>
                                     <FormControl>
                                         <Input
                                             size="default"
-                                            variant="default"
+                                            variant={
+                                                fieldState.error || form.formState.errors.root
+                                                    ? "error"
+                                                    : "default"
+                                            }
                                             type="email"
                                             autoComplete="email"
                                             placeholder={t("email")}
@@ -111,14 +119,18 @@ export function SignupForm() {
                         <FormField
                             control={form.control}
                             name="password"
-                            render={({ field }) => (
+                            render={({ field, fieldState }) => (
                                 <FormItem>
                                     <FormLabel className="sr-only">{t("password")}</FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                             <Input
                                                 size="default"
-                                                variant="default"
+                                                variant={
+                                                    fieldState.error || form.formState.errors.root
+                                                        ? "error"
+                                                        : "default"
+                                                }
                                                 type={showPassword ? "text" : "password"}
                                                 autoComplete="new-password"
                                                 placeholder={t("password")}
@@ -147,7 +159,7 @@ export function SignupForm() {
                         <FormField
                             control={form.control}
                             name="confirmPassword"
-                            render={({ field }) => (
+                            render={({ field, fieldState }) => (
                                 <FormItem>
                                     <FormLabel className="sr-only">
                                         {t("confirm_password")}
@@ -156,7 +168,11 @@ export function SignupForm() {
                                         <div className="relative">
                                             <Input
                                                 size="default"
-                                                variant="default"
+                                                variant={
+                                                    fieldState.error || form.formState.errors.root
+                                                        ? "error"
+                                                        : "default"
+                                                }
                                                 type={showPasswordConfirm ? "text" : "password"}
                                                 autoComplete="new-password"
                                                 placeholder={t("confirm_password")}
