@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { DELETE_USER_MUTATION } from "@/lib/graphql/operations/employees";
-import type { EmployeeRow } from "@/lib/hooks/useEmployeeTable";
+import { employeesListKey, type EmployeeRow } from "@/lib/hooks/useEmployeeTable";
 
 interface DeleteUserModalProps {
     open: boolean;
@@ -26,7 +26,7 @@ export function DeleteUserModal({ open, employee, onOpenChange }: DeleteUserModa
     const { mutateAsync, isPending } = useMutation({
         mutationFn: (userId: string) => gqlClient.request(DELETE_USER_MUTATION, { userId }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["employees", "list"] });
+            queryClient.invalidateQueries({ queryKey: employeesListKey() });
             onOpenChange(false);
         },
     });
