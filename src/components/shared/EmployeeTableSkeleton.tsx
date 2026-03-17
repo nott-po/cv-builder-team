@@ -1,5 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { DEFAULT_PAGE_SIZE } from "@/lib/hooks/useEmployeeTable";
+import { DEFAULT_PAGE_SIZE } from "@/lib/constants/table";
+
+import { TablePaginationSkeleton } from "./TablePaginationSkeleton";
 
 function SkeletonRow() {
     return (
@@ -61,20 +63,13 @@ export function EmployeeTableSkeleton({ rows = DEFAULT_PAGE_SIZE }: { rows?: num
                     </thead>
                     <tbody>
                         {Array.from({ length: rows }, (_, i) => (
-                            <SkeletonRow key={`skeleton-row-${i}`} />
+                            <SkeletonRow key={i} />
                         ))}
                     </tbody>
                 </table>
             </div>
 
-            <div className="flex items-center justify-between px-6 py-4">
-                <Skeleton className="h-4 w-32" />
-                <div className="flex items-center gap-2">
-                    <Skeleton className="h-8 w-8 rounded-md" />
-                    <Skeleton className="h-4 w-20" />
-                    <Skeleton className="h-8 w-8 rounded-md" />
-                </div>
-            </div>
+            <TablePaginationSkeleton />
         </div>
     );
 }

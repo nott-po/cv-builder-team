@@ -1,17 +1,14 @@
 import { getTranslations } from "next-intl/server";
 
 import { AdminEmployeeTable } from "@/components/features/employees/AdminEmployeeTable";
+import { PageHeader } from "@/components/shared/PageHeader";
 
 export default async function AdminEmployeesPage() {
     const t = await getTranslations("Admin");
 
     return (
         <div>
-            <div className="px-6 pt-3 pb-3">
-                <h1 className="text-title text-basic-text tracking-standard font-medium">
-                    {t("employees")}
-                </h1>
-            </div>
+            <PageHeader title={t("employees")} />
             <AdminEmployeeTable />
         </div>
     );
