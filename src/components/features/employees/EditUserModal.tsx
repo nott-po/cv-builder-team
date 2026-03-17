@@ -15,7 +15,7 @@ import {
     UPDATE_PROFILE_MUTATION,
     UPDATE_USER_MUTATION,
 } from "@/lib/graphql/operations/employees";
-import type { EmployeeRow } from "@/lib/hooks/useEmployeeTable";
+import { employeesListKey, type EmployeeRow } from "@/lib/hooks/useEmployeeTable";
 
 import { EmployeeForm, type CreateUserFormData } from "./EmployeeForm";
 
@@ -72,7 +72,7 @@ export function EditUserModal({ open, employee, onOpenChange }: EditUserModalPro
             });
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["employees", "list"] });
+            queryClient.invalidateQueries({ queryKey: employeesListKey() });
             setSubmitError(null);
             onOpenChange(false);
         },
