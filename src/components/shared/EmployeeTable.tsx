@@ -11,11 +11,8 @@ import { EmployeeTableSkeleton } from "@/components/shared/EmployeeTableSkeleton
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { Pagination } from "@/components/shared/Pagination";
 import { SearchInput } from "@/components/shared/SearchInput";
-import {
-    PAGE_SIZE_OPTIONS,
-    useEmployeeTable,
-    type EmployeeRow,
-} from "@/lib/hooks/useEmployeeTable";
+import { PAGE_SIZE_OPTIONS } from "@/lib/constants/table";
+import { useEmployeeTable, type EmployeeRow } from "@/lib/hooks/useEmployeeTable";
 
 type EmployeeTableProps = {
     basePath?: string;
@@ -36,7 +33,7 @@ export function EmployeeTable({ basePath, actions, renderRowActions }: EmployeeT
         page,
         pageSize,
         totalPages,
-        setPage,
+        handlePageChange,
         handlePageSizeChange,
         handleRowClick,
     } = useEmployeeTable(basePath);
@@ -180,7 +177,7 @@ export function EmployeeTable({ basePath, actions, renderRowActions }: EmployeeT
                 totalPages={totalPages}
                 pageSize={pageSize}
                 pageSizeOptions={PAGE_SIZE_OPTIONS}
-                onPageChange={setPage}
+                onPageChange={handlePageChange}
                 onPageSizeChange={handlePageSizeChange}
                 rowsPerPageLabel={t("rows_per_page")}
                 pageLabel={t("page_of", { page, total: totalPages })}
