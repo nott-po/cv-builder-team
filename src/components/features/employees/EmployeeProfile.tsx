@@ -11,6 +11,7 @@ import { Upload } from "lucide-react";
 import * as z from "zod";
 
 import { EmployeeAvatar } from "@/components/shared/EmployeeAvatar";
+import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -28,6 +29,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useUserData } from "@/lib/hooks/useUserData";
 
 const profileSchema = z.object({
@@ -85,12 +87,8 @@ export function EmployeeProfile() {
         console.log("data for posting to the server", values);
     }
 
-    if (isLoading) {
-        return <div className="p-8 text-center">Loading...</div>;
-    }
-
-    if (isError || !data) {
-        return <div className="p-8 text-center text-red-500">Error loading profile</div>;
+    if ((!isLoading && !data) || isError) {
+        return <ErrorMessage message={t("error")} />;
     }
 
     return (
@@ -107,8 +105,8 @@ export function EmployeeProfile() {
                                     size="xl"
                                     avatar={previewUrl}
                                     initial={(
-                                        data.profile.first_name?.[0] ??
-                                        data.email?.[0] ??
+                                        data?.profile.first_name?.[0] ??
+                                        data?.email?.[0] ??
                                         "?"
                                     ).toUpperCase()}
                                 />
@@ -158,19 +156,27 @@ export function EmployeeProfile() {
                                 />
                             </div>
 
-                            <div>
-                                <p className="text-center text-2xl font-medium">
-                                    {data.profile.first_name} {data.profile.last_name}
-                                </p>
-                                <p className="text-center text-base">{data.email}</p>
-                                <p className="text-center text-base">
-                                    {t("member_since")}{" "}
-                                    {new Date(Number(data.created_at)).toDateString()}
-                                </p>
-                            </div>
+                            {isLoading ? (
+                                <div className="flex flex-col gap-1">
+                                    <Skeleton className="mx-auto mb-2 h-6 w-50" />
+                                    <Skeleton className="mx-auto h-6 w-30" />
+                                    <Skeleton className="mx-auto h-6 w-40" />
+                                </div>
+                            ) : (
+                                <div>
+                                    <p className="text-basic-text mb-2 text-center text-2xl font-medium">
+                                        {data?.profile.first_name} {data?.profile.last_name}
+                                    </p>
+                                    <p className="text-input-default text-center">{data?.email}</p>
+                                    <p className="text-basic-text text-center">
+                                        {t("member_since")}{" "}
+                                        {new Date(Number(data?.created_at)).toDateString()}
+                                    </p>
+                                </div>
+                            )}
                         </div>
 
-                        <div className="grid w-full grid-cols-2 gap-x-8 gap-y-9">
+                        <div className="grid w-full grid-cols-1 gap-x-8 gap-y-9 md:grid-cols-2">
                             <FormField
                                 control={form.control}
                                 name="first_name"
@@ -225,7 +231,7 @@ export function EmployeeProfile() {
                                             defaultValue={field.value}
                                         >
                                             <FormControl>
-                                                <SelectTrigger className="border-border-input-default h-auto rounded-none border px-3 py-4 shadow-none focus:ring-0">
+                                                <SelectTrigger className="border-border-input-default h-14.5 rounded-none border px-3 py-4 shadow-none focus:ring-0">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                             </FormControl>
@@ -255,7 +261,7 @@ export function EmployeeProfile() {
                                             defaultValue={field.value}
                                         >
                                             <FormControl>
-                                                <SelectTrigger className="border-border-input-default h-auto rounded-none border px-3 py-4 shadow-none focus:ring-0">
+                                                <SelectTrigger className="border-border-input-default h-14.5 rounded-none border px-3 py-4 shadow-none focus:ring-0">
                                                     <SelectValue className="" />
                                                 </SelectTrigger>
                                             </FormControl>
@@ -273,7 +279,7 @@ export function EmployeeProfile() {
                             />
 
                             <Button
-                                className="text-gray-button-text col-start-2"
+                                className="text-gray-button-text col-start-1 md:col-start-2"
                                 type="submit"
                                 disabled={form.formState.isSubmitting}
                                 variant="grayBg"

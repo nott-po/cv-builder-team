@@ -7,9 +7,9 @@ export default async function EmployeesPage() {
 
     return (
         <div>
-            <div className="px-6 pt-3 pb-3">
-                <h1 className="text-title text-basic-text tracking-standard font-medium">
-                    {t("employees")}
+            <div className="px-6 pt-4 pb-1">
+                <h1 className="text-input-default tracking-standard px-5">
+                    <span>{t("employees")}</span>
                 </h1>
             </div>
             <EmployeeTable />
