@@ -21,6 +21,9 @@ export const USERS_QUERY = `
     }
 `;
 
+export type DepartmentsResult = { departments: { id: string; name: string }[] };
+export type PositionsResult = { positions: { id: string; name: string }[] };
+
 export const DEPARTMENTS_QUERY = `
     query Departments {
         departments {
