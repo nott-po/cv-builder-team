@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
-
 import { useTranslations } from "next-intl";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ClientError } from "graphql-request";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -14,17 +12,13 @@ import {
     CREATE_USER_MUTATION,
     DEPARTMENTS_QUERY,
     POSITIONS_QUERY,
+    type DepartmentsResult,
+    type PositionsResult,
 } from "@/lib/graphql/operations/employees";
+import { employeesListKey } from "@/lib/hooks/useEmployeeTable";
+import { useModalMutation } from "@/lib/hooks/useModalMutation";
 
 import { EmployeeForm, type CreateUserFormData } from "./EmployeeForm";
-
-interface DepartmentsResult {
-    departments: { id: string; name: string }[];
-}
-
-interface PositionsResult {
-    positions: { id: string; name: string }[];
-}
 
 interface CreateUserModalProps {
     open: boolean;
@@ -34,7 +28,6 @@ interface CreateUserModalProps {
 export function CreateUserModal({ open, onOpenChange }: CreateUserModalProps) {
     const t = useTranslations("Admin");
     const queryClient = useQueryClient();
-    const [submitError, setSubmitError] = useState<string | null>(null);
 
     const { data: departmentsData } = useQuery({
         queryKey: ["departments"],
@@ -48,21 +41,15 @@ export function CreateUserModal({ open, onOpenChange }: CreateUserModalProps) {
         enabled: open,
     });
 
-    const { mutateAsync, isPending } = useMutation({
-        mutationFn: (user: CreateUserInput) =>
-            gqlClient.request<{ createUser: { id: string; email: string } }>(CREATE_USER_MUTATION, {
-                user,
-            }),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["employees", "list"] });
-            onOpenChange(false);
-        },
+    const { isPending, submitError, handleOpenChange, handleMutate } = useModalMutation({
+        mutationFn: (user: CreateUserInput) => gqlClient.request(CREATE_USER_MUTATION, { user }),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: employeesListKey() }),
+        onClose: onOpenChange,
     });
 
     const handleSubmit = async (data: CreateUserFormData) => {
-        setSubmitError(null);
-        try {
-            await mutateAsync({
+        await handleMutate(
+            {
                 auth: { email: data.email, password: data.password },
                 cvsIds: [],
                 departmentId: data.departmentId || "",
@@ -72,26 +59,17 @@ export function CreateUserModal({ open, onOpenChange }: CreateUserModalProps) {
                     last_name: data.last_name || "",
                 },
                 role: data.role,
-            });
-        } catch (err) {
-            if (err instanceof ClientError) {
-                const raw = err.response.errors?.[0]?.message ?? "";
-                const message =
-                    raw.includes("duplicate key") || raw.includes("unique constraint")
+            },
+            (err) => {
+                if (err instanceof ClientError) {
+                    const raw = err.response.errors?.[0]?.message ?? "";
+                    return raw.includes("duplicate key") || raw.includes("unique constraint")
                         ? t("create_user_email_taken")
                         : raw || t("create_user_error");
-                setSubmitError(message);
-            } else {
-                setSubmitError(t("create_user_error"));
-            }
-        }
-    };
-
-    const handleOpenChange = (value: boolean) => {
-        if (!isPending) {
-            setSubmitError(null);
-            onOpenChange(value);
-        }
+                }
+                return t("create_user_error");
+            },
+        );
     };
 
     return (
