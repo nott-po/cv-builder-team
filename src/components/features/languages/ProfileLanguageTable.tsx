@@ -4,12 +4,16 @@ import { useState } from "react";
 
 import { useTranslations } from "next-intl";
 
+import { useQuery } from "@tanstack/react-query";
 import { Plus, Trash2 } from "lucide-react";
 
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { ProfileLanguageTableSkeleton } from "@/components/shared/ProfileLanguageTableSkeleton";
 import { Button } from "@/components/ui/button";
 import { Proficiency } from "@/generated/graphql";
+import { gqlClient } from "@/lib/graphql/fetcher";
+import { LANGUAGES_QUERY } from "@/lib/graphql/operations/languages";
+import { languagesListKey, type LanguageRow } from "@/lib/hooks/useLanguageTable";
 import { useProfileLanguages, type ProfileLanguageRow } from "@/lib/hooks/useProfileLanguages";
 
 import { AddProfileLanguageModal } from "./AddProfileLanguageModal";
@@ -29,6 +33,8 @@ interface ProfileLanguageTableProps {
     userId: string;
 }
 
+type LanguagesQueryResult = { languages: LanguageRow[] };
+
 export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
     const tUser = useTranslations("User");
     const { languages, isLoading, isError } = useProfileLanguages(userId);
@@ -37,6 +43,14 @@ export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
     const [editingLanguage, setEditingLanguage] = useState<ProfileLanguageRow | null>(null);
     const [removeOpen, setRemoveOpen] = useState(false);
     const [removingLanguage, setRemovingLanguage] = useState<ProfileLanguageRow | null>(null);
+
+    const { data: allLanguagesData, isLoading: isLoadingAll } = useQuery<LanguagesQueryResult>({
+        queryKey: languagesListKey(),
+        queryFn: () => gqlClient.request<LanguagesQueryResult>(LANGUAGES_QUERY),
+    });
+
+    const canAddMoreLanguages =
+        isLoadingAll || (allLanguagesData && languages.length < allLanguagesData.languages.length);
 
     if (isError) return <ErrorMessage message={tUser("error")} />;
 
@@ -102,18 +116,20 @@ export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
             )}
 
             {/* Actions */}
-            <div className="flex h-14 items-center justify-end gap-4 px-6">
-                <Button
-                    variant="redText"
-                    onClick={() => {
-                        setEditingLanguage(null);
-                        setAddOpen(true);
-                    }}
-                >
-                    <Plus />
-                    {tUser("add_language")}
-                </Button>
-            </div>
+            {canAddMoreLanguages && (
+                <div className="flex h-14 items-center justify-end gap-4 px-6">
+                    <Button
+                        variant="redText"
+                        onClick={() => {
+                            setEditingLanguage(null);
+                            setAddOpen(true);
+                        }}
+                    >
+                        <Plus />
+                        {tUser("add_language")}
+                    </Button>
+                </div>
+            )}
 
             {/* Modals */}
             <AddProfileLanguageModal

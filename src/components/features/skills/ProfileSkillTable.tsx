@@ -40,12 +40,14 @@ export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
     const tUser = useTranslations("User");
     const { skills, isLoading, isError } = useProfileSkills(userId);
 
-    const { data: allSkillsData } = useQuery<SkillsQueryResult>({
+    const { data: allSkillsData, isLoading: isLoadingAllSkills } = useQuery<SkillsQueryResult>({
         queryKey: skillsListKey(),
         queryFn: () => gqlClient.request<SkillsQueryResult>(SKILLS_QUERY),
-        enabled: skills.length > 0,
         staleTime: 5 * 60 * 1000,
     });
+
+    const canAddMoreSkills =
+        isLoadingAllSkills || (allSkillsData && skills.length < allSkillsData.skills.length);
 
     const grouped = useMemo<SkillGroup[]>(() => {
         if (skills.length === 0) return [];
@@ -147,16 +149,19 @@ export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
             </div>
 
             {/* Modals */}
-            <AddProfileSkillModal
-                open={addOpen}
-                userId={userId}
-                existingSkills={skills}
-                editingSkill={editingSkill}
-                onOpenChange={(v) => {
-                    setAddOpen(v);
-                    if (!v) setEditingSkill(null);
-                }}
-            />
+            {canAddMoreSkills && (
+                <AddProfileSkillModal
+                    open={addOpen}
+                    userId={userId}
+                    existingSkills={skills}
+                    editingSkill={editingSkill}
+                    onOpenChange={(v) => {
+                        setAddOpen(v);
+                        if (!v) setEditingSkill(null);
+                    }}
+                />
+            )}
+
             <RemoveProfileSkillModal
                 open={removeOpen}
                 userId={userId}
