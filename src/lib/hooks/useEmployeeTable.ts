@@ -11,6 +11,7 @@ import { useRouter } from "@/i18n/routing";
 import { DEFAULT_PAGE_SIZE } from "@/lib/constants/table";
 import { fetcher } from "@/lib/graphql/fetcher";
 import { USERS_QUERY } from "@/lib/graphql/operations/employees";
+import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 
 export type EmployeeRow = {
     id: string;
@@ -38,7 +39,7 @@ export const employeesListKey = () => ["employees", "list"] as const;
 export function useEmployeeTable(basePath = "/employees") {
     const router = useRouter();
     const searchParams = useSearchParams();
-
+    const { user } = useCurrentUser();
     const [search, setSearch] = useState("");
     const [sortDir, setSortDir] = useState<SortDir>("desc");
     const [page, setPage] = useState(1);
@@ -99,7 +100,9 @@ export function useEmployeeTable(basePath = "/employees") {
     }
 
     function handleRowClick(id: string) {
-        router.push(`${basePath}/${id}`);
+        if (user?.id === id) {
+            router.push("/profile");
+        } else router.push(`${basePath}/${id}`);
     }
 
     return {
