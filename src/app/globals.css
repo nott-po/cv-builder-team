@@ -26,12 +26,15 @@
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
     --color-red-primary: var(--red-primary);
+    --color-pink: var(--pink-color);
     --color-light-gray: var(--light-gray);
     --color-red-underline-text: var(--red-underline-text);
     --color-border-input-default: var(--default-input-border);
     --color-input-default: var(--input-default-text);
     --color-basic-text: var(--basic-text-color);
     --color-password-eye: var(--password-eye-color);
+    --color-gray-bg-button: var(--gray-bg-button);
+    --color-gray-button-text: var(--gray-button-text);
 
     --color-surface: var(--surface);
     --color-text-secondary: var(--text-secondary);
@@ -79,12 +82,15 @@
         --input: oklch(0.929 0.013 255.508);
         --ring: oklch(0.704 0.04 256.788);
         --red-primary: oklch(0.546 0.187 25.668);
+        --pink-color: oklch(0.694 0.112 19.621);
         --light-gray: oklch(0.566 0 89.876);
         --red-underline-text: oklch(0.301 0 89.876);
         --default-input-border: oklch(0.796 0.003 286.336);
         --input-default-text: oklch(0.496 0.002 286.343);
         --basic-text-color: oklch(0.301 0 89.876);
         --password-eye-color: oklch(0.545 0.002 286.349);
+        --gray-bg-button: oklch(0.88 0.003 286.344);
+        --gray-button-text: oklch(0.703 0.003 286.326);
 
         --surface: #f5f5f7;
         --text-secondary: rgba(0, 0, 0, 0.6);
@@ -122,12 +128,15 @@
         --input: oklch(1 0 0 / 15%);
         --ring: oklch(0.551 0.027 264.364);
         --red-primary: oklch(0.546 0.187 25.668);
+        --pink-color: oklch(0.447 0.123 22.861);
         --light-gray: oklch(0.566 0 89.876);
         --red-underline-text: oklch(0.971 0.003 286.35);
         --default-input-border: oklch(0.796 0.003 286.336);
         --input-default-text: oklch(0.814 0 89.876);
         --basic-text-color: oklch(1 0 89.876);
         --password-eye-color: oklch(1 0 89.876);
+        --gray-bg-button: oklch(0.424 0 89.876);
+        --gray-button-text: oklch(0.61 0 89.876);
 
         --surface: #1e1e24;
         --text-secondary: rgba(255, 255, 255, 0.6);

@@ -5,11 +5,12 @@ import { cn } from "@/lib/utils";
 type EmployeeAvatarProps = {
     initial: string;
     avatar?: string | null;
-    size?: "md" | "sm";
+    size?: "md" | "sm" | "xl";
     variant?: "default" | "primary";
 };
 
 const sizeMap = {
+    xl: { container: "size-30", text: "text-[40px]", image: 120 },
     md: { container: "size-10", text: "text-title", image: 40 },
     sm: { container: "size-8", text: "text-xs", image: 32 },
 } as const;

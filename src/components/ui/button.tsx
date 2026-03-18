@@ -28,6 +28,7 @@ const buttonVariants = cva(
                     "bg-transparent uppercase text-red-underline-text border-0 cursor-pointer hover:text-red-primary transition-colors",
                 redUnderline_active:
                     "bg-transparent border-0 border-b border-red-primary border-b-2 rounded-[0] uppercase text-red-primary cursor-pointer hover:opacity-80 transition-opacity",
+                grayBg: "bg-gray-bg-button uppercase rounded-full",
             },
             size: {
                 default: "h-9 px-4 py-2",
@@ -36,6 +37,7 @@ const buttonVariants = cva(
                 icon: "h-9 w-9",
                 redButton: "py-4 w-55",
                 headerButtons: "py-4 w-37.5",
+                updateButton: "py-4",
             },
         },
         defaultVariants: {
