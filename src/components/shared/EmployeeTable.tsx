@@ -44,7 +44,7 @@ export function EmployeeTable({ basePath, actions, renderRowActions }: EmployeeT
     return (
         <div>
             {/* Search */}
-            <div className="flex h-14 items-center justify-between px-11">
+            <div className="flex h-14 items-center justify-between px-6">
                 <SearchInput
                     value={search}
                     onChange={handleSearchChange}

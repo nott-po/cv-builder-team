@@ -43,7 +43,7 @@ export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
     const { data: allSkillsData, isLoading: isLoadingAllSkills } = useQuery<SkillsQueryResult>({
         queryKey: skillsListKey(),
         queryFn: () => gqlClient.request<SkillsQueryResult>(SKILLS_QUERY),
-        staleTime: 5 * 60 * 1000,
+        staleTime: Infinity,
     });
 
     const canAddMoreSkills =

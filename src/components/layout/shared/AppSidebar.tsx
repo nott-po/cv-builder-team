@@ -138,12 +138,15 @@ export function AppSidebar({ navGroups, userInitial, userDisplayName }: AppSideb
                 <div className="flex-1" />
 
                 {/* User profile */}
-                <div className="ml-2 flex h-14 items-center overflow-hidden rounded-tr-full rounded-br-full">
+                <Link
+                    href="/profile"
+                    className="ml-2 flex h-14 items-center overflow-hidden rounded-tr-full rounded-br-full"
+                >
                     <EmployeeAvatar initial={userInitial} variant="primary" />
                     <span className="text-body text-basic-text tracking-standard ml-3 truncate pr-2">
                         {userDisplayName}
                     </span>
-                </div>
+                </Link>
 
                 <Separator className="mt-2" />
 

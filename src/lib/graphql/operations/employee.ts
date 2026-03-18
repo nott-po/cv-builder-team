@@ -14,3 +14,25 @@ export const USER_QUERY = `
         }
     }
 `;
+
+export const UPDATE_FULL_PROFILE_MUTATION = `
+    mutation UpdateFullProfile($user: UpdateUserInput!, $profile: UpdateProfileInput!) {
+        updateUser(user: $user) {
+            id
+            department_name
+            position_name
+        }
+
+        updateProfile(profile: $profile) {
+            id
+            first_name
+            last_name
+        }
+    }
+`;
+
+export const UPLOAD_AVATAR_MUTATION = `
+    mutation UploadAvatar($avatar: UploadAvatarInput!) {
+        uploadAvatar(avatar: $avatar)
+    }
+`;
