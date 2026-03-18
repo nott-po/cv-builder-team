@@ -39,6 +39,7 @@ export function SkillForm({
     error,
 }: SkillFormProps) {
     const t = useTranslations("Admin");
+    const tCommon = useTranslations("Common");
 
     const skillSchema = useMemo(
         () =>
@@ -108,7 +109,7 @@ export function SkillForm({
                         onClick={onCancel}
                         disabled={isSubmitting}
                     >
-                        {t("cancel")}
+                        {tCommon("cancel")}
                     </Button>
                     <Button
                         type="submit"

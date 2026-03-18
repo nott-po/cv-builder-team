@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-import { AdminLanguageTable } from "@/components/features/languages/AdminLanguageTable";
+import { LanguageTable } from "@/components/features/languages/LanguageTable";
 import { PageHeader } from "@/components/shared/PageHeader";
 
 export default async function AdminLanguagesPage() {
@@ -9,7 +9,7 @@ export default async function AdminLanguagesPage() {
     return (
         <div>
             <PageHeader title={t("languages")} />
-            <AdminLanguageTable />
+            <LanguageTable />
         </div>
     );
 }

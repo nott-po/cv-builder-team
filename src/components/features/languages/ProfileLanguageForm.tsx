@@ -52,6 +52,7 @@ export function ProfileLanguageForm({
     error,
 }: ProfileLanguageFormProps) {
     const tUser = useTranslations("User");
+    const tCommon = useTranslations("Common");
 
     const profileLanguageSchema = useMemo(
         () =>
@@ -155,7 +156,7 @@ export function ProfileLanguageForm({
                         onClick={onCancel}
                         disabled={isSubmitting}
                     >
-                        {tUser("cancel")}
+                        {tCommon("cancel")}
                     </Button>
                     <Button
                         type="submit"

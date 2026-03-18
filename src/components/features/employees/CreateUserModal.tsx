@@ -7,16 +7,14 @@ import { ClientError } from "graphql-request";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { type CreateUserInput } from "@/generated/graphql";
-import { gqlClient } from "@/lib/graphql/fetcher";
-import {
-    CREATE_USER_MUTATION,
-    DEPARTMENTS_QUERY,
-    POSITIONS_QUERY,
-    type DepartmentsResult,
-    type PositionsResult,
-} from "@/lib/graphql/operations/employees";
+import { fetcher, gqlClient } from "@/lib/graphql/fetcher";
+import { DEPARTMENTS_QUERY } from "@/lib/graphql/operations/departments";
+import { CREATE_USER_MUTATION } from "@/lib/graphql/operations/employees";
+import { POSITIONS_QUERY } from "@/lib/graphql/operations/positions";
+import { departmentsListKey, type DepartmentsQueryResult } from "@/lib/hooks/useDepartmentTable";
 import { employeesListKey } from "@/lib/hooks/useEmployeeTable";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
+import { positionsListKey, type PositionsQueryResult } from "@/lib/hooks/usePositionTable";
 
 import { EmployeeForm, type CreateUserFormData } from "./EmployeeForm";
 
@@ -29,15 +27,15 @@ export function CreateUserModal({ open, onOpenChange }: CreateUserModalProps) {
     const t = useTranslations("Admin");
     const queryClient = useQueryClient();
 
-    const { data: departmentsData } = useQuery({
-        queryKey: ["departments"],
-        queryFn: () => gqlClient.request<DepartmentsResult>(DEPARTMENTS_QUERY),
+    const { data: departmentsData } = useQuery<DepartmentsQueryResult>({
+        queryKey: departmentsListKey(),
+        queryFn: () => fetcher<DepartmentsQueryResult, Record<string, never>>(DEPARTMENTS_QUERY)(),
         enabled: open,
     });
 
-    const { data: positionsData } = useQuery({
-        queryKey: ["positions"],
-        queryFn: () => gqlClient.request<PositionsResult>(POSITIONS_QUERY),
+    const { data: positionsData } = useQuery<PositionsQueryResult>({
+        queryKey: positionsListKey(),
+        queryFn: () => fetcher<PositionsQueryResult, Record<string, never>>(POSITIONS_QUERY)(),
         enabled: open,
     });
 

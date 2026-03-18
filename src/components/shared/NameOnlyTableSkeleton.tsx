@@ -16,7 +16,7 @@ function SkeletonRow() {
     );
 }
 
-export function DepartmentTableSkeleton({ rows = DEFAULT_PAGE_SIZE }: { rows?: number }) {
+export function NameOnlyTableSkeleton({ rows = DEFAULT_PAGE_SIZE }: { rows?: number }) {
     return (
         <div>
             <div className="flex h-14 items-center justify-between px-6">

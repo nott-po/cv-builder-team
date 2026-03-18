@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-import { AdminDepartmentTable } from "@/components/features/departments/AdminDepartmentTable";
+import { DepartmentTable } from "@/components/features/departments/DepartmentTable";
 import { PageHeader } from "@/components/shared/PageHeader";
 
 export default async function AdminDepartmentsPage() {
@@ -9,7 +9,7 @@ export default async function AdminDepartmentsPage() {
     return (
         <div>
             <PageHeader title={t("departments")} />
-            <AdminDepartmentTable />
+            <DepartmentTable />
         </div>
     );
 }

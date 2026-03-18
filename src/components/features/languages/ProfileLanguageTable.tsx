@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { PROFICIENCY_COLOR } from "@/lib/constants/proficiency";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { LANGUAGES_QUERY } from "@/lib/graphql/operations/languages";
-import { languagesListKey, type LanguageRow } from "@/lib/hooks/useLanguageTable";
+import { languagesListKey, type LanguagesQueryResult } from "@/lib/hooks/useLanguageTable";
 import { useProfileLanguages, type ProfileLanguageRow } from "@/lib/hooks/useProfileLanguages";
 
 import { AddProfileLanguageModal } from "./AddProfileLanguageModal";
@@ -23,8 +23,6 @@ import { RemoveProfileLanguageModal } from "./RemoveProfileLanguageModal";
 interface ProfileLanguageTableProps {
     userId: string;
 }
-
-type LanguagesQueryResult = { languages: LanguageRow[] };
 
 export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
     const tUser = useTranslations("User");
@@ -83,7 +81,7 @@ export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
 
                                         <td className="w-18 py-4">
                                             <RowActionsDropdown
-                                                ariaLabel={`${lang.name} actions`}
+                                                ariaLabel={tUser("language_actions")}
                                                 onEdit={() => {
                                                     setEditingLanguage(lang);
                                                     setAddOpen(true);

@@ -4,13 +4,12 @@ import { useTranslations } from "next-intl";
 
 import { useQueryClient } from "@tanstack/react-query";
 
+import { SimpleNameForm, type SimpleNameFormData } from "@/components/shared/SimpleNameForm";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { CREATE_POSITION_MUTATION } from "@/lib/graphql/operations/positions";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
 import { positionsListKey } from "@/lib/hooks/usePositionTable";
-
-import { PositionForm, type PositionFormData } from "./PositionForm";
 
 interface CreatePositionModalProps {
     open: boolean;
@@ -22,7 +21,7 @@ export function CreatePositionModal({ open, onOpenChange }: CreatePositionModalP
     const queryClient = useQueryClient();
 
     const { isPending, submitError, handleOpenChange, handleMutate } = useModalMutation({
-        mutationFn: (data: PositionFormData) =>
+        mutationFn: (data: SimpleNameFormData) =>
             gqlClient.request(CREATE_POSITION_MUTATION, {
                 position: { name: data.name },
             }),
@@ -37,7 +36,7 @@ export function CreatePositionModal({ open, onOpenChange }: CreatePositionModalP
                 aria-describedby={undefined}
             >
                 <DialogTitle>{t("create_position_title")}</DialogTitle>
-                <PositionForm
+                <SimpleNameForm
                     submitLabel={t("create")}
                     onSubmit={(data) => handleMutate(data, t("create_position_error"))}
                     onCancel={() => handleOpenChange(false)}
