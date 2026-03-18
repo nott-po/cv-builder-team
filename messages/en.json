@@ -24,7 +24,10 @@
         "server_error": "Something went wrong. Please try again."
     },
     "Common": {
-        "log_out": "Log out"
+        "log_out": "Log out",
+        "rows_per_page": "Rows per page",
+        "page_of": "Page {page} of {total}",
+        "error": "Something went wrong"
     },
     "Admin": {
         "employees": "Employees",
@@ -83,7 +86,18 @@
         "delete_skill_confirm": "Are you sure you want to delete skill",
         "delete_skill_error": "Failed to delete skill. Please try again.",
         "no_skills": "No skills found",
-        "skill_actions": "Skill actions"
+        "skill_actions": "Skill actions",
+        "create_department": "Create Department",
+        "create_department_title": "Create department",
+        "create_department_error": "Failed to create department. Please try again.",
+        "edit_department_title": "Edit department",
+        "edit_department_error": "Failed to update department. Please try again.",
+        "delete_department_title": "Delete department",
+        "delete_department_confirm": "Are you sure you want to delete department",
+        "delete_department_error": "Failed to delete department. Please try again.",
+        "no_departments": "No departments found",
+        "department_actions": "Department actions",
+        "error": "Something went wrong"
     },
     "User": {
         "employees": "Employees",
@@ -99,8 +113,6 @@
         "no_employees": "No employees found",
         "loading": "Loading...",
         "error": "Something went wrong",
-        "rows_per_page": "Rows per page",
-        "page_of": "Page {page} of {total}",
         "cancel": "Cancel",
         "confirm": "Confirm",
         "save": "Save",
