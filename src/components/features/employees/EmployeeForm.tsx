@@ -151,6 +151,7 @@ export function EmployeeForm({
                                         variant="default"
                                         size="default"
                                         placeholder={t("first_name")}
+                                        disabled={isSubmitting}
                                         {...field}
                                     />
                                 </FormControl>
@@ -169,6 +170,7 @@ export function EmployeeForm({
                                         variant="default"
                                         size="default"
                                         placeholder={t("last_name")}
+                                        disabled={isSubmitting}
                                         {...field}
                                     />
                                 </FormControl>
@@ -244,9 +246,7 @@ export function EmployeeForm({
                             </FormItem>
                         )}
                     />
-                </div>
 
-                <div className="w-full sm:w-1/2 sm:pr-2">
                     <FormField
                         control={form.control}
                         name="role"

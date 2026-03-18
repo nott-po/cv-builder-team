@@ -36,6 +36,7 @@ export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
     const { data: allLanguagesData, isLoading: isLoadingAll } = useQuery<LanguagesQueryResult>({
         queryKey: languagesListKey(),
         queryFn: () => gqlClient.request<LanguagesQueryResult>(LANGUAGES_QUERY),
+        staleTime: Infinity,
     });
 
     const canAddMoreLanguages =

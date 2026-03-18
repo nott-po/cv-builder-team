@@ -10,31 +10,31 @@ import { DataTable } from "@/components/shared/DataTable";
 import { NameOnlyTableSkeleton } from "@/components/shared/NameOnlyTableSkeleton";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
-import { useDepartmentTable, type DepartmentRow } from "@/lib/hooks/useDepartmentTable";
+import { usePositionTable, type PositionRow } from "@/lib/hooks/usePositionTable";
 
-import { CreateDepartmentModal } from "./CreateDepartmentModal";
-import { DeleteDepartmentModal } from "./DeleteDepartmentModal";
-import { EditDepartmentModal } from "./EditDepartmentModal";
+import { CreatePositionModal } from "./CreatePositionModal";
+import { DeletePositionModal } from "./DeletePositionModal";
+import { EditPositionModal } from "./EditPositionModal";
 
-export function DepartmentTable() {
+export function AdminPositionTable() {
     const t = useTranslations("Admin");
-    const { state, paginatedDepartments } = useDepartmentTable();
+    const { state, paginatedPositions } = usePositionTable();
     const [createOpen, setCreateOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
-    const [editDepartment, setEditDepartment] = useState<DepartmentRow | null>(null);
+    const [editPosition, setEditPosition] = useState<PositionRow | null>(null);
     const [deleteOpen, setDeleteOpen] = useState(false);
-    const [deleteDepartment, setDeleteDepartment] = useState<DepartmentRow | null>(null);
+    const [deletePosition, setDeletePosition] = useState<PositionRow | null>(null);
 
     return (
         <>
             <DataTable
                 state={state}
-                messages={{ empty: t("no_departments"), error: t("error") }}
+                messages={{ empty: t("no_positions"), error: t("error") }}
                 searchPlaceholder={t("name")}
                 actions={
                     <Button variant="redText" onClick={() => setCreateOpen(true)}>
                         <Plus />
-                        {t("create_department")}
+                        {t("create_position")}
                     </Button>
                 }
                 skeleton={<NameOnlyTableSkeleton rows={state.pageSize} />}
@@ -52,21 +52,21 @@ export function DepartmentTable() {
                     </>
                 }
             >
-                {paginatedDepartments.map((department) => (
-                    <tr key={department.id} className="border-divider border-b transition-colors">
+                {paginatedPositions.map((position) => (
+                    <tr key={position.id} className="border-divider border-b transition-colors">
                         <td className="text-small text-basic-text tracking-standard px-4 py-4">
-                            {department.name}
+                            {position.name}
                         </td>
 
                         <td className="w-18 py-4">
                             <RowActionsDropdown
-                                ariaLabel={t("department_actions")}
+                                ariaLabel={t("position_actions")}
                                 onEdit={() => {
-                                    setEditDepartment(department);
+                                    setEditPosition(position);
                                     setEditOpen(true);
                                 }}
                                 onDelete={() => {
-                                    setDeleteDepartment(department);
+                                    setDeletePosition(position);
                                     setDeleteOpen(true);
                                 }}
                             />
@@ -75,15 +75,11 @@ export function DepartmentTable() {
                 ))}
             </DataTable>
 
-            <CreateDepartmentModal open={createOpen} onOpenChange={setCreateOpen} />
-            <EditDepartmentModal
-                open={editOpen}
-                department={editDepartment}
-                onOpenChange={setEditOpen}
-            />
-            <DeleteDepartmentModal
+            <CreatePositionModal open={createOpen} onOpenChange={setCreateOpen} />
+            <EditPositionModal open={editOpen} position={editPosition} onOpenChange={setEditOpen} />
+            <DeletePositionModal
                 open={deleteOpen}
-                department={deleteDepartment}
+                position={deletePosition}
                 onOpenChange={setDeleteOpen}
             />
         </>

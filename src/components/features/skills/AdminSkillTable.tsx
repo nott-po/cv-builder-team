@@ -16,7 +16,7 @@ import { CreateSkillModal } from "./CreateSkillModal";
 import { DeleteSkillModal } from "./DeleteSkillModal";
 import { EditSkillModal } from "./EditSkillModal";
 
-export function SkillTable() {
+export function AdminSkillTable() {
     const t = useTranslations("Admin");
     const { state, paginatedSkills, sortDir, handleSortToggle } = useSkillTable();
     const [createOpen, setCreateOpen] = useState(false);
