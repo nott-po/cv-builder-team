@@ -27,7 +27,9 @@
         "log_out": "Wyloguj się",
         "rows_per_page": "Wierszy na stronę",
         "page_of": "Strona {page} z {total}",
-        "error": "Coś poszło nie tak"
+        "error": "Coś poszło nie tak",
+        "edit": "Edytuj",
+        "delete": "Usuń"
     },
     "Admin": {
         "employees": "Pracownicy",

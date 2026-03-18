@@ -4,16 +4,11 @@ import { useState } from "react";
 
 import { useTranslations } from "next-intl";
 
-import { EllipsisVertical, Pencil, Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { DepartmentTable } from "@/components/shared/DepartmentTable";
+import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import type { DepartmentRow } from "@/lib/hooks/useDepartmentTable";
 
 import { CreateDepartmentModal } from "./CreateDepartmentModal";
@@ -29,37 +24,17 @@ export function AdminDepartmentTable() {
     const [deleteDepartment, setDeleteDepartment] = useState<DepartmentRow | null>(null);
 
     const renderRowActions = (department: DepartmentRow) => (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <button
-                    className="hover:bg-hover-md ml-4 flex size-10 items-center justify-center rounded-full transition-colors"
-                    aria-label={t("department_actions")}
-                >
-                    <EllipsisVertical className="text-text-hint size-5" />
-                </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                    onClick={() => {
-                        setEditDepartment(department);
-                        setEditOpen(true);
-                    }}
-                >
-                    <Pencil />
-                    {t("edit")}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                    className="text-destructive focus:text-destructive"
-                    onClick={() => {
-                        setDeleteDepartment(department);
-                        setDeleteOpen(true);
-                    }}
-                >
-                    <Trash2 />
-                    {t("delete")}
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <RowActionsDropdown
+            ariaLabel="Department actions"
+            onEdit={() => {
+                setEditDepartment(department);
+                setEditOpen(true);
+            }}
+            onDelete={() => {
+                setDeleteDepartment(department);
+                setDeleteOpen(true);
+            }}
+        />
     );
 
     return (

@@ -5,10 +5,11 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { useQuery } from "@tanstack/react-query";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { ProfileLanguageTableSkeleton } from "@/components/shared/ProfileLanguageTableSkeleton";
+import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
 import { Proficiency } from "@/generated/graphql";
 import { gqlClient } from "@/lib/graphql/fetcher";
@@ -76,11 +77,7 @@ export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
                                 languages.map((lang) => (
                                     <tr
                                         key={lang.name}
-                                        className="border-divider hover:bg-hover-xs cursor-pointer border-b transition-colors"
-                                        onClick={() => {
-                                            setEditingLanguage(lang);
-                                            setAddOpen(true);
-                                        }}
+                                        className="border-divider hover:bg-hover-xs border-b transition-colors"
                                     >
                                         <td className="px-6 py-4">
                                             <span
@@ -95,17 +92,17 @@ export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
                                         </td>
 
                                         <td className="w-18 py-4">
-                                            <button
-                                                className="hover:bg-hover-md ml-4 flex size-10 items-center justify-center rounded-full transition-colors"
-                                                aria-label={`Remove ${lang.name}`}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
+                                            <RowActionsDropdown
+                                                ariaLabel={`${lang.name} actions`}
+                                                onEdit={() => {
+                                                    setEditingLanguage(lang);
+                                                    setAddOpen(true);
+                                                }}
+                                                onDelete={() => {
                                                     setRemovingLanguage(lang);
                                                     setRemoveOpen(true);
                                                 }}
-                                            >
-                                                <Trash2 className="text-destructive size-4" />
-                                            </button>
+                                            />
                                         </td>
                                     </tr>
                                 ))

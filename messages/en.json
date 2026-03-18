@@ -27,7 +27,9 @@
         "log_out": "Log out",
         "rows_per_page": "Rows per page",
         "page_of": "Page {page} of {total}",
-        "error": "Something went wrong"
+        "error": "Something went wrong",
+        "edit": "Edit",
+        "delete": "Delete"
     },
     "Admin": {
         "employees": "Employees",

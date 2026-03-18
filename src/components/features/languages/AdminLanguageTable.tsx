@@ -4,16 +4,11 @@ import { useState } from "react";
 
 import { useTranslations } from "next-intl";
 
-import { EllipsisVertical, Pencil, Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { LanguageTable } from "@/components/shared/LanguageTable";
+import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import type { LanguageRow } from "@/lib/hooks/useLanguageTable";
 
 import { CreateLanguageModal } from "./CreateLanguageModal";
@@ -29,37 +24,17 @@ export function AdminLanguageTable() {
     const [deleteLanguage, setDeleteLanguage] = useState<LanguageRow | null>(null);
 
     const renderRowActions = (language: LanguageRow) => (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <button
-                    className="hover:bg-hover-md ml-4 flex size-10 items-center justify-center rounded-full transition-colors"
-                    aria-label={t("language_actions")}
-                >
-                    <EllipsisVertical className="text-text-hint size-5" />
-                </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                    onClick={() => {
-                        setEditLanguage(language);
-                        setEditOpen(true);
-                    }}
-                >
-                    <Pencil />
-                    {t("edit")}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                    className="text-destructive focus:text-destructive"
-                    onClick={() => {
-                        setDeleteLanguage(language);
-                        setDeleteOpen(true);
-                    }}
-                >
-                    <Trash2 />
-                    {t("delete")}
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <RowActionsDropdown
+            ariaLabel="Language actions"
+            onEdit={() => {
+                setEditLanguage(language);
+                setEditOpen(true);
+            }}
+            onDelete={() => {
+                setDeleteLanguage(language);
+                setDeleteOpen(true);
+            }}
+        />
     );
 
     return (
