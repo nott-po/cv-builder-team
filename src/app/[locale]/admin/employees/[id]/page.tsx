@@ -12,6 +12,7 @@ import { EmployeeProfile } from "@/components/features/employees/EmployeeProfile
 import { UserHeader } from "@/components/layout/user/UserHeader";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { PageHeader } from "@/components/shared/PageHeader";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useUserData } from "@/lib/hooks/useUserData";
 
 export default function AdminEmployeeEditPage() {
@@ -28,13 +29,22 @@ export default function AdminEmployeeEditPage() {
 
     return (
         <div>
-            <PageHeader
-                items={[
-                    { label: t("employees"), href: "/admin/employees" },
-                    { label: data?.email, href: `/admin/employees/${employeeId}`, Icon: User },
-                    { label: t(currentMode) },
-                ]}
-            />
+            {isLoading ? (
+                <div className="flex justify-start gap-3 px-11 pt-3 pb-3">
+                    <Skeleton className="mb-2 h-4 w-30" />
+                    <Skeleton className="mb-2 h-4 w-50" />
+                    <Skeleton className="mb-2 h-4 w-20" />
+                </div>
+            ) : (
+                <PageHeader
+                    items={[
+                        { label: t("employees"), href: "/admin/employees" },
+                        { label: data?.email, href: `/admin/employees/${employeeId}`, Icon: User },
+                        { label: t(currentMode) },
+                    ]}
+                />
+            )}
+
             <div className="px-6">
                 <div className="mb-4">
                     <UserHeader mode={currentMode} onModeChange={setCurrentMode} />
