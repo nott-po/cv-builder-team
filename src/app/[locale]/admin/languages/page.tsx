@@ -8,7 +8,7 @@ export default async function AdminLanguagesPage() {
 
     return (
         <div>
-            <PageHeader title={t("languages")} />
+            <PageHeader items={[{ label: t("languages") }]} />
             <AdminLanguageTable />
         </div>
     );

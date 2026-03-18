@@ -9,7 +9,7 @@ export default async function SkillsPage() {
 
     return (
         <div>
-            <PageHeader title={tUser("skills")} />
+            <PageHeader items={[{ label: tUser("skills") }]} />
             <ProfileSkillTable userId={session.user!.id} />
         </div>
     );
