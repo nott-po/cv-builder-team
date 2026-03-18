@@ -100,6 +100,16 @@
         "delete_department_error": "Nie udało się usunąć działu. Spróbuj ponownie.",
         "no_departments": "Nie znaleziono działów",
         "department_actions": "Akcje działu",
+        "create_position": "Utwórz stanowisko",
+        "create_position_title": "Utwórz stanowisko",
+        "create_position_error": "Nie udało się utworzyć stanowiska. Spróbuj ponownie.",
+        "edit_position_title": "Edytuj stanowisko",
+        "edit_position_error": "Nie udało się zaktualizować stanowiska. Spróbuj ponownie.",
+        "delete_position_title": "Usuń stanowisko",
+        "delete_position_confirm": "Czy na pewno chcesz usunąć stanowisko",
+        "delete_position_error": "Nie udało się usunąć stanowiska. Spróbuj ponownie.",
+        "no_positions": "Nie znaleziono stanowisk",
+        "position_actions": "Akcje stanowiska",
         "error": "Coś poszło nie tak"
     },
     "User": {

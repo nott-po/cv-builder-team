@@ -100,6 +100,16 @@
         "delete_department_error": "Failed to delete department. Please try again.",
         "no_departments": "No departments found",
         "department_actions": "Department actions",
+        "create_position": "Create Position",
+        "create_position_title": "Create position",
+        "create_position_error": "Failed to create position. Please try again.",
+        "edit_position_title": "Edit position",
+        "edit_position_error": "Failed to update position. Please try again.",
+        "delete_position_title": "Delete position",
+        "delete_position_confirm": "Are you sure you want to delete position",
+        "delete_position_error": "Failed to delete position. Please try again.",
+        "no_positions": "No positions found",
+        "position_actions": "Position actions",
         "error": "Something went wrong"
     },
     "User": {
