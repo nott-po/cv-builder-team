@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 
+import { User } from "lucide-react";
+
 import { ProfileLanguagesPage } from "@/app/[locale]/(user)/profile/languages/page";
 import { ProfileSkillsPage } from "@/app/[locale]/(user)/profile/skills/page";
 import { EmployeeProfile } from "@/components/features/employees/EmployeeProfile";
@@ -26,7 +28,13 @@ export default function EmployeeDetailsPage() {
 
     return (
         <div>
-            <PageHeader title={t("employees")} />
+            <PageHeader
+                items={[
+                    { label: t("employees"), href: "/employees" },
+                    { label: data?.email, href: `/employees/${employeeId}`, Icon: User },
+                    { label: t(currentMode) },
+                ]}
+            />
             <div className="px-6">
                 <div className="mb-4">
                     <UserHeader mode={currentMode} onModeChange={setCurrentMode} />

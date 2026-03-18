@@ -9,7 +9,7 @@ export default async function LanguagesPage() {
 
     return (
         <div>
-            <PageHeader title={tUser("languages")} />
+            <PageHeader items={[{ label: tUser("languages") }]} />
             <ProfileLanguageTable userId={session.user!.id} />
         </div>
     );
