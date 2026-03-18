@@ -10,7 +10,7 @@ export default function ProfilePage() {
 
     return (
         <div>
-            <PageHeader title={t("profile")} />
+            <PageHeader items={[{ label: t("profile") }]} />
             <div className="px-6">
                 <ProfileForm />
             </div>
