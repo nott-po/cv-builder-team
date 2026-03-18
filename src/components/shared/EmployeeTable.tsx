@@ -11,6 +11,9 @@ import { EmployeeAvatar } from "@/components/shared/EmployeeAvatar";
 import { EmployeeTableSkeleton } from "@/components/shared/EmployeeTableSkeleton";
 import { useEmployeeTable, type EmployeeRow } from "@/lib/hooks/useEmployeeTable";
 
+const thClass = "text-small text-basic-text tracking-standard px-4 font-medium whitespace-nowrap";
+const tdClass = "text-small text-basic-text tracking-standard px-4 py-4";
+
 type EmployeeTableProps = {
     basePath?: string;
     actions?: React.ReactNode;
@@ -36,27 +39,21 @@ export function EmployeeTable({ basePath, actions, renderRowActions }: EmployeeT
                     <th className="w-20 py-4" />
 
                     <th className="py-4 text-left">
-                        <span className="text-small text-basic-text tracking-standard px-4 font-medium whitespace-nowrap">
-                            {t("first_name")}
-                        </span>
+                        <span className={thClass}>{t("first_name")}</span>
                     </th>
 
                     <th className="py-4 text-left">
-                        <span className="text-small text-basic-text tracking-standard px-4 font-medium whitespace-nowrap">
-                            {t("last_name")}
-                        </span>
+                        <span className={thClass}>{t("last_name")}</span>
                     </th>
 
                     <th className="py-4 text-left">
-                        <span className="text-small text-basic-text tracking-standard px-4 font-medium">
-                            {t("email")}
-                        </span>
+                        <span className={thClass}>{t("email")}</span>
                     </th>
 
                     <th className="py-4 text-left">
                         <button
                             onClick={handleSortToggle}
-                            className="text-small text-basic-text tracking-standard flex cursor-pointer items-center gap-1 px-4 font-medium transition-opacity hover:opacity-70"
+                            className={`${thClass} flex cursor-pointer items-center gap-1 transition-opacity hover:opacity-70`}
                         >
                             {t("department")}
                             {sortDir === "asc" ? (
@@ -68,9 +65,7 @@ export function EmployeeTable({ basePath, actions, renderRowActions }: EmployeeT
                     </th>
 
                     <th className="py-4 text-left">
-                        <span className="text-small text-basic-text tracking-standard px-4 font-medium">
-                            {t("position")}
-                        </span>
+                        <span className={thClass}>{t("position")}</span>
                     </th>
 
                     <th className="w-18" />
@@ -94,25 +89,15 @@ export function EmployeeTable({ basePath, actions, renderRowActions }: EmployeeT
                         />
                     </td>
 
-                    <td className="text-small text-basic-text tracking-standard px-4 py-4">
-                        {employee.profile.first_name ?? "—"}
-                    </td>
+                    <td className={tdClass}>{employee.profile.first_name ?? "—"}</td>
 
-                    <td className="text-small text-basic-text tracking-standard px-4 py-4">
-                        {employee.profile.last_name ?? "—"}
-                    </td>
+                    <td className={tdClass}>{employee.profile.last_name ?? "—"}</td>
 
-                    <td className="text-small text-basic-text tracking-standard px-4 py-4">
-                        {employee.email}
-                    </td>
+                    <td className={tdClass}>{employee.email}</td>
 
-                    <td className="text-small text-basic-text tracking-standard px-4 py-4">
-                        {employee.department_name ?? "—"}
-                    </td>
+                    <td className={tdClass}>{employee.department_name ?? "—"}</td>
 
-                    <td className="text-small text-basic-text tracking-standard px-4 py-4">
-                        {employee.position_name ?? "—"}
-                    </td>
+                    <td className={tdClass}>{employee.position_name ?? "—"}</td>
 
                     <td className="w-18 py-4">
                         {renderRowActions ? (

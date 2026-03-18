@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-import { PositionTable } from "@/components/features/positions/PositionTable";
+import { AdminPositionTable } from "@/components/features/positions/AdminPositionTable";
 import { PageHeader } from "@/components/shared/PageHeader";
 
 export default async function AdminPositionsPage() {
@@ -9,7 +9,7 @@ export default async function AdminPositionsPage() {
     return (
         <div>
             <PageHeader title={t("positions")} />
-            <PositionTable />
+            <AdminPositionTable />
         </div>
     );
 }

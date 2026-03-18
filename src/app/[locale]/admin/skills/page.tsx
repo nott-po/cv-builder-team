@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-import { SkillTable } from "@/components/features/skills/SkillTable";
+import { AdminSkillTable } from "@/components/features/skills/AdminSkillTable";
 import { PageHeader } from "@/components/shared/PageHeader";
 
 export default async function AdminSkillsPage() {
@@ -9,7 +9,7 @@ export default async function AdminSkillsPage() {
     return (
         <div>
             <PageHeader title={t("skills")} />
-            <SkillTable />
+            <AdminSkillTable />
         </div>
     );
 }

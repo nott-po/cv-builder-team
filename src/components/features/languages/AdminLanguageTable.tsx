@@ -16,7 +16,7 @@ import { CreateLanguageModal } from "./CreateLanguageModal";
 import { DeleteLanguageModal } from "./DeleteLanguageModal";
 import { EditLanguageModal } from "./EditLanguageModal";
 
-export function LanguageTable() {
+export function AdminLanguageTable() {
     const t = useTranslations("Admin");
     const { state, paginatedLanguages } = useLanguageTable();
     const [createOpen, setCreateOpen] = useState(false);
