@@ -1,3 +1,1 @@
-export function PositionTable() {
-    return null;
-}
+export { PositionTable } from "@/components/shared/PositionTable";
