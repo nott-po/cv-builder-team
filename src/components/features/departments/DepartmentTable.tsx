@@ -1,3 +1,1 @@
-export function DepartmentTable() {
-    return null;
-}
+export { DepartmentTable } from "@/components/shared/DepartmentTable";
