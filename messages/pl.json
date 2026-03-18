@@ -29,7 +29,9 @@
         "page_of": "Strona {page} z {total}",
         "error": "Coś poszło nie tak",
         "edit": "Edytuj",
-        "delete": "Usuń"
+        "delete": "Usuń",
+        "cancel": "Anuluj",
+        "confirm": "Potwierdź"
     },
     "Admin": {
         "employees": "Pracownicy",
