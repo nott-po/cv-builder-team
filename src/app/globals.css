@@ -45,6 +45,11 @@
     --color-hover-sm: var(--hover-sm);
     --color-hover-md: var(--hover-md);
 
+    --color-proficiency-orange: var(--proficiency-orange);
+    --color-proficiency-yellow: var(--proficiency-yellow);
+    --color-proficiency-green: var(--proficiency-green);
+    --color-proficiency-blue: var(--proficiency-blue);
+
     --text-heading: 2.125rem;
     --text-title: 1.25rem;
     --text-body: 1rem;
@@ -90,6 +95,11 @@
         --hover-xs: rgba(0, 0, 0, 0.02);
         --hover-sm: rgba(0, 0, 0, 0.04);
         --hover-md: rgba(0, 0, 0, 0.06);
+
+        --proficiency-orange: oklch(0.705 0.213 47.604);
+        --proficiency-yellow: oklch(0.795 0.184 86.047);
+        --proficiency-green: oklch(0.627 0.194 149.069);
+        --proficiency-blue: oklch(0.546 0.204 262.881);
     }
 
     .dark {
@@ -128,6 +138,11 @@
         --hover-xs: rgba(255, 255, 255, 0.02);
         --hover-sm: rgba(255, 255, 255, 0.04);
         --hover-md: rgba(255, 255, 255, 0.06);
+
+        --proficiency-orange: oklch(0.705 0.213 47.604);
+        --proficiency-yellow: oklch(0.795 0.184 86.047);
+        --proficiency-green: oklch(0.792 0.209 151.711);
+        --proficiency-blue: oklch(0.707 0.165 254.624);
     }
 }
 

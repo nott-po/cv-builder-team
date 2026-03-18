@@ -14,7 +14,7 @@ import {
 interface RowActionsDropdownProps {
     onEdit: () => void;
     onDelete: () => void;
-    ariaLabel?: string;
+    ariaLabel: string;
 }
 
 export function RowActionsDropdown({ onEdit, onDelete, ariaLabel }: RowActionsDropdownProps) {
@@ -25,28 +25,20 @@ export function RowActionsDropdown({ onEdit, onDelete, ariaLabel }: RowActionsDr
             <DropdownMenuTrigger asChild>
                 <button
                     className="hover:bg-hover-md flex size-10 items-center justify-center rounded-full transition-colors"
-                    aria-label={ariaLabel ?? "Row actions"}
+                    aria-label={ariaLabel}
                     onClick={(e) => e.stopPropagation()}
                 >
                     <EllipsisVertical className="text-text-hint size-5" />
                 </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onEdit();
-                    }}
-                >
+                <DropdownMenuItem onClick={onEdit}>
                     <Pencil />
                     {t("edit")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                     className="text-destructive focus:text-destructive"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete();
-                    }}
+                    onClick={onDelete}
                 >
                     <Trash2 />
                     {t("delete")}

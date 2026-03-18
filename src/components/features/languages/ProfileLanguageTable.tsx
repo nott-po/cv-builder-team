@@ -11,7 +11,7 @@ import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { ProfileLanguageTableSkeleton } from "@/components/shared/ProfileLanguageTableSkeleton";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
-import { Proficiency } from "@/generated/graphql";
+import { PROFICIENCY_COLOR } from "@/lib/constants/proficiency";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { LANGUAGES_QUERY } from "@/lib/graphql/operations/languages";
 import { languagesListKey, type LanguageRow } from "@/lib/hooks/useLanguageTable";
@@ -19,16 +19,6 @@ import { useProfileLanguages, type ProfileLanguageRow } from "@/lib/hooks/usePro
 
 import { AddProfileLanguageModal } from "./AddProfileLanguageModal";
 import { RemoveProfileLanguageModal } from "./RemoveProfileLanguageModal";
-
-const PROFICIENCY_COLORS: Record<Proficiency, string> = {
-    [Proficiency.A1]: "text-text-secondary",
-    [Proficiency.A2]: "text-text-secondary",
-    [Proficiency.B1]: "text-green-600 dark:text-green-400",
-    [Proficiency.B2]: "text-green-600 dark:text-green-400",
-    [Proficiency.C1]: "text-blue-600 dark:text-blue-400",
-    [Proficiency.C2]: "text-blue-600 dark:text-blue-400",
-    [Proficiency.Native]: "text-destructive",
-};
 
 interface ProfileLanguageTableProps {
     userId: string;
@@ -81,7 +71,7 @@ export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
                                     >
                                         <td className="px-6 py-4">
                                             <span
-                                                className={`text-small tracking-standard font-medium ${PROFICIENCY_COLORS[lang.proficiency]}`}
+                                                className={`text-small tracking-standard font-medium ${PROFICIENCY_COLOR[lang.proficiency]}`}
                                             >
                                                 {lang.proficiency}
                                             </span>

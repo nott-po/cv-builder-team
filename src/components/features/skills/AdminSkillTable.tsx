@@ -25,7 +25,7 @@ export function AdminSkillTable() {
 
     const renderRowActions = (skill: SkillRow) => (
         <RowActionsDropdown
-            ariaLabel="Skill actions"
+            ariaLabel={t("skill_actions")}
             onEdit={() => {
                 setEditSkill(skill);
                 setEditOpen(true);

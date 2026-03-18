@@ -11,7 +11,7 @@ import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { ProfileSkillTableSkeleton } from "@/components/shared/ProfileSkillTableSkeleton";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
-import { Mastery } from "@/generated/graphql";
+import { MASTERY_COLOR } from "@/lib/constants/proficiency";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { SKILLS_QUERY } from "@/lib/graphql/operations/skills";
 import { useProfileSkills, type ProfileSkillRow } from "@/lib/hooks/useProfileSkills";
@@ -19,14 +19,6 @@ import { skillsListKey, type SkillsQueryResult } from "@/lib/hooks/useSkillTable
 
 import { AddProfileSkillModal } from "./AddProfileSkillModal";
 import { RemoveProfileSkillModal } from "./RemoveProfileSkillModal";
-
-const MASTERY_COLORS: Record<Mastery, string> = {
-    [Mastery.Novice]: "bg-destructive",
-    [Mastery.Competent]: "bg-orange-500",
-    [Mastery.Proficient]: "bg-yellow-500",
-    [Mastery.Advanced]: "bg-blue-500",
-    [Mastery.Expert]: "bg-green-500",
-};
 
 type SkillGroup = {
     categoryName: string | null;
@@ -106,7 +98,7 @@ export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
                                             className="hover:bg-hover-xs flex items-center gap-3 rounded px-2 py-2 transition-colors"
                                         >
                                             <span
-                                                className={`h-1.5 w-16 flex-shrink-0 rounded-sm ${MASTERY_COLORS[skill.mastery]}`}
+                                                className={`h-1.5 w-16 flex-shrink-0 rounded-sm ${MASTERY_COLOR[skill.mastery]}`}
                                             />
                                             <span className="text-small text-basic-text tracking-standard flex-1 truncate">
                                                 {skill.name}
@@ -132,32 +124,32 @@ export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
             </div>
 
             {/* Actions */}
-            <div className="flex h-14 items-center justify-end gap-4 px-6">
-                <Button
-                    variant="redText"
-                    onClick={() => {
-                        setEditingSkill(null);
-                        setAddOpen(true);
-                    }}
-                >
-                    <Plus />
-                    {tUser("add_skill")}
-                </Button>
-            </div>
+            {canAddMoreSkills && (
+                <div className="flex h-14 items-center justify-end gap-4 px-6">
+                    <Button
+                        variant="redText"
+                        onClick={() => {
+                            setEditingSkill(null);
+                            setAddOpen(true);
+                        }}
+                    >
+                        <Plus />
+                        {tUser("add_skill")}
+                    </Button>
+                </div>
+            )}
 
             {/* Modals */}
-            {canAddMoreSkills && (
-                <AddProfileSkillModal
-                    open={addOpen}
-                    userId={userId}
-                    existingSkills={skills}
-                    editingSkill={editingSkill}
-                    onOpenChange={(v) => {
-                        setAddOpen(v);
-                        if (!v) setEditingSkill(null);
-                    }}
-                />
-            )}
+            <AddProfileSkillModal
+                open={addOpen}
+                userId={userId}
+                existingSkills={skills}
+                editingSkill={editingSkill}
+                onOpenChange={(v) => {
+                    setAddOpen(v);
+                    if (!v) setEditingSkill(null);
+                }}
+            />
 
             <RemoveProfileSkillModal
                 open={removeOpen}

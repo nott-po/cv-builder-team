@@ -26,7 +26,7 @@ export function AdminEmployeeTable() {
 
     const renderRowActions = (employee: EmployeeRow) => (
         <RowActionsDropdown
-            ariaLabel="Employee actions"
+            ariaLabel={t("employee_actions")}
             onEdit={() => {
                 setEditEmployee(employee);
                 setEditOpen(true);

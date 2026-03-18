@@ -76,6 +76,7 @@
         "native_name": "Nazwa natywna",
         "native_name_required": "Nazwa natywna jest wymagana",
         "no_languages": "Nie znaleziono języków",
+        "employee_actions": "Akcje pracownika",
         "language_actions": "Akcje języka",
         "type": "Typ",
         "category": "Kategoria",
