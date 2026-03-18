@@ -5,10 +5,11 @@ import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { useQuery } from "@tanstack/react-query";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { ProfileSkillTableSkeleton } from "@/components/shared/ProfileSkillTableSkeleton";
+import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
 import { Mastery } from "@/generated/graphql";
 import { gqlClient } from "@/lib/graphql/fetcher";
@@ -102,11 +103,7 @@ export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
                                     {group.skills.map((skill) => (
                                         <div
                                             key={skill.name}
-                                            className="hover:bg-hover-xs group flex cursor-pointer items-center gap-3 rounded px-2 py-2 transition-colors"
-                                            onClick={() => {
-                                                setEditingSkill(skill);
-                                                setAddOpen(true);
-                                            }}
+                                            className="hover:bg-hover-xs flex items-center gap-3 rounded px-2 py-2 transition-colors"
                                         >
                                             <span
                                                 className={`h-1.5 w-16 flex-shrink-0 rounded-sm ${MASTERY_COLORS[skill.mastery]}`}
@@ -114,17 +111,17 @@ export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
                                             <span className="text-small text-basic-text tracking-standard flex-1 truncate">
                                                 {skill.name}
                                             </span>
-                                            <button
-                                                className="hover:bg-hover-md ml-auto flex size-6 items-center justify-center rounded-full opacity-0 transition-all group-hover:opacity-100"
-                                                aria-label={`Remove ${skill.name}`}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
+                                            <RowActionsDropdown
+                                                ariaLabel={`${skill.name} actions`}
+                                                onEdit={() => {
+                                                    setEditingSkill(skill);
+                                                    setAddOpen(true);
+                                                }}
+                                                onDelete={() => {
                                                     setRemovingSkill(skill);
                                                     setRemoveOpen(true);
                                                 }}
-                                            >
-                                                <Trash2 className="text-destructive size-3.5" />
-                                            </button>
+                                            />
                                         </div>
                                     ))}
                                 </div>

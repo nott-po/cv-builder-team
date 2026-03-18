@@ -4,16 +4,11 @@ import { useState } from "react";
 
 import { useTranslations } from "next-intl";
 
-import { EllipsisVertical, Pencil, Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { EmployeeTable } from "@/components/shared/EmployeeTable";
+import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { ROUTES } from "@/lib/constants/routes";
 import type { EmployeeRow } from "@/lib/hooks/useEmployeeTable";
 
@@ -30,40 +25,17 @@ export function AdminEmployeeTable() {
     const [deleteEmployee, setDeleteEmployee] = useState<EmployeeRow | null>(null);
 
     const renderRowActions = (employee: EmployeeRow) => (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <button
-                    className="hover:bg-hover-md ml-4 flex size-10 items-center justify-center rounded-full transition-colors"
-                    onClick={(e) => e.stopPropagation()}
-                    aria-label="Employee actions"
-                >
-                    <EllipsisVertical className="text-text-hint size-5" />
-                </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setEditEmployee(employee);
-                        setEditOpen(true);
-                    }}
-                >
-                    <Pencil />
-                    {t("edit")}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                    className="text-destructive focus:text-destructive"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setDeleteEmployee(employee);
-                        setDeleteOpen(true);
-                    }}
-                >
-                    <Trash2 />
-                    {t("delete")}
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <RowActionsDropdown
+            ariaLabel="Employee actions"
+            onEdit={() => {
+                setEditEmployee(employee);
+                setEditOpen(true);
+            }}
+            onDelete={() => {
+                setDeleteEmployee(employee);
+                setDeleteOpen(true);
+            }}
+        />
     );
 
     return (

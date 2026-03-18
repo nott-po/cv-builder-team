@@ -37,7 +37,11 @@ export const UPDATE_PROFILE_SKILL_MUTATION = `
 export const DELETE_PROFILE_SKILL_MUTATION = `
     mutation DeleteProfileSkill($skill: DeleteProfileSkillInput!) {
         deleteProfileSkill(skill: $skill) {
-            affected
+            id
+            skills {
+                name
+                mastery
+            }
         }
     }
 `;
