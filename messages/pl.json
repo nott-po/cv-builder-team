@@ -24,7 +24,10 @@
         "server_error": "Coś poszło nie tak. Spróbuj ponownie."
     },
     "Common": {
-        "log_out": "Wyloguj się"
+        "log_out": "Wyloguj się",
+        "rows_per_page": "Wierszy na stronę",
+        "page_of": "Strona {page} z {total}",
+        "error": "Coś poszło nie tak"
     },
     "Admin": {
         "employees": "Pracownicy",
@@ -83,7 +86,18 @@
         "delete_skill_confirm": "Czy na pewno chcesz usunąć umiejętność",
         "delete_skill_error": "Nie udało się usunąć umiejętności. Spróbuj ponownie.",
         "no_skills": "Nie znaleziono umiejętności",
-        "skill_actions": "Akcje umiejętności"
+        "skill_actions": "Akcje umiejętności",
+        "create_department": "Utwórz dział",
+        "create_department_title": "Utwórz dział",
+        "create_department_error": "Nie udało się utworzyć działu. Spróbuj ponownie.",
+        "edit_department_title": "Edytuj dział",
+        "edit_department_error": "Nie udało się zaktualizować działu. Spróbuj ponownie.",
+        "delete_department_title": "Usuń dział",
+        "delete_department_confirm": "Czy na pewno chcesz usunąć dział",
+        "delete_department_error": "Nie udało się usunąć działu. Spróbuj ponownie.",
+        "no_departments": "Nie znaleziono działów",
+        "department_actions": "Akcje działu",
+        "error": "Coś poszło nie tak"
     },
     "User": {
         "employees": "Pracownicy",
@@ -99,8 +113,6 @@
         "no_employees": "Nie znaleziono pracowników",
         "loading": "Ładowanie...",
         "error": "Coś poszło nie tak",
-        "rows_per_page": "Wierszy na stronę",
-        "page_of": "Strona {page} z {total}",
         "cancel": "Anuluj",
         "confirm": "Potwierdź",
         "save": "Zapisz",
