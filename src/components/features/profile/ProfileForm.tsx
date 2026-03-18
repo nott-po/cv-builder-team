@@ -85,11 +85,10 @@ const compressAvatar = (file: File): Promise<{ base64: string; size: number; typ
                 const outputType = "image/jpeg";
                 const dataUrl = canvas.toDataURL(outputType, 0.8);
 
-                const base64 = dataUrl.split(",")[1];
+                const rawBase64 = dataUrl.split(",")[1];
+                const sizeInBytes = Math.round((rawBase64.length * 3) / 4);
 
-                const sizeInBytes = Math.round((base64.length * 3) / 4);
-
-                resolve({ base64, size: sizeInBytes, type: outputType });
+                resolve({ base64: dataUrl, size: sizeInBytes, type: outputType });
             };
             img.onerror = (err) => reject(err);
         };
@@ -419,7 +418,7 @@ export function ProfileForm() {
                                 variant="grayBg"
                                 size="updateButton"
                             >
-                                {updateProfileMutation.isPending ? "Saving..." : t("update")}
+                                {updateProfileMutation.isPending ? t("loading") : t("update")}
                             </Button>
                         </div>
                     </form>
