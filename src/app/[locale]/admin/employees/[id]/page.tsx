@@ -4,13 +4,12 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 
-import { ChevronRight, User } from "lucide-react";
-
+import { ProfileLanguagesPage } from "@/app/[locale]/(user)/profile/languages/page";
+import { ProfileSkillsPage } from "@/app/[locale]/(user)/profile/skills/page";
 import { EmployeeProfile } from "@/components/features/employees/EmployeeProfile";
 import { UserHeader } from "@/components/layout/user/UserHeader";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Link } from "@/i18n/routing";
+import { PageHeader } from "@/components/shared/PageHeader";
 import { useUserData } from "@/lib/hooks/useUserData";
 
 export default function AdminEmployeeEditPage() {
@@ -27,30 +26,23 @@ export default function AdminEmployeeEditPage() {
 
     return (
         <div>
-            <div className="mb-2 px-6 pt-4 pb-1">
-                <h1 className="text-input-default tracking-standard flex items-center gap-3 px-5">
-                    <Link href="/employees">{t("employees")}</Link>
-                    <ChevronRight className="size-4" />
-
-                    {isLoading ? (
-                        <Skeleton className="h-4 w-40" />
-                    ) : (
-                        <div className="flex items-center gap-1">
-                            <User className="text-pink size-5" />
-                            <div className="text-pink">{data?.email}</div>
-                        </div>
-                    )}
-                </h1>
-            </div>
-
+            <PageHeader title={t("employees")} />
             <div className="px-6">
                 <div className="mb-4">
                     <UserHeader mode={currentMode} onModeChange={setCurrentMode} />
                 </div>
                 <div>
                     {currentMode === "profile" && <EmployeeProfile />}
-                    {currentMode === "skills" && <div>Skills Component</div>}
-                    {currentMode === "language" && <div>Language Component</div>}
+                    {currentMode === "skills" && (
+                        <div>
+                            <ProfileSkillsPage userId={employeeId} />
+                        </div>
+                    )}
+                    {currentMode === "language" && (
+                        <div>
+                            <ProfileLanguagesPage userId={employeeId} />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
