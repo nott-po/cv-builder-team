@@ -25,7 +25,7 @@ export function AdminLanguageTable() {
 
     const renderRowActions = (language: LanguageRow) => (
         <RowActionsDropdown
-            ariaLabel="Language actions"
+            ariaLabel={t("language_actions")}
             onEdit={() => {
                 setEditLanguage(language);
                 setEditOpen(true);

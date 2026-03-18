@@ -25,7 +25,7 @@ export function AdminDepartmentTable() {
 
     const renderRowActions = (department: DepartmentRow) => (
         <RowActionsDropdown
-            ariaLabel="Department actions"
+            ariaLabel={t("department_actions")}
             onEdit={() => {
                 setEditDepartment(department);
                 setEditOpen(true);
