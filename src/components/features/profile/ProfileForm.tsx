@@ -36,6 +36,7 @@ import {
     UPDATE_FULL_PROFILE_MUTATION,
     UPLOAD_AVATAR_MUTATION,
 } from "@/lib/graphql/operations/employee";
+import { CURRENT_USER_KEY } from "@/lib/hooks/useCurrentUser";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useDepartments } from "@/lib/hooks/useDepartments";
 import { usePositions } from "@/lib/hooks/usePositions";
@@ -146,6 +147,7 @@ export function ProfileForm() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["employee", currentUserId] });
+            queryClient.invalidateQueries({ queryKey: CURRENT_USER_KEY });
             form.clearErrors("root");
         },
         onError: (error) => {
@@ -171,6 +173,16 @@ export function ProfileForm() {
     });
 
     const avatarFile = useWatch({ control: form.control, name: "avatar" });
+
+    const watchedDept = useWatch({ control: form.control, name: "department_name" });
+    const watchedPos = useWatch({ control: form.control, name: "position_name" });
+
+    const { isDirty } = form.formState;
+
+    const hasChanges = isDirty || avatarFile instanceof File;
+    const hasValidSelects = Boolean(watchedDept) && Boolean(watchedPos);
+
+    const isSubmitEnabled = hasChanges && hasValidSelects;
 
     const previewUrl = useMemo(() => {
         if (avatarFile && avatarFile instanceof File) {
@@ -412,10 +424,14 @@ export function ProfileForm() {
                             />
 
                             <Button
-                                className="text-gray-button-text col-start-1 mt-2 md:col-start-2"
+                                className="col-start-1 mt-2 md:col-start-2"
                                 type="submit"
-                                disabled={updateProfileMutation.isPending}
-                                variant="grayBg"
+                                disabled={updateProfileMutation.isPending || !isSubmitEnabled}
+                                variant={
+                                    updateProfileMutation.isPending || !isSubmitEnabled
+                                        ? "grayBg"
+                                        : "redPrimary"
+                                }
                                 size="updateButton"
                             >
                                 {updateProfileMutation.isPending ? t("loading") : t("update")}

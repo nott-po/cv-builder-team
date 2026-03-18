@@ -8,7 +8,7 @@ export default async function EmployeesPage() {
 
     return (
         <div>
-            <PageHeader title={t("employees")} />
+            <PageHeader items={[{ label: t("employees") }]} />
             <EmployeeTable />
         </div>
     );
