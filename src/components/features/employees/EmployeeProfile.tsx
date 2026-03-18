@@ -20,10 +20,13 @@ export function EmployeeProfile() {
         <div className="flex justify-center">
             <div className="w-full max-w-213 p-6">
                 {isLoading ? (
-                    <div className="flex flex-col gap-1">
-                        <Skeleton className="mx-auto mb-2 h-6 w-50" />
-                        <Skeleton className="mx-auto h-6 w-30" />
-                        <Skeleton className="mx-auto h-6 w-40" />
+                    <div className="flex flex-col items-center justify-center gap-6 md:flex-row">
+                        <Skeleton className="mb-2 h-30 w-30 rounded-full" />
+                        <div className="flex flex-col gap-1">
+                            <Skeleton className="mx-auto mb-2 h-6 w-50" />
+                            <Skeleton className="mx-auto h-6 w-30" />
+                            <Skeleton className="mx-auto h-6 w-40" />
+                        </div>
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center gap-6 md:flex-row">
