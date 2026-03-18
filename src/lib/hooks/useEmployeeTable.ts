@@ -8,6 +8,7 @@ import type { UserRole } from "@/generated/graphql";
 import { useRouter } from "@/i18n/routing";
 import { fetcher } from "@/lib/graphql/fetcher";
 import { USERS_QUERY } from "@/lib/graphql/operations/employees";
+import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useTablePagination } from "@/lib/hooks/useTablePagination";
 import type { SortDir, TableState } from "@/types/table";
 
@@ -36,6 +37,7 @@ export function useEmployeeTable(basePath = "/employees") {
     const router = useRouter();
     const { page, setPage, pageSize, handlePageChange, handlePageSizeChange } =
         useTablePagination(basePath);
+    const { user } = useCurrentUser();
 
     const [search, setSearch] = useState("");
     const [sortDir, setSortDir] = useState<SortDir>("desc");
@@ -84,7 +86,9 @@ export function useEmployeeTable(basePath = "/employees") {
     }
 
     function handleRowClick(id: string) {
-        router.push(`${basePath}/${id}`);
+        if (user?.id === id) {
+            router.push("/profile");
+        } else router.push(`${basePath}/${id}`);
     }
 
     const state: TableState = {
