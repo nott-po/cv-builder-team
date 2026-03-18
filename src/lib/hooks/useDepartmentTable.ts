@@ -1,68 +1,32 @@
 "use client";
 
-import { useMemo, useState } from "react";
-
-import { useQuery } from "@tanstack/react-query";
-
 import { fetcher } from "@/lib/graphql/fetcher";
 import { DEPARTMENTS_QUERY } from "@/lib/graphql/operations/departments";
-import { useTablePagination } from "@/lib/hooks/useTablePagination";
-import type { TableState } from "@/types/table";
+import { useSimpleTable } from "@/lib/hooks/useSimpleTable";
 
 export type DepartmentRow = {
     id: string;
     name: string;
 };
 
-type DepartmentsQueryResult = {
+export type DepartmentsQueryResult = {
     departments: DepartmentRow[];
 };
 
 export const departmentsListKey = () => ["departments", "list"] as const;
 
+const getDepartmentRows = (data: DepartmentsQueryResult) => data.departments;
+const filterDepartmentRow = (row: DepartmentRow, lower: string) =>
+    row.name.toLowerCase().includes(lower);
+
 export function useDepartmentTable(basePath = "/admin/departments") {
-    const { page, setPage, pageSize, handlePageChange, handlePageSizeChange } =
-        useTablePagination(basePath);
-
-    const [search, setSearch] = useState("");
-
-    const { data, isLoading, isError } = useQuery<DepartmentsQueryResult>({
+    const { state, paginatedRows } = useSimpleTable<DepartmentsQueryResult, DepartmentRow>({
+        basePath,
         queryKey: departmentsListKey(),
         queryFn: () => fetcher<DepartmentsQueryResult, Record<string, never>>(DEPARTMENTS_QUERY)(),
+        getRows: getDepartmentRows,
+        filterRow: filterDepartmentRow,
     });
 
-    const departments = useMemo(() => {
-        if (!data?.departments) return [];
-
-        if (!search.trim()) return data.departments;
-
-        const lower = search.toLowerCase();
-        return data.departments.filter((d) => d.name.toLowerCase().includes(lower));
-    }, [data, search]);
-
-    const totalPages = Math.max(1, Math.ceil(departments.length / pageSize));
-    const paginatedDepartments = departments.slice((page - 1) * pageSize, page * pageSize);
-
-    function handleSearchChange(value: string) {
-        setSearch(value);
-        setPage(1);
-    }
-
-    const state: TableState = {
-        isLoading,
-        isError,
-        isEmpty: departments.length === 0,
-        search,
-        onSearchChange: handleSearchChange,
-        page,
-        pageSize,
-        totalPages,
-        onPageChange: handlePageChange,
-        onPageSizeChange: handlePageSizeChange,
-    };
-
-    return {
-        state,
-        paginatedDepartments,
-    };
+    return { state, paginatedDepartments: paginatedRows };
 }

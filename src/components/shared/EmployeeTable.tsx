@@ -124,7 +124,7 @@ export function EmployeeTable({ basePath, actions, renderRowActions }: EmployeeT
                                     handleRowClick(employee.id);
                                 }}
                                 className="hover:bg-hover-md ml-4 flex size-10 items-center justify-center rounded-full transition-colors"
-                                aria-label="View employee"
+                                aria-label={t("view_employee")}
                             >
                                 <ChevronRight className="text-text-hint size-6" />
                             </button>

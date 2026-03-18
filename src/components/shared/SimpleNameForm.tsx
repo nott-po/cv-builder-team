@@ -12,28 +12,29 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-export type DepartmentFormData = {
+export type SimpleNameFormData = {
     name: string;
 };
 
-type DepartmentFormProps = {
+type SimpleNameFormProps = {
     submitLabel: string;
-    initialData?: Partial<DepartmentFormData>;
-    onSubmit: (data: DepartmentFormData) => Promise<void>;
+    initialData?: Partial<SimpleNameFormData>;
+    onSubmit: (data: SimpleNameFormData) => Promise<void>;
     onCancel: () => void;
     isSubmitting: boolean;
     error: string | null;
 };
 
-export function DepartmentForm({
+export function SimpleNameForm({
     submitLabel,
     initialData,
     onSubmit,
     onCancel,
     isSubmitting,
     error,
-}: DepartmentFormProps) {
+}: SimpleNameFormProps) {
     const t = useTranslations("Admin");
+    const tCommon = useTranslations("Common");
 
     const schema = useMemo(
         () =>
@@ -43,7 +44,7 @@ export function DepartmentForm({
         [t],
     );
 
-    const form = useForm<DepartmentFormData>({
+    const form = useForm<SimpleNameFormData>({
         resolver: zodResolver(schema),
         defaultValues: { name: initialData?.name ?? "" },
     });
@@ -80,7 +81,7 @@ export function DepartmentForm({
                         onClick={onCancel}
                         disabled={isSubmitting}
                     >
-                        {t("cancel")}
+                        {tCommon("cancel")}
                     </Button>
                     <Button
                         type="submit"

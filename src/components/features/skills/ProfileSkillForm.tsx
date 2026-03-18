@@ -53,6 +53,7 @@ export function ProfileSkillForm({
     error,
 }: ProfileSkillFormProps) {
     const tUser = useTranslations("User");
+    const tCommon = useTranslations("Common");
 
     const profileSkillSchema = useMemo(
         () =>
@@ -153,7 +154,7 @@ export function ProfileSkillForm({
                         onClick={onCancel}
                         disabled={isSubmitting}
                     >
-                        {tUser("cancel")}
+                        {tCommon("cancel")}
                     </Button>
                     <Button
                         type="submit"

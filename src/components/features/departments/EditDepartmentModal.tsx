@@ -4,13 +4,12 @@ import { useTranslations } from "next-intl";
 
 import { useQueryClient } from "@tanstack/react-query";
 
+import { SimpleNameForm, type SimpleNameFormData } from "@/components/shared/SimpleNameForm";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { UPDATE_DEPARTMENT_MUTATION } from "@/lib/graphql/operations/departments";
 import { departmentsListKey, type DepartmentRow } from "@/lib/hooks/useDepartmentTable";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
-
-import { DepartmentForm, type DepartmentFormData } from "./DepartmentForm";
 
 interface EditDepartmentModalProps {
     open: boolean;
@@ -24,7 +23,7 @@ export function EditDepartmentModal({ open, department, onOpenChange }: EditDepa
     const departmentId = department?.id;
 
     const { isPending, submitError, handleOpenChange, handleMutate } = useModalMutation({
-        mutationFn: (data: DepartmentFormData) => {
+        mutationFn: (data: SimpleNameFormData) => {
             if (!departmentId) return Promise.reject(new Error("No department selected"));
             return gqlClient.request(UPDATE_DEPARTMENT_MUTATION, {
                 department: { departmentId, name: data.name },
@@ -42,7 +41,7 @@ export function EditDepartmentModal({ open, department, onOpenChange }: EditDepa
             >
                 <DialogTitle>{t("edit_department_title")}</DialogTitle>
                 {department && (
-                    <DepartmentForm
+                    <SimpleNameForm
                         key={department.id}
                         submitLabel={t("save")}
                         initialData={{ name: department.name }}

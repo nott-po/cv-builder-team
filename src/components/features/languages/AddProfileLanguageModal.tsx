@@ -6,12 +6,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { gqlClient } from "@/lib/graphql/fetcher";
+import { LANGUAGES_QUERY } from "@/lib/graphql/operations/languages";
 import {
     ADD_PROFILE_LANGUAGE_MUTATION,
-    LANGUAGES_QUERY,
     UPDATE_PROFILE_LANGUAGE_MUTATION,
-} from "@/lib/graphql/operations/languages";
-import { languagesListKey, type LanguageRow } from "@/lib/hooks/useLanguageTable";
+} from "@/lib/graphql/operations/profile";
+import { languagesListKey, type LanguagesQueryResult } from "@/lib/hooks/useLanguageTable";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
 import { profileLanguagesKey, type ProfileLanguageRow } from "@/lib/hooks/useProfileLanguages";
 
@@ -25,7 +25,6 @@ interface AddProfileLanguageModalProps {
     onOpenChange: (open: boolean) => void;
 }
 
-type LanguagesQueryResult = { languages: LanguageRow[] };
 type MutationVars = { formData: ProfileLanguageFormData; isEditing: boolean };
 
 export function AddProfileLanguageModal({

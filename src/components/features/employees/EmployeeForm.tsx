@@ -8,6 +8,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import {
+    FloatingLabelWrapper,
+    floatingSelectTriggerClass,
+} from "@/components/ui/floating-label-wrapper";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -60,9 +64,6 @@ interface EmployeeFormProps {
     initialData?: EditInitialData;
 }
 
-const selectTriggerClass =
-    "rounded-none border-border-input-default h-auto py-4 shadow-none focus:ring-0 text-input-default";
-
 export function EmployeeForm({
     mode = "create",
     onSubmit,
@@ -74,6 +75,7 @@ export function EmployeeForm({
     initialData,
 }: EmployeeFormProps) {
     const t = useTranslations("Admin");
+    const tCommon = useTranslations("Common");
     const isEdit = mode === "edit";
 
     const form = useForm<CreateUserFormData>({
@@ -106,6 +108,7 @@ export function EmployeeForm({
                                             type="email"
                                             placeholder={t("email")}
                                             autoComplete="off"
+                                            disabled={isSubmitting}
                                             {...field}
                                         />
                                     </FormControl>
@@ -126,6 +129,7 @@ export function EmployeeForm({
                                             type="password"
                                             placeholder={t("password")}
                                             autoComplete="new-password"
+                                            disabled={isSubmitting}
                                             {...field}
                                         />
                                     </FormControl>
@@ -178,24 +182,30 @@ export function EmployeeForm({
                         name="departmentId"
                         render={({ field }) => (
                             <FormItem>
-                                <Select onValueChange={field.onChange} value={field.value ?? ""}>
-                                    <FormControl>
-                                        <SelectTrigger className={selectTriggerClass}>
-                                            <SelectValue placeholder={t("department")} />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent
-                                        side="bottom"
-                                        avoidCollisions={false}
-                                        className="max-h-48"
+                                <FloatingLabelWrapper label={t("department")}>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value ?? ""}
+                                        disabled={isSubmitting}
                                     >
-                                        {departments.map((d) => (
-                                            <SelectItem key={d.id} value={d.id}>
-                                                {d.name}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                        <FormControl>
+                                            <SelectTrigger className={floatingSelectTriggerClass}>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent
+                                            side="bottom"
+                                            avoidCollisions={false}
+                                            className="max-h-48"
+                                        >
+                                            {departments.map((d) => (
+                                                <SelectItem key={d.id} value={d.id}>
+                                                    {d.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FloatingLabelWrapper>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -206,24 +216,30 @@ export function EmployeeForm({
                         name="positionId"
                         render={({ field }) => (
                             <FormItem>
-                                <Select onValueChange={field.onChange} value={field.value ?? ""}>
-                                    <FormControl>
-                                        <SelectTrigger className={selectTriggerClass}>
-                                            <SelectValue placeholder={t("position")} />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent
-                                        side="bottom"
-                                        avoidCollisions={false}
-                                        className="max-h-48"
+                                <FloatingLabelWrapper label={t("position")}>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value ?? ""}
+                                        disabled={isSubmitting}
                                     >
-                                        {positions.map((p) => (
-                                            <SelectItem key={p.id} value={p.id}>
-                                                {p.name}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
+                                        <FormControl>
+                                            <SelectTrigger className={floatingSelectTriggerClass}>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent
+                                            side="bottom"
+                                            avoidCollisions={false}
+                                            className="max-h-48"
+                                        >
+                                            {positions.map((p) => (
+                                                <SelectItem key={p.id} value={p.id}>
+                                                    {p.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FloatingLabelWrapper>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -236,13 +252,14 @@ export function EmployeeForm({
                         name="role"
                         render={({ field }) => (
                             <FormItem>
-                                <div className="border-border-input-default relative border">
-                                    <span className="bg-background text-muted-foreground absolute -top-2.5 left-3 px-1 text-xs leading-none">
-                                        {t("role")}
-                                    </span>
-                                    <Select onValueChange={field.onChange} value={field.value}>
+                                <FloatingLabelWrapper label={t("role")}>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value}
+                                        disabled={isSubmitting}
+                                    >
                                         <FormControl>
-                                            <SelectTrigger className="text-input-default h-auto border-0 px-3 py-4 shadow-none focus:ring-0">
+                                            <SelectTrigger className={floatingSelectTriggerClass}>
                                                 <SelectValue />
                                             </SelectTrigger>
                                         </FormControl>
@@ -254,7 +271,7 @@ export function EmployeeForm({
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                </div>
+                                </FloatingLabelWrapper>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -271,7 +288,7 @@ export function EmployeeForm({
                         onClick={onCancel}
                         disabled={isSubmitting}
                     >
-                        {t("cancel")}
+                        {tCommon("cancel")}
                     </Button>
                     <Button
                         type="submit"

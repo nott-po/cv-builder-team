@@ -4,13 +4,12 @@ import { useTranslations } from "next-intl";
 
 import { useQueryClient } from "@tanstack/react-query";
 
+import { SimpleNameForm, type SimpleNameFormData } from "@/components/shared/SimpleNameForm";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { UPDATE_POSITION_MUTATION } from "@/lib/graphql/operations/positions";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
 import { positionsListKey, type PositionRow } from "@/lib/hooks/usePositionTable";
-
-import { PositionForm, type PositionFormData } from "./PositionForm";
 
 interface EditPositionModalProps {
     open: boolean;
@@ -24,7 +23,7 @@ export function EditPositionModal({ open, position, onOpenChange }: EditPosition
     const positionId = position?.id;
 
     const { isPending, submitError, handleOpenChange, handleMutate } = useModalMutation({
-        mutationFn: (data: PositionFormData) => {
+        mutationFn: (data: SimpleNameFormData) => {
             if (!positionId) return Promise.reject(new Error("No position selected"));
             return gqlClient.request(UPDATE_POSITION_MUTATION, {
                 position: { positionId, name: data.name },
@@ -42,7 +41,7 @@ export function EditPositionModal({ open, position, onOpenChange }: EditPosition
             >
                 <DialogTitle>{t("edit_position_title")}</DialogTitle>
                 {position && (
-                    <PositionForm
+                    <SimpleNameForm
                         key={position.id}
                         submitLabel={t("save")}
                         initialData={{ name: position.name }}

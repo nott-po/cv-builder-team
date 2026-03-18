@@ -36,6 +36,7 @@ export function LanguageForm({
     error,
 }: LanguageFormProps) {
     const t = useTranslations("Admin");
+    const tCommon = useTranslations("Common");
 
     const languageSchema = useMemo(
         () =>
@@ -139,7 +140,7 @@ export function LanguageForm({
                         onClick={onCancel}
                         disabled={isSubmitting}
                     >
-                        {t("cancel")}
+                        {tCommon("cancel")}
                     </Button>
                     <Button
                         type="submit"

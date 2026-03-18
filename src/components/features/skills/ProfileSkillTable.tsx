@@ -36,7 +36,6 @@ export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
     const { data: allSkillsData, isLoading: isLoadingAllSkills } = useQuery<SkillsQueryResult>({
         queryKey: skillsListKey(),
         queryFn: () => gqlClient.request<SkillsQueryResult>(SKILLS_QUERY),
-        staleTime: 5 * 60 * 1000,
     });
 
     const canAddMoreSkills =
@@ -104,7 +103,7 @@ export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
                                                 {skill.name}
                                             </span>
                                             <RowActionsDropdown
-                                                ariaLabel={`${skill.name} actions`}
+                                                ariaLabel={tUser("skill_actions")}
                                                 onEdit={() => {
                                                     setEditingSkill(skill);
                                                     setAddOpen(true);

@@ -6,7 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { DeleteConfirmModal } from "@/components/shared/DeleteConfirmModal";
 import { gqlClient } from "@/lib/graphql/fetcher";
-import { DELETE_PROFILE_LANGUAGE_MUTATION } from "@/lib/graphql/operations/languages";
+import { DELETE_PROFILE_LANGUAGE_MUTATION } from "@/lib/graphql/operations/profile";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
 import { profileLanguagesKey, type ProfileLanguageRow } from "@/lib/hooks/useProfileLanguages";
 

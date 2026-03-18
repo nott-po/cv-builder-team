@@ -1,31 +1,21 @@
 "use client";
 
-import { useState } from "react";
-
 import { useTranslations } from "next-intl";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ClientError } from "graphql-request";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { gqlClient } from "@/lib/graphql/fetcher";
-import {
-    DEPARTMENTS_QUERY,
-    POSITIONS_QUERY,
-    UPDATE_PROFILE_MUTATION,
-    UPDATE_USER_MUTATION,
-} from "@/lib/graphql/operations/employees";
+import { fetcher, gqlClient } from "@/lib/graphql/fetcher";
+import { DEPARTMENTS_QUERY } from "@/lib/graphql/operations/departments";
+import { UPDATE_PROFILE_MUTATION, UPDATE_USER_MUTATION } from "@/lib/graphql/operations/employees";
+import { POSITIONS_QUERY } from "@/lib/graphql/operations/positions";
+import { departmentsListKey, type DepartmentsQueryResult } from "@/lib/hooks/useDepartmentTable";
 import { employeesListKey, type EmployeeRow } from "@/lib/hooks/useEmployeeTable";
+import { useModalMutation } from "@/lib/hooks/useModalMutation";
+import { positionsListKey, type PositionsQueryResult } from "@/lib/hooks/usePositionTable";
 
 import { EmployeeForm, type CreateUserFormData } from "./EmployeeForm";
-
-interface DepartmentsResult {
-    departments: { id: string; name: string }[];
-}
-
-interface PositionsResult {
-    positions: { id: string; name: string }[];
-}
 
 interface EditUserModalProps {
     open: boolean;
@@ -36,24 +26,22 @@ interface EditUserModalProps {
 export function EditUserModal({ open, employee, onOpenChange }: EditUserModalProps) {
     const t = useTranslations("Admin");
     const queryClient = useQueryClient();
-    const [submitError, setSubmitError] = useState<string | null>(null);
 
-    const { data: departmentsData } = useQuery({
-        queryKey: ["departments"],
-        queryFn: () => gqlClient.request<DepartmentsResult>(DEPARTMENTS_QUERY),
+    const { data: departmentsData } = useQuery<DepartmentsQueryResult>({
+        queryKey: departmentsListKey(),
+        queryFn: () => fetcher<DepartmentsQueryResult, Record<string, never>>(DEPARTMENTS_QUERY)(),
         enabled: open,
     });
 
-    const { data: positionsData } = useQuery({
-        queryKey: ["positions"],
-        queryFn: () => gqlClient.request<PositionsResult>(POSITIONS_QUERY),
+    const { data: positionsData } = useQuery<PositionsQueryResult>({
+        queryKey: positionsListKey(),
+        queryFn: () => fetcher<PositionsQueryResult, Record<string, never>>(POSITIONS_QUERY)(),
         enabled: open,
     });
 
-    const { mutateAsync, isPending } = useMutation({
+    const { isPending, submitError, handleOpenChange, handleMutate } = useModalMutation({
         mutationFn: async (data: CreateUserFormData) => {
             if (!employee) return;
-
             await gqlClient.request(UPDATE_USER_MUTATION, {
                 user: {
                     userId: employee.id,
@@ -62,7 +50,6 @@ export function EditUserModal({ open, employee, onOpenChange }: EditUserModalPro
                     role: data.role,
                 },
             });
-
             await gqlClient.request(UPDATE_PROFILE_MUTATION, {
                 profile: {
                     userId: employee.id,
@@ -71,32 +58,9 @@ export function EditUserModal({ open, employee, onOpenChange }: EditUserModalPro
                 },
             });
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: employeesListKey() });
-            setSubmitError(null);
-            onOpenChange(false);
-        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: employeesListKey() }),
+        onClose: onOpenChange,
     });
-
-    const handleSubmit = async (data: CreateUserFormData) => {
-        setSubmitError(null);
-        try {
-            await mutateAsync(data);
-        } catch (err) {
-            const message =
-                err instanceof ClientError
-                    ? (err.response.errors?.[0]?.message ?? t("edit_user_error"))
-                    : t("edit_user_error");
-            setSubmitError(message);
-        }
-    };
-
-    const handleOpenChange = (value: boolean) => {
-        if (!isPending) {
-            setSubmitError(null);
-            onOpenChange(value);
-        }
-    };
 
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -109,7 +73,13 @@ export function EditUserModal({ open, employee, onOpenChange }: EditUserModalPro
                     <EmployeeForm
                         mode="edit"
                         key={employee.id}
-                        onSubmit={handleSubmit}
+                        onSubmit={(data) =>
+                            handleMutate(data, (err) =>
+                                err instanceof ClientError
+                                    ? (err.response.errors?.[0]?.message ?? t("edit_user_error"))
+                                    : t("edit_user_error"),
+                            )
+                        }
                         onCancel={() => handleOpenChange(false)}
                         departments={departmentsData?.departments ?? []}
                         positions={positionsData?.positions ?? []}
