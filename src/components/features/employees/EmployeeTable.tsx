@@ -8,8 +8,9 @@ import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
 
 import { DataTable } from "@/components/shared/DataTable";
 import { EmployeeAvatar } from "@/components/shared/EmployeeAvatar";
-import { EmployeeTableSkeleton } from "@/components/shared/EmployeeTableSkeleton";
 import { useEmployeeTable, type EmployeeRow } from "@/lib/hooks/useEmployeeTable";
+
+import { EmployeeTableSkeleton } from "./EmployeeTableSkeleton";
 
 const thClass = "text-small text-basic-text tracking-standard px-4 font-medium whitespace-nowrap";
 const tdClass = "text-small text-basic-text tracking-standard px-4 py-4";

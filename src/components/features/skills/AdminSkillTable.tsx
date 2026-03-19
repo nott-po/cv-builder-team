@@ -8,13 +8,13 @@ import { ChevronDown, ChevronUp, Plus } from "lucide-react";
 
 import { DataTable } from "@/components/shared/DataTable";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
-import { SkillTableSkeleton } from "@/components/shared/SkillTableSkeleton";
 import { Button } from "@/components/ui/button";
 import { useSkillTable, type SkillRow } from "@/lib/hooks/useSkillTable";
 
 import { CreateSkillModal } from "./CreateSkillModal";
 import { DeleteSkillModal } from "./DeleteSkillModal";
 import { EditSkillModal } from "./EditSkillModal";
+import { SkillTableSkeleton } from "./SkillTableSkeleton";
 
 export function AdminSkillTable() {
     const t = useTranslations("Admin");

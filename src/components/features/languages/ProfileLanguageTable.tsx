@@ -8,7 +8,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
-import { ProfileLanguageTableSkeleton } from "@/components/shared/ProfileLanguageTableSkeleton";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
 import { PROFICIENCY_COLOR } from "@/lib/constants/proficiency";
@@ -18,13 +17,15 @@ import { languagesListKey, type LanguagesQueryResult } from "@/lib/hooks/useLang
 import { useProfileLanguages, type ProfileLanguageRow } from "@/lib/hooks/useProfileLanguages";
 
 import { AddProfileLanguageModal } from "./AddProfileLanguageModal";
+import { ProfileLanguageTableSkeleton } from "./ProfileLanguageTableSkeleton";
 import { RemoveProfileLanguageModal } from "./RemoveProfileLanguageModal";
 
 interface ProfileLanguageTableProps {
     userId: string;
+    readOnly?: boolean;
 }
 
-export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
+export function ProfileLanguageTable({ userId, readOnly = false }: ProfileLanguageTableProps) {
     const tUser = useTranslations("User");
     const { languages, isLoading, isError } = useProfileLanguages(userId);
 
@@ -37,10 +38,13 @@ export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
         queryKey: languagesListKey(),
         queryFn: () => gqlClient.request<LanguagesQueryResult>(LANGUAGES_QUERY),
         staleTime: Infinity,
+        enabled: !readOnly,
     });
 
     const canAddMoreLanguages =
-        isLoadingAll || (allLanguagesData && languages.length < allLanguagesData.languages.length);
+        !readOnly &&
+        (isLoadingAll ||
+            (allLanguagesData && languages.length < allLanguagesData.languages.length));
 
     if (isError) return <ErrorMessage message={tUser("error")} />;
 
@@ -56,7 +60,7 @@ export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
                             {languages.length === 0 ? (
                                 <tr>
                                     <td
-                                        colSpan={3}
+                                        colSpan={readOnly ? 2 : 3}
                                         className="text-body text-text-secondary px-6 py-16 text-center"
                                     >
                                         {tUser("no_languages")}
@@ -66,7 +70,7 @@ export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
                                 languages.map((lang) => (
                                     <tr
                                         key={lang.name}
-                                        className="border-divider hover:bg-hover-xs border-b transition-colors"
+                                        className={`border-divider border-b${readOnly ? "" : "hover:bg-hover-xs transition-colors"}`}
                                     >
                                         <td className="px-6 py-4">
                                             <span
@@ -80,19 +84,21 @@ export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
                                             {lang.name}
                                         </td>
 
-                                        <td className="w-18 py-4">
-                                            <RowActionsDropdown
-                                                ariaLabel={tUser("language_actions")}
-                                                onEdit={() => {
-                                                    setEditingLanguage(lang);
-                                                    setAddOpen(true);
-                                                }}
-                                                onDelete={() => {
-                                                    setRemovingLanguage(lang);
-                                                    setRemoveOpen(true);
-                                                }}
-                                            />
-                                        </td>
+                                        {!readOnly && (
+                                            <td className="w-18 py-4">
+                                                <RowActionsDropdown
+                                                    ariaLabel={tUser("language_actions")}
+                                                    onEdit={() => {
+                                                        setEditingLanguage(lang);
+                                                        setAddOpen(true);
+                                                    }}
+                                                    onDelete={() => {
+                                                        setRemovingLanguage(lang);
+                                                        setRemoveOpen(true);
+                                                    }}
+                                                />
+                                            </td>
+                                        )}
                                     </tr>
                                 ))
                             )}
@@ -118,25 +124,29 @@ export function ProfileLanguageTable({ userId }: ProfileLanguageTableProps) {
             )}
 
             {/* Modals */}
-            <AddProfileLanguageModal
-                open={addOpen}
-                userId={userId}
-                existingLanguages={languages}
-                editingLanguage={editingLanguage}
-                onOpenChange={(v) => {
-                    setAddOpen(v);
-                    if (!v) setEditingLanguage(null);
-                }}
-            />
-            <RemoveProfileLanguageModal
-                open={removeOpen}
-                userId={userId}
-                language={removingLanguage}
-                onOpenChange={(v) => {
-                    setRemoveOpen(v);
-                    if (!v) setRemovingLanguage(null);
-                }}
-            />
+            {!readOnly && (
+                <>
+                    <AddProfileLanguageModal
+                        open={addOpen}
+                        userId={userId}
+                        existingLanguages={languages}
+                        editingLanguage={editingLanguage}
+                        onOpenChange={(v) => {
+                            setAddOpen(v);
+                            if (!v) setEditingLanguage(null);
+                        }}
+                    />
+                    <RemoveProfileLanguageModal
+                        open={removeOpen}
+                        userId={userId}
+                        language={removingLanguage}
+                        onOpenChange={(v) => {
+                            setRemoveOpen(v);
+                            if (!v) setRemovingLanguage(null);
+                        }}
+                    />
+                </>
+            )}
         </div>
     );
 }

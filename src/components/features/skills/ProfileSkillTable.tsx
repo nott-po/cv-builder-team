@@ -8,7 +8,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
-import { ProfileSkillTableSkeleton } from "@/components/shared/ProfileSkillTableSkeleton";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
 import { MASTERY_COLOR } from "@/lib/constants/proficiency";
@@ -18,6 +17,7 @@ import { useProfileSkills, type ProfileSkillRow } from "@/lib/hooks/useProfileSk
 import { skillsListKey, type SkillsQueryResult } from "@/lib/hooks/useSkillTable";
 
 import { AddProfileSkillModal } from "./AddProfileSkillModal";
+import { ProfileSkillTableSkeleton } from "./ProfileSkillTableSkeleton";
 import { RemoveProfileSkillModal } from "./RemoveProfileSkillModal";
 
 type SkillGroup = {
@@ -27,9 +27,10 @@ type SkillGroup = {
 
 interface ProfileSkillTableProps {
     userId: string;
+    readOnly?: boolean;
 }
 
-export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
+export function ProfileSkillTable({ userId, readOnly = false }: ProfileSkillTableProps) {
     const tUser = useTranslations("User");
     const { skills, isLoading, isError } = useProfileSkills(userId);
 
@@ -40,7 +41,8 @@ export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
     });
 
     const canAddMoreSkills =
-        isLoadingAllSkills || (allSkillsData && skills.length < allSkillsData.skills.length);
+        !readOnly &&
+        (isLoadingAllSkills || (allSkillsData && skills.length < allSkillsData.skills.length));
 
     const grouped = useMemo<SkillGroup[]>(() => {
         if (skills.length === 0) return [];
@@ -95,7 +97,7 @@ export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
                                     {group.skills.map((skill) => (
                                         <div
                                             key={skill.name}
-                                            className="hover:bg-hover-xs flex items-center gap-3 rounded px-2 py-2 transition-colors"
+                                            className={`flex items-center gap-3 rounded px-2 py-2${readOnly ? "" : "hover:bg-hover-xs transition-colors"}`}
                                         >
                                             <span
                                                 className={`h-1.5 w-16 flex-shrink-0 rounded-sm ${MASTERY_COLOR[skill.mastery]}`}
@@ -103,17 +105,19 @@ export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
                                             <span className="text-small text-basic-text tracking-standard flex-1 truncate">
                                                 {skill.name}
                                             </span>
-                                            <RowActionsDropdown
-                                                ariaLabel={tUser("skill_actions")}
-                                                onEdit={() => {
-                                                    setEditingSkill(skill);
-                                                    setAddOpen(true);
-                                                }}
-                                                onDelete={() => {
-                                                    setRemovingSkill(skill);
-                                                    setRemoveOpen(true);
-                                                }}
-                                            />
+                                            {!readOnly && (
+                                                <RowActionsDropdown
+                                                    ariaLabel={tUser("skill_actions")}
+                                                    onEdit={() => {
+                                                        setEditingSkill(skill);
+                                                        setAddOpen(true);
+                                                    }}
+                                                    onDelete={() => {
+                                                        setRemovingSkill(skill);
+                                                        setRemoveOpen(true);
+                                                    }}
+                                                />
+                                            )}
                                         </div>
                                     ))}
                                 </div>
@@ -140,26 +144,30 @@ export function ProfileSkillTable({ userId }: ProfileSkillTableProps) {
             )}
 
             {/* Modals */}
-            <AddProfileSkillModal
-                open={addOpen}
-                userId={userId}
-                existingSkills={skills}
-                editingSkill={editingSkill}
-                onOpenChange={(v) => {
-                    setAddOpen(v);
-                    if (!v) setEditingSkill(null);
-                }}
-            />
+            {!readOnly && (
+                <>
+                    <AddProfileSkillModal
+                        open={addOpen}
+                        userId={userId}
+                        existingSkills={skills}
+                        editingSkill={editingSkill}
+                        onOpenChange={(v) => {
+                            setAddOpen(v);
+                            if (!v) setEditingSkill(null);
+                        }}
+                    />
 
-            <RemoveProfileSkillModal
-                open={removeOpen}
-                userId={userId}
-                skill={removingSkill}
-                onOpenChange={(v) => {
-                    setRemoveOpen(v);
-                    if (!v) setRemovingSkill(null);
-                }}
-            />
+                    <RemoveProfileSkillModal
+                        open={removeOpen}
+                        userId={userId}
+                        skill={removingSkill}
+                        onOpenChange={(v) => {
+                            setRemoveOpen(v);
+                            if (!v) setRemovingSkill(null);
+                        }}
+                    />
+                </>
+            )}
         </div>
     );
 }
