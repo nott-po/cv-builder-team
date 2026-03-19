@@ -153,6 +153,7 @@
         "confirm": "Potwierdź",
         "create": "Utwórz",
         "cancel": "Anuluj",
-        "search": "Szukaj"
+        "search": "Szukaj",
+        "no_cvs": "Nie dodano jeszcze żadnych CV"
     }
 }

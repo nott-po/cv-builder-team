@@ -84,6 +84,10 @@ export function useCvTable(userId: string, basePath = "/cvs") {
         setPage(1);
     }
 
+    function handleRowClick(cvId: string) {
+        router.push(`${basePath}/${cvId}`);
+    }
+
     function handlePageChange(newPage: number) {
         setPage(newPage);
     }
@@ -109,5 +113,6 @@ export function useCvTable(userId: string, basePath = "/cvs") {
         handlePageChange,
         handlePageSizeChange,
         refetch,
+        handleRowClick,
     };
 }
