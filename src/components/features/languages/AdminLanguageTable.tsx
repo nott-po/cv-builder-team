@@ -7,7 +7,6 @@ import { useTranslations } from "next-intl";
 import { Plus } from "lucide-react";
 
 import { DataTable } from "@/components/shared/DataTable";
-import { LanguageTableSkeleton } from "@/components/shared/LanguageTableSkeleton";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
 import { useLanguageTable, type LanguageRow } from "@/lib/hooks/useLanguageTable";
@@ -15,6 +14,7 @@ import { useLanguageTable, type LanguageRow } from "@/lib/hooks/useLanguageTable
 import { CreateLanguageModal } from "./CreateLanguageModal";
 import { DeleteLanguageModal } from "./DeleteLanguageModal";
 import { EditLanguageModal } from "./EditLanguageModal";
+import { LanguageTableSkeleton } from "./LanguageTableSkeleton";
 
 export function AdminLanguageTable() {
     const t = useTranslations("Admin");

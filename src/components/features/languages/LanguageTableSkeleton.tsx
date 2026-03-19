@@ -1,7 +1,6 @@
+import { TablePaginationSkeleton } from "@/components/shared/TablePaginationSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DEFAULT_PAGE_SIZE } from "@/lib/constants/table";
-
-import { TablePaginationSkeleton } from "./TablePaginationSkeleton";
 
 function SkeletonRow() {
     return (
