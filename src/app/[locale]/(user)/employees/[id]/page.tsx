@@ -6,9 +6,9 @@ import { useParams } from "next/navigation";
 
 import { User } from "lucide-react";
 
-import { EmployeeProfile } from "@/components/features/employees/EmployeeProfile";
-import { ProfileLanguageTable } from "@/components/features/languages/ProfileLanguageTable";
-import { ProfileSkillTable } from "@/components/features/skills/ProfileSkillTable";
+import { EmployeeProfile } from "@/components/features/employees/user/EmployeeProfile";
+import { ProfileLanguageTable } from "@/components/features/languages/profile/ProfileLanguageTable";
+import { ProfileSkillTable } from "@/components/features/skills/profile/ProfileSkillTable";
 import { UserHeader } from "@/components/layout/user/UserHeader";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { PageHeader } from "@/components/shared/PageHeader";
