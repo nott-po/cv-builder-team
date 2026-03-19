@@ -8,17 +8,19 @@ import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
+import { RemoveProfileItemModal } from "@/components/shared/RemoveProfileItemModal";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
 import { MASTERY_COLOR } from "@/lib/constants/proficiency";
 import { gqlClient } from "@/lib/graphql/fetcher";
+import { DELETE_PROFILE_SKILL_MUTATION } from "@/lib/graphql/operations/profile";
 import { SKILLS_QUERY } from "@/lib/graphql/operations/skills";
 import { useProfileSkills, type ProfileSkillRow } from "@/lib/hooks/useProfileSkills";
+import { profileSkillsKey } from "@/lib/hooks/useProfileSkills";
 import { skillsListKey, type SkillsQueryResult } from "@/lib/hooks/useSkillTable";
 
 import { AddProfileSkillModal } from "./AddProfileSkillModal";
 import { ProfileSkillTableSkeleton } from "./ProfileSkillTableSkeleton";
-import { RemoveProfileSkillModal } from "./RemoveProfileSkillModal";
 
 type SkillGroup = {
     categoryName: string | null;
@@ -157,14 +159,22 @@ export function ProfileSkillTable({ userId, readOnly = false }: ProfileSkillTabl
                         }}
                     />
 
-                    <RemoveProfileSkillModal
+                    <RemoveProfileItemModal
                         open={removeOpen}
-                        userId={userId}
-                        skill={removingSkill}
                         onOpenChange={(v) => {
                             setRemoveOpen(v);
                             if (!v) setRemovingSkill(null);
                         }}
+                        title={tUser("remove_skill_title")}
+                        confirmText={tUser("remove_skill_confirm")}
+                        itemName={removingSkill?.name}
+                        errorMessage={tUser("remove_skill_error")}
+                        mutationFn={(name) =>
+                            gqlClient.request(DELETE_PROFILE_SKILL_MUTATION, {
+                                skill: { userId, name: [name] },
+                            })
+                        }
+                        queryKey={profileSkillsKey(userId)}
                     />
                 </>
             )}

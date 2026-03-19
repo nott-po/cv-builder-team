@@ -8,17 +8,22 @@ import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
+import { RemoveProfileItemModal } from "@/components/shared/RemoveProfileItemModal";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
 import { PROFICIENCY_COLOR } from "@/lib/constants/proficiency";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { LANGUAGES_QUERY } from "@/lib/graphql/operations/languages";
+import { DELETE_PROFILE_LANGUAGE_MUTATION } from "@/lib/graphql/operations/profile";
 import { languagesListKey, type LanguagesQueryResult } from "@/lib/hooks/useLanguageTable";
-import { useProfileLanguages, type ProfileLanguageRow } from "@/lib/hooks/useProfileLanguages";
+import {
+    profileLanguagesKey,
+    useProfileLanguages,
+    type ProfileLanguageRow,
+} from "@/lib/hooks/useProfileLanguages";
 
 import { AddProfileLanguageModal } from "./AddProfileLanguageModal";
 import { ProfileLanguageTableSkeleton } from "./ProfileLanguageTableSkeleton";
-import { RemoveProfileLanguageModal } from "./RemoveProfileLanguageModal";
 
 interface ProfileLanguageTableProps {
     userId: string;
@@ -136,14 +141,23 @@ export function ProfileLanguageTable({ userId, readOnly = false }: ProfileLangua
                             if (!v) setEditingLanguage(null);
                         }}
                     />
-                    <RemoveProfileLanguageModal
+
+                    <RemoveProfileItemModal
                         open={removeOpen}
-                        userId={userId}
-                        language={removingLanguage}
                         onOpenChange={(v) => {
                             setRemoveOpen(v);
                             if (!v) setRemovingLanguage(null);
                         }}
+                        title={tUser("remove_language_title")}
+                        confirmText={tUser("remove_language_confirm")}
+                        itemName={removingLanguage?.name}
+                        errorMessage={tUser("remove_language_error")}
+                        mutationFn={(name) =>
+                            gqlClient.request(DELETE_PROFILE_LANGUAGE_MUTATION, {
+                                language: { userId, name },
+                            })
+                        }
+                        queryKey={profileLanguagesKey(userId)}
                     />
                 </>
             )}
