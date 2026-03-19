@@ -140,5 +140,19 @@
         "remove_skill_title": "Remove Skill",
         "remove_skill_confirm": "Are you sure you want to remove",
         "remove_skill_error": "Failed to remove skill. Please try again."
+    },
+    "CV": {
+        "cvs": "CVs",
+        "name": "Name",
+        "education": "Education",
+        "employee": "Employee",
+        "description": "Description",
+        "create_cv": "Create CV",
+        "delete_cv": "Delete CV",
+        "delete_cv_text": "Are you sure you want to delete CV",
+        "confirm": "Confirm",
+        "create": "Create",
+        "cancel": "Cancel",
+        "search": "Search"
     }
 }

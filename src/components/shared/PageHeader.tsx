@@ -8,9 +8,9 @@ import { Link } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 export type BreadcrumbItem = {
-    label?: string;
+    label: string;
     href?: string;
-    Icon?: React.ElementType; // <-- 1. Добавили возможность передать иконку
+    Icon?: React.ElementType;
 };
 
 interface PageHeaderProps {
@@ -43,7 +43,7 @@ export function PageHeader({ items }: PageHeaderProps) {
                 );
 
                 return (
-                    <React.Fragment key={index}>
+                    <React.Fragment key={item.label}>
                         {item.href && !isLast ? (
                             <Link
                                 href={item.href}

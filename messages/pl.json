@@ -140,5 +140,19 @@
         "remove_skill_title": "Usuń umiejętność",
         "remove_skill_confirm": "Czy na pewno chcesz usunąć",
         "remove_skill_error": "Nie udało się usunąć umiejętności. Spróbuj ponownie."
+    },
+    "CV": {
+        "cvs": "CV",
+        "name": "Imię i nazwisko",
+        "education": "Wykształcenie",
+        "employee": "Pracownik",
+        "description": "Opis",
+        "create_cv": "Utwórz CV",
+        "delete_cv": "Usuń CV",
+        "delete_cv_text": "Czy na pewno chcesz usunąć CV",
+        "confirm": "Potwierdź",
+        "create": "Utwórz",
+        "cancel": "Anuluj",
+        "search": "Szukaj"
     }
 }
