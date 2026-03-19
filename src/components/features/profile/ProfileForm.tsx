@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import { useTranslations } from "next-intl";
@@ -8,10 +7,8 @@ import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ClientError } from "graphql-request";
-import { Upload } from "lucide-react";
 import * as z from "zod";
 
-import { EmployeeAvatar } from "@/components/shared/EmployeeAvatar";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,6 +39,8 @@ import { useDepartments } from "@/lib/hooks/useDepartments";
 import { usePositions } from "@/lib/hooks/usePositions";
 import { useUserData } from "@/lib/hooks/useUserData";
 
+import { AvatarUpload, compressAvatar } from "./AvatarUpload";
+
 const profileSchema = z.object({
     first_name: z.string().min(1, "First name is required").optional().or(z.literal("")),
     last_name: z.string().min(1, "Last name is required").optional().or(z.literal("")),
@@ -51,51 +50,6 @@ const profileSchema = z.object({
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
-
-const compressAvatar = (file: File): Promise<{ base64: string; size: number; type: string }> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-
-        reader.onload = (event) => {
-            const img = new Image();
-            img.src = event.target?.result as string;
-
-            img.onload = () => {
-                const MAX_WIDTH = 400;
-                const MAX_HEIGHT = 400;
-                let { width, height } = img;
-
-                if (width > MAX_WIDTH) {
-                    height = Math.round((height * MAX_WIDTH) / width);
-                    width = MAX_WIDTH;
-                }
-                if (height > MAX_HEIGHT) {
-                    width = Math.round((width * MAX_HEIGHT) / height);
-                    height = MAX_HEIGHT;
-                }
-
-                const canvas = document.createElement("canvas");
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext("2d");
-
-                if (!ctx) return reject(new Error("Canvas context is not available"));
-                ctx.drawImage(img, 0, 0, width, height);
-
-                const outputType = "image/jpeg";
-                const dataUrl = canvas.toDataURL(outputType, 0.8);
-
-                const rawBase64 = dataUrl.split(",")[1];
-                const sizeInBytes = Math.round((rawBase64.length * 3) / 4);
-
-                resolve({ base64: dataUrl, size: sizeInBytes, type: outputType });
-            };
-            img.onerror = (err) => reject(err);
-        };
-        reader.onerror = (err) => reject(err);
-    });
-};
 
 export function ProfileForm() {
     const t = useTranslations("User");
@@ -184,21 +138,6 @@ export function ProfileForm() {
 
     const isSubmitEnabled = hasChanges && hasValidSelects;
 
-    const previewUrl = useMemo(() => {
-        if (avatarFile && avatarFile instanceof File) {
-            return URL.createObjectURL(avatarFile);
-        }
-        return data?.profile?.avatar;
-    }, [avatarFile, data?.profile?.avatar]);
-
-    useEffect(() => {
-        return () => {
-            if (previewUrl && previewUrl.startsWith("blob:")) {
-                URL.revokeObjectURL(previewUrl);
-            }
-        };
-    }, [previewUrl]);
-
     function onSubmit(values: ProfileFormValues) {
         updateProfileMutation.mutate(values);
     }
@@ -219,54 +158,23 @@ export function ProfileForm() {
                         className="mx-auto w-full space-y-6"
                     >
                         <div className="mb-8 items-center gap-6">
-                            <div className="mb-8 flex items-center justify-center gap-6">
-                                <EmployeeAvatar
-                                    size="xl"
-                                    avatar={previewUrl}
-                                    initial={(
-                                        data?.profile?.first_name?.[0] ??
-                                        data?.email?.[0] ??
-                                        "?"
-                                    ).toUpperCase()}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="avatar"
-                                    render={({
-                                        field: { value: _value, onChange, ...fieldProps },
-                                    }) => (
-                                        <FormItem>
-                                            <FormControl>
-                                                <Input
-                                                    id="my-avatar-upload"
-                                                    type="file"
-                                                    accept="image/png, image/jpeg, image/gif, image/webp"
-                                                    className="hidden"
-                                                    onChange={(e) => {
-                                                        const file = e.target.files?.[0];
-                                                        if (file) onChange(file);
-                                                    }}
-                                                    {...fieldProps}
-                                                />
-                                            </FormControl>
-                                            <FormLabel
-                                                htmlFor="my-avatar-upload"
-                                                className="group flex cursor-pointer flex-col gap-1"
-                                            >
-                                                <div className="text-basic-text flex items-center gap-2 text-base font-medium transition-opacity group-hover:opacity-70">
-                                                    <Upload className="size-5" />
-                                                    {t("upload_avatar")}
-                                                </div>
-                                                <span className="text-text-secondary text-sm font-normal">
-                                                    {t("Upload_avatar_rules")}
-                                                </span>
-                                            </FormLabel>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
+                            <FormField
+                                control={form.control}
+                                name="avatar"
+                                render={({ field: { value: _value, onChange, ...fieldProps } }) => (
+                                    <AvatarUpload
+                                        currentAvatar={data?.profile?.avatar}
+                                        initial={(
+                                            data?.profile?.first_name?.[0] ??
+                                            data?.email?.[0] ??
+                                            "?"
+                                        ).toUpperCase()}
+                                        avatarFile={avatarFile instanceof File ? avatarFile : null}
+                                        onChange={onChange}
+                                        fieldProps={fieldProps}
+                                    />
+                                )}
+                            />
 
                             {isActuallyLoading ? (
                                 <div className="flex flex-col gap-1">

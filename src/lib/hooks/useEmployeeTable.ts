@@ -2,16 +2,15 @@
 
 import { useMemo, useState } from "react";
 
-import { useSearchParams } from "next/navigation";
-
 import { useQuery } from "@tanstack/react-query";
 
 import type { UserRole } from "@/generated/graphql";
 import { useRouter } from "@/i18n/routing";
-import { DEFAULT_PAGE_SIZE } from "@/lib/constants/table";
 import { fetcher } from "@/lib/graphql/fetcher";
 import { USERS_QUERY } from "@/lib/graphql/operations/employees";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
+import { useTablePagination } from "@/lib/hooks/useTablePagination";
+import type { SortDir, TableState } from "@/types/table";
 
 export type EmployeeRow = {
     id: string;
@@ -32,18 +31,16 @@ type UsersQueryResult = {
     users: EmployeeRow[];
 };
 
-type SortDir = "asc" | "desc";
-
 export const employeesListKey = () => ["employees", "list"] as const;
 
 export function useEmployeeTable(basePath = "/employees") {
     const router = useRouter();
-    const searchParams = useSearchParams();
+    const { page, setPage, pageSize, handlePageChange, handlePageSizeChange } =
+        useTablePagination(basePath);
     const { user } = useCurrentUser();
+
     const [search, setSearch] = useState("");
     const [sortDir, setSortDir] = useState<SortDir>("desc");
-    const [page, setPage] = useState(1);
-    const pageSize = Number(searchParams.get("pageSize")) || DEFAULT_PAGE_SIZE;
 
     const { data, isLoading, isError } = useQuery<UsersQueryResult>({
         queryKey: employeesListKey(),
@@ -88,36 +85,30 @@ export function useEmployeeTable(basePath = "/employees") {
         setPage(1);
     }
 
-    function handlePageChange(newPage: number) {
-        setPage(newPage);
-    }
-
-    function handlePageSizeChange(size: number) {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("pageSize", String(size));
-        router.push(`${basePath}?${params.toString()}`);
-        setPage(1);
-    }
-
     function handleRowClick(id: string) {
         if (user?.id === id) {
             router.push("/profile");
         } else router.push(`${basePath}/${id}`);
     }
 
-    return {
-        paginatedEmployees,
+    const state: TableState = {
         isLoading,
         isError,
+        isEmpty: employees.length === 0,
         search,
-        handleSearchChange,
-        sortDir,
-        handleSortToggle,
+        onSearchChange: handleSearchChange,
         page,
         pageSize,
         totalPages,
-        handlePageChange,
-        handlePageSizeChange,
+        onPageChange: handlePageChange,
+        onPageSizeChange: handlePageSizeChange,
+    };
+
+    return {
+        state,
+        paginatedEmployees,
+        sortDir,
+        handleSortToggle,
         handleRowClick,
     };
 }
