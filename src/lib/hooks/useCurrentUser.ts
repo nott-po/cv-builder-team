@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+
 import apiClient from "@/lib/api/client";
 import type { SessionUser } from "@/types/auth";
 
@@ -22,6 +23,7 @@ export function useCurrentUser() {
         queryKey: CURRENT_USER_KEY,
         queryFn: fetchCurrentUser,
         staleTime: Infinity,
+        gcTime: Infinity,
         retry: false,
     });
 
