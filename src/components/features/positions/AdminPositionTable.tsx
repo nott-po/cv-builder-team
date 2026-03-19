@@ -6,14 +6,15 @@ import { useTranslations } from "next-intl";
 
 import { Plus } from "lucide-react";
 
+import { AdminDeleteModal } from "@/components/shared/AdminDeleteModal";
 import { DataTable } from "@/components/shared/DataTable";
 import { NameOnlyTableSkeleton } from "@/components/shared/NameOnlyTableSkeleton";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
-import { usePositionTable, type PositionRow } from "@/lib/hooks/usePositionTable";
+import { DELETE_POSITION_MUTATION } from "@/lib/graphql/operations/positions";
+import { positionsListKey, usePositionTable, type PositionRow } from "@/lib/hooks/usePositionTable";
 
 import { CreatePositionModal } from "./CreatePositionModal";
-import { DeletePositionModal } from "./DeletePositionModal";
 import { EditPositionModal } from "./EditPositionModal";
 
 export function AdminPositionTable() {
@@ -77,10 +78,16 @@ export function AdminPositionTable() {
 
             <CreatePositionModal open={createOpen} onOpenChange={setCreateOpen} />
             <EditPositionModal open={editOpen} position={editPosition} onOpenChange={setEditOpen} />
-            <DeletePositionModal
+            <AdminDeleteModal
                 open={deleteOpen}
-                position={deletePosition}
+                item={deletePosition}
                 onOpenChange={setDeleteOpen}
+                mutation={DELETE_POSITION_MUTATION}
+                buildVars={(id) => ({ position: { positionId: id } })}
+                queryKey={positionsListKey()}
+                titleKey="delete_position_title"
+                confirmKey="delete_position_confirm"
+                errorKey="delete_position_error"
             />
         </>
     );
