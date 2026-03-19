@@ -11,10 +11,10 @@ import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/lib/constants/routes";
 import type { EmployeeRow } from "@/lib/hooks/useEmployeeTable";
 
+import { EmployeeTable } from "../user/EmployeeTable";
 import { CreateUserModal } from "./CreateUserModal";
 import { DeleteUserModal } from "./DeleteUserModal";
 import { EditUserModal } from "./EditUserModal";
-import { EmployeeTable } from "./EmployeeTable";
 
 export function AdminEmployeeTable() {
     const t = useTranslations("Admin");

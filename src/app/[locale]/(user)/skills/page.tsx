@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-import { ProfileSkillTable } from "@/components/features/skills/ProfileSkillTable";
+import { ProfileSkillTable } from "@/components/features/skills/profile/ProfileSkillTable";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { getSession } from "@/lib/auth/tokens";
 
