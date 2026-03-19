@@ -6,13 +6,14 @@ import { useTranslations } from "next-intl";
 
 import { Plus } from "lucide-react";
 
+import { AdminDeleteModal } from "@/components/shared/AdminDeleteModal";
 import { DataTable } from "@/components/shared/DataTable";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
-import { useLanguageTable, type LanguageRow } from "@/lib/hooks/useLanguageTable";
+import { DELETE_LANGUAGE_MUTATION } from "@/lib/graphql/operations/languages";
+import { languagesListKey, useLanguageTable, type LanguageRow } from "@/lib/hooks/useLanguageTable";
 
 import { CreateLanguageModal } from "./CreateLanguageModal";
-import { DeleteLanguageModal } from "./DeleteLanguageModal";
 import { EditLanguageModal } from "./EditLanguageModal";
 import { LanguageTableSkeleton } from "./LanguageTableSkeleton";
 
@@ -97,10 +98,16 @@ export function AdminLanguageTable() {
 
             <CreateLanguageModal open={createOpen} onOpenChange={setCreateOpen} />
             <EditLanguageModal open={editOpen} language={editLanguage} onOpenChange={setEditOpen} />
-            <DeleteLanguageModal
+            <AdminDeleteModal
                 open={deleteOpen}
-                language={deleteLanguage}
+                item={deleteLanguage}
                 onOpenChange={setDeleteOpen}
+                mutation={DELETE_LANGUAGE_MUTATION}
+                buildVars={(id) => ({ language: { languageId: id } })}
+                queryKey={languagesListKey()}
+                titleKey="delete_language_title"
+                confirmKey="delete_language_confirm"
+                errorKey="delete_language_error"
             />
         </>
     );

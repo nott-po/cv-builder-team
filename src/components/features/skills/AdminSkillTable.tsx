@@ -6,13 +6,14 @@ import { useTranslations } from "next-intl";
 
 import { ChevronDown, ChevronUp, Plus } from "lucide-react";
 
+import { AdminDeleteModal } from "@/components/shared/AdminDeleteModal";
 import { DataTable } from "@/components/shared/DataTable";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
-import { useSkillTable, type SkillRow } from "@/lib/hooks/useSkillTable";
+import { DELETE_SKILL_MUTATION } from "@/lib/graphql/operations/skills";
+import { skillsListKey, useSkillTable, type SkillRow } from "@/lib/hooks/useSkillTable";
 
 import { CreateSkillModal } from "./CreateSkillModal";
-import { DeleteSkillModal } from "./DeleteSkillModal";
 import { EditSkillModal } from "./EditSkillModal";
 import { SkillTableSkeleton } from "./SkillTableSkeleton";
 
@@ -105,7 +106,17 @@ export function AdminSkillTable() {
 
             <CreateSkillModal open={createOpen} onOpenChange={setCreateOpen} />
             <EditSkillModal open={editOpen} skill={editSkill} onOpenChange={setEditOpen} />
-            <DeleteSkillModal open={deleteOpen} skill={deleteSkill} onOpenChange={setDeleteOpen} />
+            <AdminDeleteModal
+                open={deleteOpen}
+                item={deleteSkill}
+                onOpenChange={setDeleteOpen}
+                mutation={DELETE_SKILL_MUTATION}
+                buildVars={(id) => ({ skill: { skillId: id } })}
+                queryKey={skillsListKey()}
+                titleKey="delete_skill_title"
+                confirmKey="delete_skill_confirm"
+                errorKey="delete_skill_error"
+            />
         </>
     );
 }

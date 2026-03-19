@@ -6,14 +6,19 @@ import { useTranslations } from "next-intl";
 
 import { Plus } from "lucide-react";
 
+import { AdminDeleteModal } from "@/components/shared/AdminDeleteModal";
 import { DataTable } from "@/components/shared/DataTable";
 import { NameOnlyTableSkeleton } from "@/components/shared/NameOnlyTableSkeleton";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
-import { useDepartmentTable, type DepartmentRow } from "@/lib/hooks/useDepartmentTable";
+import { DELETE_DEPARTMENT_MUTATION } from "@/lib/graphql/operations/departments";
+import {
+    departmentsListKey,
+    useDepartmentTable,
+    type DepartmentRow,
+} from "@/lib/hooks/useDepartmentTable";
 
 import { CreateDepartmentModal } from "./CreateDepartmentModal";
-import { DeleteDepartmentModal } from "./DeleteDepartmentModal";
 import { EditDepartmentModal } from "./EditDepartmentModal";
 
 export function AdminDepartmentTable() {
@@ -81,10 +86,16 @@ export function AdminDepartmentTable() {
                 department={editDepartment}
                 onOpenChange={setEditOpen}
             />
-            <DeleteDepartmentModal
+            <AdminDeleteModal
                 open={deleteOpen}
-                department={deleteDepartment}
+                item={deleteDepartment}
                 onOpenChange={setDeleteOpen}
+                mutation={DELETE_DEPARTMENT_MUTATION}
+                buildVars={(id) => ({ department: { departmentId: id } })}
+                queryKey={departmentsListKey()}
+                titleKey="delete_department_title"
+                confirmKey="delete_department_confirm"
+                errorKey="delete_department_error"
             />
         </>
     );
