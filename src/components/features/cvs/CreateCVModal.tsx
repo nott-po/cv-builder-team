@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { CREATE_CV_MUTATION } from "@/lib/graphql/operations/cvs";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
-import { cvsListKey } from "@/lib/hooks/useCvTable";
+import { cvsListKey } from "@/lib/hooks/useCVTable";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
 
 import { CvForm, type CreateCvFormData } from "./CVForm";

@@ -1,0 +1,197 @@
+"use client";
+
+import { useForm } from "react-hook-form";
+
+import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+import { UserCVHeader } from "@/components/features/cvs/UserCVHeader";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { Button } from "@/components/ui/button";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+// 1. ИМПОРТЫ ХУКОВ (Убедись, что регистр совпадает с файлами!)
+import { useCv } from "@/lib/hooks/useCV";
+import { useUpdateCV } from "@/lib/hooks/useUpdateCV";
+import { cn } from "@/lib/utils";
+
+// Этот хук мы обсуждали ранее
+
+// 2. СХЕМА ВАЛИДАЦИИ
+const cvSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    education: z.string().optional(),
+    description: z.string().min(1, "Description is required"),
+});
+
+export type UpdateCvFormData = z.infer<typeof cvSchema>;
+
+export function CVUpdateForm() {
+    const params = useParams();
+    const cvId = params.id as string;
+    const t = useTranslations("CV");
+
+    // 3. ПОЛУЧАЕМ ДАННЫЕ С СЕРВЕРА
+    const { cv, isLoading: isFetching, isError: isFetchError } = useCv(cvId);
+
+    // 4. ПОДКЛЮЧАЕМ МУТАЦИЮ ОБНОВЛЕНИЯ
+    const { mutateAsync: updateCv, isPending: isSubmitting, error: updateError } = useUpdateCV();
+
+    // 5. ИНИЦИАЛИЗИРУЕМ ФОРМУ
+    const form = useForm<UpdateCvFormData>({
+        resolver: zodResolver(cvSchema),
+        mode: "onChange",
+        defaultValues: {
+            name: "",
+            education: "",
+            description: "",
+        },
+        values: cv
+            ? {
+                  name: cv.name,
+                  education: cv.education || "",
+                  description: cv.description || "",
+              }
+            : undefined,
+    });
+
+    // ДОБАВЛЯЕМ ЭТО:
+    // isDirty равно true, если в форме есть несохраненные изменения
+    const { isDirty, isValid } = form.formState;
+    const isSubmitEnabled = isDirty && isValid;
+
+    // 6. ОБРАБОТЧИК ОТПРАВКИ
+    const onSubmit = async (data: UpdateCvFormData) => {
+        try {
+            await updateCv({
+                cvId: cvId, // Передаем ID резюме, которое обновляем
+                ...data,
+            });
+            // Если нужно, тут можно добавить тост-уведомление об успехе
+        } catch (e) {
+            console.error("Failed to update CV", e);
+        }
+    };
+
+    // Показываем загрузку, пока тянем данные резюме
+    if (isFetching) return <div className="p-6">Загрузка данных...</div>;
+    if (isFetchError || !cv) return <div className="text-destructive p-6">Ошибка загрузки CV</div>;
+
+    return (
+        <div>
+            <PageHeader items={[{ label: t("cvs"), href: "/cvs" }, { label: cv.name }]} />
+
+            <div className="mb-4 px-6">
+                <div className="mb-8">
+                    <UserCVHeader mode="details" />
+                </div>
+
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="mx-auto flex max-w-213 flex-col gap-9 pt-4"
+                    >
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem className="relative">
+                                    <FormLabel className="bg-surface text-muted-foreground absolute -top-2.5 left-3 z-10 px-1 text-xs leading-none">
+                                        {t("name")}
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            variant="default"
+                                            size="default"
+                                            className="relative z-0 text-base"
+                                            autoComplete="off"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="education"
+                            render={({ field }) => (
+                                <FormItem className="relative">
+                                    <FormLabel className="bg-surface text-muted-foreground absolute -top-2.5 left-3 z-10 px-1 text-xs leading-none">
+                                        {t("education")}
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            variant="default"
+                                            size="default"
+                                            className="relative z-0 text-base"
+                                            autoComplete="off"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem className="relative">
+                                    <FormLabel className="bg-surface text-muted-foreground absolute -top-2.5 left-3 z-10 px-1 text-xs leading-none">
+                                        {t("description")}
+                                    </FormLabel>
+                                    <FormControl>
+                                        <textarea
+                                            className={cn(
+                                                "border-border-input-default text-input-default flex w-full rounded-none border bg-transparent px-3 py-4 text-base shadow-none transition-colors",
+                                                "min-h-[160px] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none",
+                                                "relative z-0",
+                                            )}
+                                            autoComplete="off"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        {/* Показываем ошибку обновления, если она есть */}
+                        {updateError && (
+                            <p className="text-destructive text-sm">
+                                {updateError instanceof Error
+                                    ? updateError.message
+                                    : "Ошибка при сохранении"}
+                            </p>
+                        )}
+
+                        <div className="flex w-full justify-end gap-3">
+                            <Button
+                                className="w-full md:w-1/2"
+                                type="submit"
+                                disabled={isSubmitting || !isSubmitEnabled}
+                                variant={isSubmitting || !isSubmitEnabled ? "grayBg" : "redPrimary"}
+                                size="updateButton"
+                            >
+                                {t("update")}
+                            </Button>
+                        </div>
+                    </form>
+                </Form>
+            </div>
+        </div>
+    );
+}

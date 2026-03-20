@@ -45,3 +45,42 @@ export const DELETE_CV_MUTATION = `
     }
   }
 `;
+
+export const CV_QUERY = `
+  query GetCv($cvId: ID!) {
+    cv(cvId: $cvId) {
+      id
+      created_at
+      name
+      education
+      description
+      user {
+        id
+        email
+      }
+      projects {
+        id
+        name
+      }
+      skills {
+        name
+        mastery
+      }
+      languages {
+        name
+        proficiency
+      }
+    }
+  }
+`;
+
+export const UPDATE_CV_MUTATION = `
+  mutation UpdateCv($cv: UpdateCvInput!) {
+    updateCv(cv: $cv) {
+      id
+      name
+      education
+      description
+    }
+  }
+`;

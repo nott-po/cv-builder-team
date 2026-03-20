@@ -12,7 +12,7 @@ import { CVTableSkeleton } from "@/components/shared/CVTableSkeleton";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
-import { useCvTable, type CvRow } from "@/lib/hooks/useCvTable";
+import { useCVTable, type CvRow } from "@/lib/hooks/useCVTable";
 
 export function CVTable() {
     const t = useTranslations("CV");
@@ -30,7 +30,7 @@ export function CVTable() {
         handleSortToggle,
         sortDir,
         handleRowClick,
-    } = useCvTable(currentUserId);
+    } = useCVTable(currentUserId);
 
     const isDataLoading = isLoading || !user;
 

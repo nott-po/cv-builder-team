@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { DELETE_CV_MUTATION } from "@/lib/graphql/operations/cvs";
-import { cvsListKey, type CvRow } from "@/lib/hooks/useCvTable";
+import { cvsListKey, type CvRow } from "@/lib/hooks/useCVTable";
 
 interface DeleteCVModalProps {
     open: boolean;

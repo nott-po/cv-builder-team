@@ -28,7 +28,7 @@ export function PageHeader({ items }: PageHeaderProps) {
 
                 let textColorClass = "";
                 if (isSecondElement) {
-                    textColorClass = "text-red-primary";
+                    textColorClass = "text-pink";
                 } else {
                     textColorClass = isLast ? "text-header-item" : "text-input-default";
                 }

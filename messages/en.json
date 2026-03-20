@@ -154,6 +154,11 @@
         "create": "Create",
         "cancel": "Cancel",
         "search": "Search",
-        "no_cvs": "No added CVs yet"
+        "no_cvs": "No added CVs yet",
+        "details": "Details",
+        "skills": "Skills",
+        "projects": "Projects",
+        "preview": "Preview",
+        "update": "Update"
     }
 }

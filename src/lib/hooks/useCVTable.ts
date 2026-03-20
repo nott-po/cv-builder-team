@@ -31,7 +31,7 @@ type SortDir = "asc" | "desc";
 
 export const cvsListKey = (userId: string) => ["cvs", userId] as const;
 
-export function useCvTable(userId: string, basePath = "/cvs") {
+export function useCVTable(userId: string, basePath = "/cvs") {
     const router = useRouter();
     const searchParams = useSearchParams();
 
