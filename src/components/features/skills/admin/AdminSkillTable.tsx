@@ -4,11 +4,12 @@ import { useState } from "react";
 
 import { useTranslations } from "next-intl";
 
-import { ChevronDown, ChevronUp, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { AdminDeleteModal } from "@/components/shared/AdminDeleteModal";
 import { DataTable } from "@/components/shared/DataTable";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
+import { SortableColumnHeader } from "@/components/shared/SortableColumnHeader";
 import { Button } from "@/components/ui/button";
 import { DELETE_SKILL_MUTATION } from "@/lib/graphql/operations/skills";
 import { skillsListKey, useSkillTable, type SkillRow } from "@/lib/hooks/useSkillTable";
@@ -40,7 +41,6 @@ export function AdminSkillTable() {
                 }
                 skeleton={<SkillTableSkeleton rows={state.pageSize} />}
                 colSpan={4}
-                minWidth="560px"
                 head={
                     <>
                         <th className="py-4 text-left">
@@ -49,19 +49,11 @@ export function AdminSkillTable() {
                             </span>
                         </th>
 
-                        <th className="py-4 text-left">
-                            <button
-                                onClick={handleSortToggle}
-                                className="text-small text-basic-text tracking-standard flex cursor-pointer items-center gap-1 px-4 font-medium transition-opacity hover:opacity-70"
-                            >
-                                {t("type")}
-                                {sortDir === "asc" ? (
-                                    <ChevronUp className="size-4.5" />
-                                ) : (
-                                    <ChevronDown className="size-4.5" />
-                                )}
-                            </button>
-                        </th>
+                        <SortableColumnHeader
+                            label={t("type")}
+                            sortDir={sortDir}
+                            onToggle={handleSortToggle}
+                        />
 
                         <th className="py-4 text-left">
                             <span className="text-small text-basic-text tracking-standard px-4 font-medium whitespace-nowrap">

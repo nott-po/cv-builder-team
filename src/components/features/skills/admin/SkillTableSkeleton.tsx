@@ -28,7 +28,7 @@ export function SkillTableSkeleton({ rows = DEFAULT_PAGE_SIZE }: { rows?: number
                 <Skeleton className="h-9 w-64 rounded-md" />
             </div>
 
-            <div className="px-6">
+            <div className="overflow-x-auto px-6">
                 <table className="w-full border-collapse">
                     <thead>
                         <tr className="border-divider border-b">
