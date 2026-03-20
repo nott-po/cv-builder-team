@@ -8,10 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-    FloatingLabelWrapper,
-    floatingSelectTriggerClass,
-} from "@/components/ui/floating-label-wrapper";
+import { FloatingLabelWrapper, floatingInputClass } from "@/components/ui/floating-label-wrapper";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -191,7 +188,7 @@ export function EmployeeForm({
                                         disabled={isSubmitting}
                                     >
                                         <FormControl>
-                                            <SelectTrigger className={floatingSelectTriggerClass}>
+                                            <SelectTrigger className={floatingInputClass}>
                                                 <SelectValue />
                                             </SelectTrigger>
                                         </FormControl>
@@ -225,7 +222,7 @@ export function EmployeeForm({
                                         disabled={isSubmitting}
                                     >
                                         <FormControl>
-                                            <SelectTrigger className={floatingSelectTriggerClass}>
+                                            <SelectTrigger className={floatingInputClass}>
                                                 <SelectValue />
                                             </SelectTrigger>
                                         </FormControl>
@@ -259,7 +256,7 @@ export function EmployeeForm({
                                         disabled={isSubmitting}
                                     >
                                         <FormControl>
-                                            <SelectTrigger className={floatingSelectTriggerClass}>
+                                            <SelectTrigger className={floatingInputClass}>
                                                 <SelectValue />
                                             </SelectTrigger>
                                         </FormControl>
