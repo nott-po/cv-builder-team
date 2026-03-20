@@ -84,3 +84,27 @@ export const UPDATE_CV_MUTATION = `
     }
   }
 `;
+
+export const ADD_CV_SKILL_MUTATION = `
+  mutation AddCvSkill($skill: AddCvSkillInput!) {
+    addCvSkill(skill: $skill) {
+      id
+    }
+  }
+`;
+
+export const UPDATE_CV_SKILL_MUTATION = `
+  mutation UpdateCvSkill($skill: UpdateCvSkillInput!) {
+    updateCvSkill(skill: $skill) {
+      id
+    }
+  }
+`;
+
+export const DELETE_CV_SKILL_MUTATION = `
+  mutation DeleteCvSkill($skill: DeleteCvSkillInput!) {
+    deleteCvSkill(skill: $skill) {
+      id
+    }
+  }
+`;

@@ -6,8 +6,6 @@ import type { Mastery } from "@/generated/graphql";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { CV_QUERY } from "@/lib/graphql/operations/cvs";
 
-// Проверь путь до твоих типов
-
 export type CvDetail = {
     id: string;
     created_at: string;
@@ -18,7 +16,10 @@ export type CvDetail = {
         id: string;
         email?: string;
     } | null;
-    projects?: any[];
+    projects?: {
+        id: string;
+        name: string;
+    }[];
     skills?: {
         name: string;
         mastery: Mastery;

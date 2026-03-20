@@ -204,6 +204,20 @@
         "create": "Utwórz",
         "cancel": "Anuluj",
         "search": "Szukaj",
-        "no_cvs": "Nie dodano jeszcze żadnych CV"
+        "no_cvs": "Nie dodano jeszcze żadnych CV",
+        "details": "Szczegóły",
+        "skills": "Umiejętności",
+        "projects": "Projekty",
+        "preview": "Podgląd",
+        "update": "Zaktualizuj",
+        "add_skill": "Dodaj umiejętność",
+        "edit_skill_error": "Błąd edycji",
+        "skill_actions": "Akcje umiejętności",
+        "remove_skill_title": "Usuń umiejętność",
+        "remove_skill_confirm": "Czy na pewno chcesz usunąć",
+        "remove_skill_error": "Nie udało się usunąć umiejętności. Spróbuj ponownie.",
+        "edit_skill_title": "Edytuj umiejętność",
+        "save": "Zapisz",
+        "add_skill_error": "Nie udało się dodać umiejętności. Spróbuj ponownie."
     }
 }

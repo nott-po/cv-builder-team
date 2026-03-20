@@ -20,18 +20,14 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-// 1. ИМПОРТЫ ХУКОВ (Убедись, что регистр совпадает с файлами!)
 import { useCv } from "@/lib/hooks/useCV";
 import { useUpdateCV } from "@/lib/hooks/useUpdateCV";
 import { cn } from "@/lib/utils";
 
-// Этот хук мы обсуждали ранее
-
-// 2. СХЕМА ВАЛИДАЦИИ
 const cvSchema = z.object({
     name: z.string().min(1, "Name is required"),
     education: z.string().optional(),
-    description: z.string().min(1, "Description is required"),
+    description: z.string().optional(),
 });
 
 export type UpdateCvFormData = z.infer<typeof cvSchema>;
@@ -41,13 +37,10 @@ export function CVUpdateForm() {
     const cvId = params.id as string;
     const t = useTranslations("CV");
 
-    // 3. ПОЛУЧАЕМ ДАННЫЕ С СЕРВЕРА
     const { cv, isLoading: isFetching, isError: isFetchError } = useCv(cvId);
 
-    // 4. ПОДКЛЮЧАЕМ МУТАЦИЮ ОБНОВЛЕНИЯ
     const { mutateAsync: updateCv, isPending: isSubmitting, error: updateError } = useUpdateCV();
 
-    // 5. ИНИЦИАЛИЗИРУЕМ ФОРМУ
     const form = useForm<UpdateCvFormData>({
         resolver: zodResolver(cvSchema),
         mode: "onChange",
@@ -65,25 +58,20 @@ export function CVUpdateForm() {
             : undefined,
     });
 
-    // ДОБАВЛЯЕМ ЭТО:
-    // isDirty равно true, если в форме есть несохраненные изменения
     const { isDirty, isValid } = form.formState;
     const isSubmitEnabled = isDirty && isValid;
 
-    // 6. ОБРАБОТЧИК ОТПРАВКИ
     const onSubmit = async (data: UpdateCvFormData) => {
         try {
             await updateCv({
-                cvId: cvId, // Передаем ID резюме, которое обновляем
+                cvId: cvId,
                 ...data,
             });
-            // Если нужно, тут можно добавить тост-уведомление об успехе
         } catch (e) {
             console.error("Failed to update CV", e);
         }
     };
 
-    // Показываем загрузку, пока тянем данные резюме
     if (isFetching) return <div className="p-6">Загрузка данных...</div>;
     if (isFetchError || !cv) return <div className="text-destructive p-6">Ошибка загрузки CV</div>;
 
@@ -104,14 +92,18 @@ export function CVUpdateForm() {
                         <FormField
                             control={form.control}
                             name="name"
-                            render={({ field }) => (
+                            render={({ field, fieldState }) => (
                                 <FormItem className="relative">
                                     <FormLabel className="bg-surface text-muted-foreground absolute -top-2.5 left-3 z-10 px-1 text-xs leading-none">
                                         {t("name")}
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            variant="default"
+                                            variant={
+                                                fieldState.error || form.formState.errors.root
+                                                    ? "error"
+                                                    : "default"
+                                            }
                                             size="default"
                                             className="relative z-0 text-base"
                                             autoComplete="off"
@@ -126,14 +118,18 @@ export function CVUpdateForm() {
                         <FormField
                             control={form.control}
                             name="education"
-                            render={({ field }) => (
+                            render={({ field, fieldState }) => (
                                 <FormItem className="relative">
                                     <FormLabel className="bg-surface text-muted-foreground absolute -top-2.5 left-3 z-10 px-1 text-xs leading-none">
                                         {t("education")}
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            variant="default"
+                                            variant={
+                                                fieldState.error || form.formState.errors.root
+                                                    ? "error"
+                                                    : "default"
+                                            }
                                             size="default"
                                             className="relative z-0 text-base"
                                             autoComplete="off"
