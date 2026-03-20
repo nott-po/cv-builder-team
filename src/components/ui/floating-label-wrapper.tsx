@@ -19,5 +19,5 @@ export function FloatingLabelWrapper({ label, children, error }: FloatingLabelWr
     );
 }
 
-export const floatingSelectTriggerClass =
+export const floatingInputClass =
     "text-input-default h-auto border-0 px-3 py-4 shadow-none focus:ring-0";
