@@ -8,6 +8,7 @@ import {
     FolderOpen,
     Languages,
     LayoutGrid,
+    Settings,
     TrendingUp,
     Users,
 } from "lucide-react";
@@ -32,6 +33,7 @@ export function AdminSidebar() {
             { href: ROUTES.ADMIN.SKILLS, label: t("skills"), Icon: TrendingUp },
             { href: ROUTES.ADMIN.LANGUAGES, label: t("languages"), Icon: Languages },
         ],
+        [{ href: ROUTES.ADMIN.SETTINGS, label: t("settings"), Icon: Settings }],
     ];
 
     const initial = user?.email?.[0]?.toUpperCase() ?? "?";
