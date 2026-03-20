@@ -9,10 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-    FloatingLabelWrapper,
-    floatingSelectTriggerClass,
-} from "@/components/ui/floating-label-wrapper";
+import { FloatingLabelWrapper, floatingInputClass } from "@/components/ui/floating-label-wrapper";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import {
     Select,
@@ -90,7 +87,7 @@ export function ProfileLanguageForm({
                                     disabled={isSubmitting || readOnly}
                                 >
                                     <FormControl>
-                                        <SelectTrigger className={floatingSelectTriggerClass}>
+                                        <SelectTrigger className={floatingInputClass}>
                                             <SelectValue placeholder={tUser("language")} />
                                         </SelectTrigger>
                                     </FormControl>
@@ -128,7 +125,7 @@ export function ProfileLanguageForm({
                                     disabled={isSubmitting}
                                 >
                                     <FormControl>
-                                        <SelectTrigger className={floatingSelectTriggerClass}>
+                                        <SelectTrigger className={floatingInputClass}>
                                             <SelectValue placeholder={tUser("proficiency")} />
                                         </SelectTrigger>
                                     </FormControl>
