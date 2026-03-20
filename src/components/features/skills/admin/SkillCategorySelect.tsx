@@ -4,10 +4,7 @@ import { Fragment } from "react";
 
 import { useTranslations } from "next-intl";
 
-import {
-    FloatingLabelWrapper,
-    floatingSelectTriggerClass,
-} from "@/components/ui/floating-label-wrapper";
+import { FloatingLabelWrapper, floatingInputClass } from "@/components/ui/floating-label-wrapper";
 import {
     Select,
     SelectContent,
@@ -57,7 +54,7 @@ export function SkillCategorySelect({
     return (
         <FloatingLabelWrapper label={t("category")} error={error}>
             <Select onValueChange={onChange} value={value} disabled={disabled}>
-                <SelectTrigger className={floatingSelectTriggerClass}>
+                <SelectTrigger className={floatingInputClass}>
                     <SelectValue placeholder={t("category")} />
                 </SelectTrigger>
                 <SelectContent side="bottom" avoidCollisions={false} className="max-h-60">
