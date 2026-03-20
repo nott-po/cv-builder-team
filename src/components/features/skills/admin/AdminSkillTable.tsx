@@ -1,0 +1,114 @@
+"use client";
+
+import { useState } from "react";
+
+import { useTranslations } from "next-intl";
+
+import { Plus } from "lucide-react";
+
+import { AdminDeleteModal } from "@/components/shared/AdminDeleteModal";
+import { DataTable } from "@/components/shared/DataTable";
+import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
+import { SortableColumnHeader } from "@/components/shared/SortableColumnHeader";
+import { Button } from "@/components/ui/button";
+import { DELETE_SKILL_MUTATION } from "@/lib/graphql/operations/skills";
+import { skillsListKey, useSkillTable, type SkillRow } from "@/lib/hooks/useSkillTable";
+
+import { CreateSkillModal } from "./CreateSkillModal";
+import { EditSkillModal } from "./EditSkillModal";
+import { SkillTableSkeleton } from "./SkillTableSkeleton";
+
+export function AdminSkillTable() {
+    const t = useTranslations("Admin");
+    const { state, paginatedSkills, sortDir, handleSortToggle } = useSkillTable();
+    const [createOpen, setCreateOpen] = useState(false);
+    const [editOpen, setEditOpen] = useState(false);
+    const [editSkill, setEditSkill] = useState<SkillRow | null>(null);
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const [deleteSkill, setDeleteSkill] = useState<SkillRow | null>(null);
+
+    return (
+        <>
+            <DataTable
+                state={state}
+                messages={{ empty: t("no_skills"), error: t("error") }}
+                searchPlaceholder={t("name")}
+                actions={
+                    <Button variant="redText" onClick={() => setCreateOpen(true)}>
+                        <Plus />
+                        {t("create_skill")}
+                    </Button>
+                }
+                skeleton={<SkillTableSkeleton rows={state.pageSize} />}
+                colSpan={4}
+                head={
+                    <>
+                        <th className="py-4 text-left">
+                            <span className="text-small text-basic-text tracking-standard px-4 font-medium whitespace-nowrap">
+                                {t("name")}
+                            </span>
+                        </th>
+
+                        <SortableColumnHeader
+                            label={t("type")}
+                            sortDir={sortDir}
+                            onToggle={handleSortToggle}
+                        />
+
+                        <th className="py-4 text-left">
+                            <span className="text-small text-basic-text tracking-standard px-4 font-medium whitespace-nowrap">
+                                {t("category")}
+                            </span>
+                        </th>
+
+                        <th className="w-18" />
+                    </>
+                }
+            >
+                {paginatedSkills.map((skill) => (
+                    <tr key={skill.id} className="border-divider border-b transition-colors">
+                        <td className="text-small text-basic-text tracking-standard px-4 py-4">
+                            {skill.name}
+                        </td>
+
+                        <td className="text-small text-basic-text tracking-standard px-4 py-4">
+                            {skill.category_parent_name ?? "—"}
+                        </td>
+
+                        <td className="text-small text-text-secondary tracking-standard px-4 py-4">
+                            {skill.category_name ?? "—"}
+                        </td>
+
+                        <td className="w-18 py-4">
+                            <RowActionsDropdown
+                                ariaLabel={t("skill_actions")}
+                                onEdit={() => {
+                                    setEditSkill(skill);
+                                    setEditOpen(true);
+                                }}
+                                onDelete={() => {
+                                    setDeleteSkill(skill);
+                                    setDeleteOpen(true);
+                                }}
+                            />
+                        </td>
+                    </tr>
+                ))}
+            </DataTable>
+
+            <CreateSkillModal open={createOpen} onOpenChange={setCreateOpen} />
+            <EditSkillModal open={editOpen} skill={editSkill} onOpenChange={setEditOpen} />
+            <AdminDeleteModal
+                open={deleteOpen}
+                item={deleteSkill}
+                onOpenChange={setDeleteOpen}
+                mutation={DELETE_SKILL_MUTATION}
+                buildVars={(id) => ({ skill: { skillId: id } })}
+                queryKey={skillsListKey()}
+                titleKey="delete_skill_title"
+                confirmKey="delete_skill_confirm"
+                errorKey="delete_skill_error"
+            />
+        </>
+    );
+}

@@ -21,27 +21,6 @@ export const USERS_QUERY = `
     }
 `;
 
-export type DepartmentsResult = { departments: { id: string; name: string }[] };
-export type PositionsResult = { positions: { id: string; name: string }[] };
-
-export const DEPARTMENTS_QUERY = `
-    query Departments {
-        departments {
-            id
-            name
-        }
-    }
-`;
-
-export const POSITIONS_QUERY = `
-    query Positions {
-        positions {
-            id
-            name
-        }
-    }
-`;
-
 export const CREATE_USER_MUTATION = `
     mutation CreateUser($user: CreateUserInput!) {
         createUser(user: $user) {
