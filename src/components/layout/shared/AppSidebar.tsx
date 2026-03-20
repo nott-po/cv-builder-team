@@ -42,7 +42,7 @@ function DesktopNavList({ navGroups }: { navGroups: NavItem[][] }) {
                                     className={cn(
                                         "flex h-14 items-center rounded-tr-full rounded-br-full transition-colors",
                                         isActive
-                                            ? "bg-hover-sm text-basic-text"
+                                            ? "bg-background text-basic-text"
                                             : "text-text-secondary hover:bg-hover-xs",
                                     )}
                                 >
@@ -92,7 +92,7 @@ function MobileBottomNav({
                         className={cn(
                             "flex flex-1 items-center justify-center gap-2 rounded-full px-2 py-2 transition-colors sm:px-3",
                             isActive
-                                ? "bg-hover-sm text-basic-text"
+                                ? "bg-background text-basic-text"
                                 : "text-text-secondary hover:bg-hover-xs",
                         )}
                     >
