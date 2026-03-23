@@ -4,9 +4,9 @@ import { useMemo, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
-import type { UserRole } from "@/generated/graphql";
 import { useRouter } from "@/i18n/routing";
 import { STALE_TIME_ENTITY } from "@/lib/constants/query";
+import type { UserRole } from "@/lib/constants/roles";
 import { fetcher } from "@/lib/graphql/fetcher";
 import { USERS_QUERY } from "@/lib/graphql/operations/employees";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";

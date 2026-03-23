@@ -1,4 +1,4 @@
-import { UserRole } from "@/generated/graphql";
+import { type UserRole } from "@/lib/constants/roles";
 
 export type SessionUser = {
     id: string;
