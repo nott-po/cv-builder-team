@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
+import { STALE_TIME_ENTITY } from "@/lib/constants/query";
 import { fetcher } from "@/lib/graphql/fetcher";
 import { SKILLS_QUERY } from "@/lib/graphql/operations/skills";
 import { useTablePagination } from "@/lib/hooks/useTablePagination";
@@ -34,6 +35,7 @@ export function useSkillTable(basePath = "/admin/skills") {
     const { data, isLoading, isError } = useQuery<SkillsQueryResult>({
         queryKey: skillsListKey(),
         queryFn: () => fetcher<SkillsQueryResult, Record<string, never>>(SKILLS_QUERY)(),
+        staleTime: STALE_TIME_ENTITY,
     });
 
     const skills = useMemo(() => {

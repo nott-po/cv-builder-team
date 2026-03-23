@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
+import { STALE_TIME_ENTITY } from "@/lib/constants/query";
 import { fetcher } from "@/lib/graphql/fetcher";
 import { PROJECTS_QUERY } from "@/lib/graphql/operations/projects";
 import { useTablePagination } from "@/lib/hooks/useTablePagination";
@@ -35,6 +36,7 @@ export function useProjectTable(basePath = "/admin/projects") {
     const { data, isLoading, isError } = useQuery<ProjectsQueryResult>({
         queryKey: projectsListKey(),
         queryFn: () => fetcher<ProjectsQueryResult, Record<string, never>>(PROJECTS_QUERY)(),
+        staleTime: STALE_TIME_ENTITY,
     });
 
     const projects = useMemo(() => {

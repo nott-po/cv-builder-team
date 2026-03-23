@@ -13,6 +13,7 @@ interface SimpleTableOptions<TData, TRow> {
     queryFn: () => Promise<TData>;
     getRows: (data: TData) => TRow[];
     filterRow: (row: TRow, lower: string) => boolean;
+    staleTime?: number;
 }
 
 export function useSimpleTable<TData, TRow>({
@@ -21,6 +22,7 @@ export function useSimpleTable<TData, TRow>({
     queryFn,
     getRows,
     filterRow,
+    staleTime,
 }: SimpleTableOptions<TData, TRow>) {
     const { page, setPage, pageSize, handlePageChange, handlePageSizeChange } =
         useTablePagination(basePath);
@@ -30,6 +32,7 @@ export function useSimpleTable<TData, TRow>({
     const { data, isLoading, isError } = useQuery<TData>({
         queryKey,
         queryFn,
+        staleTime,
     });
 
     const rows = useMemo(() => {
