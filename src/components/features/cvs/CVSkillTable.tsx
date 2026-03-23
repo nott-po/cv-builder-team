@@ -107,7 +107,7 @@ export function CVSkillTable({ cvId, readOnly = false }: CVSkillTableProps) {
                                 <div className="grid grid-cols-2 gap-x-8 gap-y-2 sm:grid-cols-3">
                                     {group.skills.map((skill) => (
                                         <div
-                                            key={skill.name} // 3. ИСПОЛЬЗУЕМ skill.name
+                                            key={skill.name}
                                             className={`flex items-center gap-3 rounded px-2 py-2 ${
                                                 readOnly
                                                     ? ""

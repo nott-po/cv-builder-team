@@ -218,6 +218,7 @@
         "remove_skill_error": "Nie udało się usunąć umiejętności. Spróbuj ponownie.",
         "edit_skill_title": "Edytuj umiejętność",
         "save": "Zapisz",
-        "add_skill_error": "Nie udało się dodać umiejętności. Spróbuj ponownie."
+        "add_skill_error": "Nie udało się dodać umiejętności. Spróbuj ponownie.",
+        "error": "Coś poszło nie tak"
     }
 }

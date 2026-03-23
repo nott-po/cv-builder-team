@@ -120,7 +120,9 @@ export function CVTable() {
                                         <td className="text-small text-basic-text tracking-standard p-4">
                                             <button
                                                 className="hover:bg-hover-md ml-4 flex size-10 items-center justify-center rounded-full transition-colors"
-                                                onClick={() => {
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
                                                     setSelectedCv(cv);
                                                     setDeleteOpen(true);
                                                 }}

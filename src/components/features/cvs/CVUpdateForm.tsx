@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { UserCVHeader } from "@/components/features/cvs/UserCVHeader";
+import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +21,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useCv } from "@/lib/hooks/useCV";
 import { useUpdateCV } from "@/lib/hooks/useUpdateCV";
 import { cn } from "@/lib/utils";
@@ -72,8 +74,31 @@ export function CVUpdateForm() {
         }
     };
 
-    if (isFetching) return <div className="p-6">Загрузка данных...</div>;
-    if (isFetchError || !cv) return <div className="text-destructive p-6">Ошибка загрузки CV</div>;
+    if (isFetchError) return <ErrorMessage message={t("error")} />;
+
+    if (isFetching || !cv) {
+        return (
+            <div>
+                <div className="flex justify-start gap-3 px-11 pt-3 pb-3">
+                    <Skeleton className="h-6 w-20" />
+                    <Skeleton className="h-6 w-32" />
+                </div>
+                <div className="mb-4 px-6">
+                    <div className="mb-4">
+                        <UserCVHeader mode="details" />
+                    </div>
+                    <div className="mx-auto max-w-213 space-y-9 pt-4">
+                        <Skeleton className="h-14 w-full" />
+                        <Skeleton className="h-14 w-full" />
+                        <Skeleton className="h-40 w-full" />
+                        <div className="flex justify-end">
+                            <Skeleton className="h-12 w-full md:w-1/2" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div>
@@ -165,12 +190,9 @@ export function CVUpdateForm() {
                             )}
                         />
 
-                        {/* Показываем ошибку обновления, если она есть */}
                         {updateError && (
                             <p className="text-destructive text-sm">
-                                {updateError instanceof Error
-                                    ? updateError.message
-                                    : "Ошибка при сохранении"}
+                                {updateError instanceof Error ? updateError.message : t("error")}
                             </p>
                         )}
 

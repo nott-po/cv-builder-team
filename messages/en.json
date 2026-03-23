@@ -218,6 +218,7 @@
         "remove_skill_error": "Failed to remove skill. Please try again.",
         "edit_skill_title": "Edit skill",
         "save": "Save",
-        "add_skill_error": "Failed to add skill. Please try again."
+        "add_skill_error": "Failed to add skill. Please try again.",
+        "error": "Something went wrong"
     }
 }
