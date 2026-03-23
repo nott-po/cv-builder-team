@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { STALE_TIME_ENTITY } from "@/lib/constants/query";
-import { fetcher } from "@/lib/graphql/fetcher";
+import { gqlClient } from "@/lib/graphql/fetcher";
 import { USER_QUERY } from "@/lib/graphql/operations/employee";
 
 export type EmployeeDetails = {
@@ -28,7 +28,7 @@ export type UserQueryResponse = {
 export function useUserData(id: string) {
     return useQuery<UserQueryResponse, Error, EmployeeDetails>({
         queryKey: ["employee", id],
-        queryFn: () => fetcher<UserQueryResponse, { userId: string }>(USER_QUERY, { userId: id })(),
+        queryFn: () => gqlClient.request<UserQueryResponse>(USER_QUERY, { userId: id }),
         select: (data) => data.user,
         enabled: Boolean(id),
         staleTime: STALE_TIME_ENTITY,

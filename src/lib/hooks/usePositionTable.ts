@@ -1,7 +1,7 @@
 "use client";
 
 import { STALE_TIME_REFERENCE } from "@/lib/constants/query";
-import { fetcher } from "@/lib/graphql/fetcher";
+import { gqlClient } from "@/lib/graphql/fetcher";
 import {
     POSITIONS_QUERY,
     positionsListKey,
@@ -20,7 +20,7 @@ export function usePositionTable(basePath = "/admin/positions") {
     const { state, paginatedRows } = useSimpleTable<PositionsQueryResult, PositionRow>({
         basePath,
         queryKey: positionsListKey(),
-        queryFn: () => fetcher<PositionsQueryResult, Record<string, never>>(POSITIONS_QUERY)(),
+        queryFn: () => gqlClient.request<PositionsQueryResult>(POSITIONS_QUERY),
         getRows: getPositionRows,
         filterRow: filterPositionRow,
         staleTime: STALE_TIME_REFERENCE,
