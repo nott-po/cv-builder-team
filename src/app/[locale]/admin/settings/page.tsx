@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { SettingsForm } from "@/components/features/settings/SettingsForm";
 import { PageHeader } from "@/components/shared/PageHeader";
 
-export default async function SettingsPage() {
+export default async function AdminSettingsPage() {
     const t = await getTranslations("Settings");
 
     return (

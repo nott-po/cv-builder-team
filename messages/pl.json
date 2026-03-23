@@ -130,7 +130,8 @@
         "no_skills_available": "Brak dostępnych umiejętności",
         "remove_environment_item": "Usuń {name}",
         "update": "Zaktualizuj",
-        "error": "Coś poszło nie tak"
+        "error": "Coś poszło nie tak",
+        "settings": "Ustawienia"
     },
     "User": {
         "employees": "Pracownicy",
@@ -189,6 +190,15 @@
         "edit_skill_error": "Nie udało się zaktualizować umiejętności. Spróbuj ponownie.",
         "remove_skill_title": "Usuń umiejętność",
         "remove_skill_confirm": "Czy na pewno chcesz usunąć",
-        "remove_skill_error": "Nie udało się usunąć umiejętności. Spróbuj ponownie."
+        "remove_skill_error": "Nie udało się usunąć umiejętności. Spróbuj ponownie.",
+        "settings": "Ustawienia"
+    },
+    "Settings": {
+        "title": "Ustawienia",
+        "appearance": "Wygląd",
+        "language": "Język",
+        "theme_system": "Ustawienia urządzenia",
+        "theme_light": "Jasny",
+        "theme_dark": "Ciemny"
     }
 }
