@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -37,6 +39,8 @@ export function Pagination({
     rowsPerPageLabel,
     pageLabel,
 }: PaginationProps) {
+    const t = useTranslations("Common");
+
     return (
         <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2 px-6 py-3">
             <div className="flex items-center gap-2">
@@ -70,7 +74,7 @@ export function Pagination({
                             className="size-8"
                             onClick={() => onPageChange(1)}
                             disabled={page === 1}
-                            aria-label="First page"
+                            aria-label={t("first_page")}
                         >
                             <ChevronsLeft className="size-4" />
                         </Button>
@@ -82,7 +86,7 @@ export function Pagination({
                             className="size-8"
                             onClick={() => onPageChange(page - 1)}
                             disabled={page === 1}
-                            aria-label="Previous page"
+                            aria-label={t("previous_page")}
                         >
                             <ChevronLeft className="size-4" />
                         </Button>
@@ -94,7 +98,7 @@ export function Pagination({
                             className="size-8"
                             onClick={() => onPageChange(page + 1)}
                             disabled={page >= totalPages}
-                            aria-label="Next page"
+                            aria-label={t("next_page")}
                         >
                             <ChevronRight className="size-4" />
                         </Button>
@@ -106,7 +110,7 @@ export function Pagination({
                             className="size-8"
                             onClick={() => onPageChange(totalPages)}
                             disabled={page >= totalPages}
-                            aria-label="Last page"
+                            aria-label={t("last_page")}
                         >
                             <ChevronsRight className="size-4" />
                         </Button>
