@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
-import { FileText, Globe, TrendingUp, Users } from "lucide-react";
+import { FileText, Globe, Settings, TrendingUp, Users } from "lucide-react";
 
 import { AppSidebar } from "@/components/layout/shared/AppSidebar";
 import { ROUTES } from "@/lib/constants/routes";
@@ -19,6 +19,7 @@ export function UserSidebar() {
             { href: ROUTES.LANGUAGES, label: t("languages"), Icon: Globe },
             { href: ROUTES.CVS, label: t("cvs"), Icon: FileText },
         ],
+        [{ href: ROUTES.SETTINGS, label: t("settings"), Icon: Settings }],
     ];
 
     const initial = user?.email?.[0]?.toUpperCase() ?? "?";

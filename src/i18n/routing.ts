@@ -8,4 +8,9 @@ export const routing = defineRouting({
     localeDetection: false,
 });
 
+export const LOCALE_LABELS: Record<string, string> = {
+    en: "English",
+    pl: "Polski",
+};
+
 export const { Link, useRouter, usePathname } = createNavigation(routing);

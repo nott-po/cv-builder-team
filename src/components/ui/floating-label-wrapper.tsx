@@ -11,7 +11,7 @@ export function FloatingLabelWrapper({ label, children, error }: FloatingLabelWr
         <div
             className={`relative border ${error ? "border-destructive" : "border-border-input-default"}`}
         >
-            <span className="bg-background text-muted-foreground absolute -top-2.5 left-3 px-1 text-xs leading-none">
+            <span className="bg-surface text-muted-foreground absolute -top-2.5 left-3 px-1 text-xs leading-none">
                 {label}
             </span>
             {children}
