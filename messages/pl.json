@@ -150,6 +150,8 @@
         "department": "Dział",
         "position": "Stanowisko",
         "no_employees": "Nie znaleziono pracowników",
+        "no_departments": "Brak działów",
+        "no_positions": "Brak stanowisk",
         "loading": "Ładowanie...",
         "error": "Coś poszło nie tak",
         "rows_per_page": "Wierszy na stronę",

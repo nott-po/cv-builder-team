@@ -150,6 +150,8 @@
         "department": "Department",
         "position": "Position",
         "no_employees": "No employees found",
+        "no_departments": "No departments",
+        "no_positions": "No positions",
         "loading": "Loading...",
         "error": "Something went wrong",
         "rows_per_page": "Rows per page",

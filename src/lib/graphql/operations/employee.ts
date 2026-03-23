@@ -5,7 +5,13 @@ export const USER_QUERY = `
             created_at
             email
             department_name
+            department {
+                id
+            }
             position_name
+            position {
+                id
+            }
             profile {
                 first_name
                 last_name
