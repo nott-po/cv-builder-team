@@ -1,13 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { useTranslations } from "next-intl";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
-import { Eye, EyeOff } from "lucide-react";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -20,6 +19,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useRouter } from "@/i18n/routing";
 import apiClient from "@/lib/api/client";
 import { ROLE_HOME } from "@/lib/constants/roles";
@@ -35,7 +35,6 @@ export function LoginForm() {
     const t = useTranslations("Auth");
     const router = useRouter();
     const { setUser } = useCurrentUser();
-    const [showPassword, setShowPassword] = useState(false);
 
     const formSchema = useMemo(() => {
         return z.object({
@@ -110,33 +109,17 @@ export function LoginForm() {
                                 <FormItem>
                                     <FormLabel className="sr-only">{t("password")}</FormLabel>
                                     <FormControl>
-                                        <div className="relative">
-                                            <Input
-                                                size="default"
-                                                variant={
-                                                    fieldState.error || form.formState.errors.root
-                                                        ? "error"
-                                                        : "default"
-                                                }
-                                                type={showPassword ? "text" : "password"}
-                                                autoComplete="current-password"
-                                                placeholder={t("password")}
-                                                {...field}
-                                            />
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute top-1/2 right-5 h-8 w-8 -translate-y-1/2 p-0 hover:bg-transparent [&_svg]:size-6"
-                                            >
-                                                {showPassword ? (
-                                                    <EyeOff className="text-password-eye" />
-                                                ) : (
-                                                    <Eye className="text-password-eye" />
-                                                )}
-                                            </Button>
-                                        </div>
+                                        <PasswordInput
+                                            size="default"
+                                            variant={
+                                                fieldState.error || form.formState.errors.root
+                                                    ? "error"
+                                                    : "default"
+                                            }
+                                            autoComplete="current-password"
+                                            placeholder={t("password")}
+                                            {...field}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
