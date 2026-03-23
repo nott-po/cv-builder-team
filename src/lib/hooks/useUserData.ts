@@ -10,7 +10,9 @@ export type EmployeeDetails = {
     email: string;
     created_at: string;
     department_name: string | null;
+    department?: { id: string } | null;
     position_name: string | null;
+    position?: { id: string } | null;
     profile: {
         first_name: string | null;
         last_name: string | null;
