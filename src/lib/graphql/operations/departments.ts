@@ -1,3 +1,14 @@
+export type DepartmentRow = {
+    id: string;
+    name: string;
+};
+
+export type DepartmentsQueryResult = {
+    departments: DepartmentRow[];
+};
+
+export const departmentsListKey = () => ["departments", "list"] as const;
+
 export const DEPARTMENTS_QUERY = `
     query Departments {
         departments {
