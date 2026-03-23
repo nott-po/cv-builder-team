@@ -116,7 +116,7 @@ export function AvatarUpload({
                         {t("upload_avatar")}
                     </div>
                     <span className="text-text-secondary text-sm font-normal">
-                        {t("Upload_avatar_rules")}
+                        {t("upload_avatar_rules")}
                     </span>
                 </FormLabel>
                 <FormMessage />
