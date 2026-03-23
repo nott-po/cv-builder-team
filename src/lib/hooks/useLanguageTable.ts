@@ -1,7 +1,7 @@
 "use client";
 
 import { STALE_TIME_REFERENCE } from "@/lib/constants/query";
-import { fetcher } from "@/lib/graphql/fetcher";
+import { gqlClient } from "@/lib/graphql/fetcher";
 import { LANGUAGES_QUERY } from "@/lib/graphql/operations/languages";
 import { useSimpleTable } from "@/lib/hooks/useSimpleTable";
 
@@ -26,7 +26,7 @@ export function useLanguageTable(basePath = "/admin/languages") {
     const { state, paginatedRows } = useSimpleTable<LanguagesQueryResult, LanguageRow>({
         basePath,
         queryKey: languagesListKey(),
-        queryFn: () => fetcher<LanguagesQueryResult, Record<string, never>>(LANGUAGES_QUERY)(),
+        queryFn: () => gqlClient.request<LanguagesQueryResult>(LANGUAGES_QUERY),
         getRows: getLanguageRows,
         filterRow: filterLanguageRow,
         staleTime: STALE_TIME_REFERENCE,

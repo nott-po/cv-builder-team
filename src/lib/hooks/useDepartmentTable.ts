@@ -1,7 +1,7 @@
 "use client";
 
 import { STALE_TIME_REFERENCE } from "@/lib/constants/query";
-import { fetcher } from "@/lib/graphql/fetcher";
+import { gqlClient } from "@/lib/graphql/fetcher";
 import {
     DEPARTMENTS_QUERY,
     departmentsListKey,
@@ -20,7 +20,7 @@ export function useDepartmentTable(basePath = "/admin/departments") {
     const { state, paginatedRows } = useSimpleTable<DepartmentsQueryResult, DepartmentRow>({
         basePath,
         queryKey: departmentsListKey(),
-        queryFn: () => fetcher<DepartmentsQueryResult, Record<string, never>>(DEPARTMENTS_QUERY)(),
+        queryFn: () => gqlClient.request<DepartmentsQueryResult>(DEPARTMENTS_QUERY),
         getRows: getDepartmentRows,
         filterRow: filterDepartmentRow,
         staleTime: STALE_TIME_REFERENCE,
