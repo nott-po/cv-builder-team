@@ -15,7 +15,20 @@ function isTokenExpiredError(status: number, body: GqlResponse): boolean {
 }
 
 export async function POST(request: NextRequest) {
-    const body = await request.json();
+    let body: { query: string; variables?: Record<string, unknown> };
+    try {
+        body = await request.json();
+    } catch {
+        return NextResponse.json(
+            { errors: [{ message: "Invalid request body" }] },
+            { status: 400 },
+        );
+    }
+
+    if (!body.query || typeof body.query !== "string") {
+        return NextResponse.json({ errors: [{ message: "Missing query" }] }, { status: 400 });
+    }
+
     const session = await getSession();
 
     let status: number, data: GqlResponse;
