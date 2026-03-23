@@ -1,18 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { gqlClient } from "@/lib/graphql/fetcher";
-import { POSITIONS_QUERY } from "@/lib/graphql/operations/positions";
-
-export type PositionRow = {
-    id: string;
-    name: string;
-};
-
-export type PositionsQueryResult = {
-    positions: PositionRow[];
-};
-
-export const positionsListKey = () => ["positions", "list"] as const;
+import {
+    POSITIONS_QUERY,
+    positionsListKey,
+    type PositionRow,
+    type PositionsQueryResult,
+} from "@/lib/graphql/operations/positions";
 
 export function usePositions() {
     return useQuery<PositionsQueryResult, Error, PositionRow[]>({

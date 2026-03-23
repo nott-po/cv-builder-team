@@ -1,19 +1,15 @@
 "use client";
 
 import { fetcher } from "@/lib/graphql/fetcher";
-import { POSITIONS_QUERY } from "@/lib/graphql/operations/positions";
+import {
+    POSITIONS_QUERY,
+    positionsListKey,
+    type PositionRow,
+    type PositionsQueryResult,
+} from "@/lib/graphql/operations/positions";
 import { useSimpleTable } from "@/lib/hooks/useSimpleTable";
 
-export type PositionRow = {
-    id: string;
-    name: string;
-};
-
-export type PositionsQueryResult = {
-    positions: PositionRow[];
-};
-
-export const positionsListKey = () => ["positions", "list"] as const;
+export { positionsListKey, type PositionRow, type PositionsQueryResult };
 
 const getPositionRows = (data: PositionsQueryResult) => data.positions;
 const filterPositionRow = (row: PositionRow, lower: string) =>

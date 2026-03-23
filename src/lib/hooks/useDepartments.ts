@@ -1,18 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { gqlClient } from "@/lib/graphql/fetcher";
-import { DEPARTMENTS_QUERY } from "@/lib/graphql/operations/departments";
-
-export type DepartmentRow = {
-    id: string;
-    name: string;
-};
-
-export type DepartmentsQueryResult = {
-    departments: DepartmentRow[];
-};
-
-export const departmentsListKey = () => ["departments", "list"] as const;
+import {
+    DEPARTMENTS_QUERY,
+    departmentsListKey,
+    type DepartmentRow,
+    type DepartmentsQueryResult,
+} from "@/lib/graphql/operations/departments";
 
 export function useDepartments() {
     return useQuery<DepartmentsQueryResult, Error, DepartmentRow[]>({

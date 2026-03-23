@@ -1,19 +1,15 @@
 "use client";
 
 import { fetcher } from "@/lib/graphql/fetcher";
-import { DEPARTMENTS_QUERY } from "@/lib/graphql/operations/departments";
+import {
+    DEPARTMENTS_QUERY,
+    departmentsListKey,
+    type DepartmentRow,
+    type DepartmentsQueryResult,
+} from "@/lib/graphql/operations/departments";
 import { useSimpleTable } from "@/lib/hooks/useSimpleTable";
 
-export type DepartmentRow = {
-    id: string;
-    name: string;
-};
-
-export type DepartmentsQueryResult = {
-    departments: DepartmentRow[];
-};
-
-export const departmentsListKey = () => ["departments", "list"] as const;
+export { departmentsListKey, type DepartmentRow, type DepartmentsQueryResult };
 
 const getDepartmentRows = (data: DepartmentsQueryResult) => data.departments;
 const filterDepartmentRow = (row: DepartmentRow, lower: string) =>
