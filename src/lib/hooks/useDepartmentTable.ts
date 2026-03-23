@@ -1,5 +1,6 @@
 "use client";
 
+import { STALE_TIME_REFERENCE } from "@/lib/constants/query";
 import { fetcher } from "@/lib/graphql/fetcher";
 import {
     DEPARTMENTS_QUERY,
@@ -22,6 +23,7 @@ export function useDepartmentTable(basePath = "/admin/departments") {
         queryFn: () => fetcher<DepartmentsQueryResult, Record<string, never>>(DEPARTMENTS_QUERY)(),
         getRows: getDepartmentRows,
         filterRow: filterDepartmentRow,
+        staleTime: STALE_TIME_REFERENCE,
     });
 
     return { state, paginatedDepartments: paginatedRows };

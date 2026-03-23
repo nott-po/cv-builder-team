@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 
+import { STALE_TIME_ENTITY } from "@/lib/constants/query";
 import { fetcher } from "@/lib/graphql/fetcher";
 import { USER_QUERY } from "@/lib/graphql/operations/employee";
 
@@ -30,5 +31,6 @@ export function useUserData(id: string) {
         queryFn: () => fetcher<UserQueryResponse, { userId: string }>(USER_QUERY, { userId: id })(),
         select: (data) => data.user,
         enabled: Boolean(id),
+        staleTime: STALE_TIME_ENTITY,
     });
 }

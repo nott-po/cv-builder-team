@@ -1,5 +1,6 @@
 "use client";
 
+import { STALE_TIME_REFERENCE } from "@/lib/constants/query";
 import { fetcher } from "@/lib/graphql/fetcher";
 import {
     POSITIONS_QUERY,
@@ -22,6 +23,7 @@ export function usePositionTable(basePath = "/admin/positions") {
         queryFn: () => fetcher<PositionsQueryResult, Record<string, never>>(POSITIONS_QUERY)(),
         getRows: getPositionRows,
         filterRow: filterPositionRow,
+        staleTime: STALE_TIME_REFERENCE,
     });
 
     return { state, paginatedPositions: paginatedRows };
