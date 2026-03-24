@@ -23,10 +23,12 @@ export function EditProjectModal({ open, project, onOpenChange }: EditProjectMod
     const queryClient = useQueryClient();
 
     const { isPending, submitError, handleOpenChange, handleMutate } = useModalMutation({
-        mutationFn: (data: ProjectFormData) =>
-            gqlClient.request(UPDATE_PROJECT_MUTATION, {
+        mutationFn: (data: ProjectFormData) => {
+            if (!project) return Promise.reject(new Error("No project selected"));
+
+            return gqlClient.request(UPDATE_PROJECT_MUTATION, {
                 project: {
-                    projectId: project!.id,
+                    projectId: project.id,
                     name: data.name,
                     domain: data.domain,
                     start_date: data.start_date,
@@ -34,7 +36,8 @@ export function EditProjectModal({ open, project, onOpenChange }: EditProjectMod
                     description: data.description,
                     environment: data.environment,
                 },
-            }),
+            });
+        },
         onSuccess: () => queryClient.invalidateQueries({ queryKey: projectsListKey() }),
         onClose: onOpenChange,
     });
