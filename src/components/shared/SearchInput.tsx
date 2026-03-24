@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Search } from "lucide-react";
 
@@ -13,6 +13,11 @@ type SearchInputProps = {
 
 export function SearchInput({ value, onChange, placeholder, debounceMs = 300 }: SearchInputProps) {
     const [localValue, setLocalValue] = useState(value);
+    const onChangeRef = useRef(onChange);
+
+    useEffect(() => {
+        onChangeRef.current = onChange;
+    }, [onChange]);
 
     useEffect(() => {
         setLocalValue(value);
@@ -20,9 +25,9 @@ export function SearchInput({ value, onChange, placeholder, debounceMs = 300 }: 
 
     useEffect(() => {
         if (localValue === value) return;
-        const timer = setTimeout(() => onChange(localValue), debounceMs);
+        const timer = setTimeout(() => onChangeRef.current(localValue), debounceMs);
         return () => clearTimeout(timer);
-    }, [localValue, debounceMs, onChange, value]);
+    }, [localValue, debounceMs, value]);
 
     return (
         <div className="relative w-80">
