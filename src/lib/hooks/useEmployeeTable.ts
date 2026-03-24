@@ -3,6 +3,7 @@
 import { useRouter } from "@/i18n/routing";
 import { STALE_TIME_ENTITY } from "@/lib/constants/query";
 import type { UserRole } from "@/lib/constants/roles";
+import { ROUTES } from "@/lib/constants/routes";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { USERS_QUERY } from "@/lib/graphql/operations/employees";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
@@ -65,8 +66,10 @@ export function useEmployeeTable(basePath = "/employees") {
 
     function handleRowClick(id: string) {
         if (user?.id === id) {
-            router.push("/profile");
-        } else router.push(`${basePath}/${id}`);
+            router.push(ROUTES.PROFILE);
+        } else {
+            router.push(`${basePath}/${id}`);
+        }
     }
 
     return {
