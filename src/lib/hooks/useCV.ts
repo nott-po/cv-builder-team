@@ -19,6 +19,13 @@ export type CvDetail = {
     projects?: {
         id: string;
         name: string;
+        start_date: string;
+        end_date: string | null;
+        description: string;
+        domain: string;
+        responsibilities: string[];
+        roles: string[];
+        environment: string[];
     }[];
     skills?: {
         name: string;

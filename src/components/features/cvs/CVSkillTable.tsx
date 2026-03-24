@@ -118,7 +118,7 @@ export function CVSkillTable({ cvId, readOnly = false }: CVSkillTableProps) {
                                                 className={`h-1.5 w-16 flex-shrink-0 rounded-sm ${MASTERY_COLOR[skill.mastery]}`}
                                             />
                                             <span className="text-small text-basic-text tracking-standard flex-1 truncate">
-                                                {skill.name} {/* 4. ИСПОЛЬЗУЕМ skill.name */}
+                                                {skill.name}
                                             </span>
                                             {!readOnly && (
                                                 <RowActionsDropdown

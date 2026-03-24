@@ -219,6 +219,20 @@
         "edit_skill_title": "Edit skill",
         "save": "Save",
         "add_skill_error": "Failed to add skill. Please try again.",
-        "error": "Something went wrong"
+        "error": "Something went wrong",
+        "add_project": "Add project",
+        "remove_project_title": "Remove project",
+        "remove_project_confirm": "Are you sure you want to remove",
+        "no_projects": "No projects",
+        "till_now": "Till now",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "add": "Add",
+        "select_a_project": "Select a project",
+        "project": "Project",
+        "environment": "Environment",
+        "domain": "Domain",
+        "roles": "Roles",
+        "responsibilities": "Responsibilities"
     }
 }

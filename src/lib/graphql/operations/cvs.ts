@@ -60,7 +60,17 @@ export const CV_QUERY = `
       }
       projects {
         id
+        project { 
+            id
+        }
         name
+        domain
+        start_date
+        end_date
+        roles
+        responsibilities
+        description
+        environment
       }
       skills {
         name
@@ -104,6 +114,30 @@ export const UPDATE_CV_SKILL_MUTATION = `
 export const DELETE_CV_SKILL_MUTATION = `
   mutation DeleteCvSkill($skill: DeleteCvSkillInput!) {
     deleteCvSkill(skill: $skill) {
+      id
+    }
+  }
+`;
+
+export const ADD_CV_PROJECT_MUTATION = `
+  mutation AddCvProject($project: AddCvProjectInput!) {
+    addCvProject(project: $project) {
+      id
+    }
+  }
+`;
+
+export const UPDATE_CV_PROJECT_MUTATION = `
+  mutation UpdateCvProject($project: UpdateCvProjectInput!) {
+    updateCvProject(project: $project) {
+      id
+    }
+  }
+`;
+
+export const REMOVE_CV_PROJECT_MUTATION = `
+  mutation RemoveCvProject($project: RemoveCvProjectInput!) {
+    removeCvProject(project: $project) {
       id
     }
   }

@@ -219,6 +219,20 @@
         "edit_skill_title": "Edytuj umiejętność",
         "save": "Zapisz",
         "add_skill_error": "Nie udało się dodać umiejętności. Spróbuj ponownie.",
-        "error": "Coś poszło nie tak"
+        "error": "Coś poszło nie tak",
+        "add_project": "Dodaj projekt",
+        "remove_project_title": "Usuń projekt",
+        "remove_project_confirm": "Czy na pewno chcesz usunąć",
+        "no_projects": "Brak projektów",
+        "till_now": "Do teraz",
+        "start_date": "Data rozpoczęcia",
+        "end_date": "Data zakończenia",
+        "add": "Dodaj",
+        "select_a_project": "Wybierz projekt",
+        "project": "Projekt",
+        "environment": "Środowisko",
+        "domain": "Domena",
+        "roles": "Role",
+        "responsibilities": "Obowiązki"
     }
 }

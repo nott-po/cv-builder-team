@@ -43,7 +43,7 @@ export function PageHeader({ items }: PageHeaderProps) {
                 );
 
                 return (
-                    <React.Fragment key={item.label}>
+                    <React.Fragment key={index}>
                         {item.href && !isLast ? (
                             <Link
                                 href={item.href}
