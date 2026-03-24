@@ -118,15 +118,10 @@ export function ProfileForm() {
 
     const avatarFile = useWatch({ control: form.control, name: "avatar" });
 
-    const watchedDept = useWatch({ control: form.control, name: "departmentId" });
-    const watchedPos = useWatch({ control: form.control, name: "positionId" });
-
     const { isDirty } = form.formState;
 
     const hasChanges = isDirty || avatarFile instanceof File;
-    const hasValidSelects = Boolean(watchedDept) && Boolean(watchedPos);
-
-    const isSubmitEnabled = hasChanges && hasValidSelects;
+    const isSubmitEnabled = hasChanges;
 
     function onSubmit(values: ProfileFormValues) {
         updateProfileMutation.mutate(values);
