@@ -25,8 +25,8 @@ jest.mock("@/lib/api/client", () => ({
 
 jest.mock("@/lib/constants/roles", () => ({
     ROLE_HOME: {
-        ADMIN: "/admin-dashboard",
-        USER: "/dashboard",
+        Admin: "/admin/employees",
+        Employee: "/employees",
     },
 }));
 
@@ -34,7 +34,7 @@ describe("getLoginFormSchema (Login Validation)", () => {
     const mockT = (key: string) => key;
     const schema = getLoginFormSchema(mockT);
 
-    it("should return an error for invalid email", () => {
+    it("rejects invalid email", () => {
         const result = schema.safeParse({
             email: "not-an-email",
             password: "Password123!",
@@ -46,7 +46,7 @@ describe("getLoginFormSchema (Login Validation)", () => {
         }
     });
 
-    it("should return an error if password is less than 6 characters", () => {
+    it("rejects password shorter than 6 characters", () => {
         const result = schema.safeParse({
             email: "test@test.com",
             password: "123",
@@ -58,12 +58,20 @@ describe("getLoginFormSchema (Login Validation)", () => {
         }
     });
 
-    it("should successfully validate with correct data", () => {
+    it("accepts valid email and password", () => {
         const result = schema.safeParse({
             email: "test@test.com",
             password: "ValidPassword123!",
         });
         expect(result.success).toBe(true);
+    });
+
+    it("rejects empty email", () => {
+        const result = schema.safeParse({
+            email: "",
+            password: "ValidPassword123!",
+        });
+        expect(result.success).toBe(false);
     });
 });
 
@@ -100,10 +108,10 @@ describe("LoginForm Component (UI)", () => {
         expect(apiClient.post).not.toHaveBeenCalled();
     });
 
-    it("successfully submits data, updates user and redirects", async () => {
+    it("successfully logs in Employee and redirects to /employees", async () => {
         const user = userEvent.setup();
 
-        const mockUser = { id: "1", role: "USER", email: "user@test.com" };
+        const mockUser = { id: "1", role: "Employee", email: "user@test.com" };
         (apiClient.post as jest.Mock).mockResolvedValueOnce({
             data: { user: mockUser },
         });
@@ -121,11 +129,31 @@ describe("LoginForm Component (UI)", () => {
                 password: "ValidPass123!",
             });
             expect(mockSetUser).toHaveBeenCalledWith(mockUser);
-            expect(mockPush).toHaveBeenCalledWith("/dashboard");
+            expect(mockPush).toHaveBeenCalledWith("/employees");
         });
     });
 
-    it("shows server error (e.g., invalid password)", async () => {
+    it("successfully logs in Admin and redirects to /admin/employees", async () => {
+        const user = userEvent.setup();
+
+        const mockUser = { id: "1", role: "Admin", email: "admin@test.com" };
+        (apiClient.post as jest.Mock).mockResolvedValueOnce({
+            data: { user: mockUser },
+        });
+
+        render(<LoginForm />);
+
+        await user.type(screen.getByPlaceholderText("email"), "admin@test.com");
+        await user.type(screen.getByPlaceholderText("password"), "ValidPass123!");
+
+        await user.click(screen.getByRole("button", { name: "log_in" }));
+
+        await waitFor(() => {
+            expect(mockPush).toHaveBeenCalledWith("/admin/employees");
+        });
+    });
+
+    it("shows server error message on failed login", async () => {
         const user = userEvent.setup();
 
         const mockAxiosError = {
@@ -148,7 +176,24 @@ describe("LoginForm Component (UI)", () => {
         expect(mockPush).not.toHaveBeenCalled();
     });
 
-    it("should switch the password visibility when clicking on the 'eye' icon", async () => {
+    it("shows generic error when server returns non-axios error", async () => {
+        const user = userEvent.setup();
+
+        (apiClient.post as jest.Mock).mockRejectedValueOnce(new Error("Network error"));
+
+        render(<LoginForm />);
+
+        await user.type(screen.getByPlaceholderText("email"), "test@test.com");
+        await user.type(screen.getByPlaceholderText("password"), "ValidPass!");
+
+        await user.click(screen.getByRole("button", { name: "log_in" }));
+
+        await waitFor(() => {
+            expect(screen.getByText("server_error")).toBeInTheDocument();
+        });
+    });
+
+    it("toggles password visibility", async () => {
         const user = userEvent.setup();
         render(<LoginForm />);
 
@@ -160,10 +205,37 @@ describe("LoginForm Component (UI)", () => {
         const togglePasswordButton = allButtons[0];
 
         await user.click(togglePasswordButton);
-
         expect(passwordInput).toHaveAttribute("type", "text");
 
         await user.click(togglePasswordButton);
         expect(passwordInput).toHaveAttribute("type", "password");
+    });
+
+    it("disables submit button while submitting", async () => {
+        const user = userEvent.setup();
+
+        let resolvePost: (value: unknown) => void;
+        (apiClient.post as jest.Mock).mockReturnValueOnce(
+            new Promise((resolve) => {
+                resolvePost = resolve;
+            }),
+        );
+
+        render(<LoginForm />);
+
+        await user.type(screen.getByPlaceholderText("email"), "test@test.com");
+        await user.type(screen.getByPlaceholderText("password"), "ValidPass!");
+
+        await user.click(screen.getByRole("button", { name: "log_in" }));
+
+        await waitFor(() => {
+            expect(screen.getByRole("button", { name: "loading" })).toBeDisabled();
+        });
+
+        resolvePost!({ data: { user: { id: "1", role: "Employee", email: "test@test.com" } } });
+
+        await waitFor(() => {
+            expect(screen.getByRole("button", { name: "log_in" })).not.toBeDisabled();
+        });
     });
 });

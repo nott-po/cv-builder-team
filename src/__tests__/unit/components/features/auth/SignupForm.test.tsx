@@ -25,8 +25,8 @@ jest.mock("@/lib/api/client", () => ({
 
 jest.mock("@/lib/constants/roles", () => ({
     ROLE_HOME: {
-        ADMIN: "/admin-dashboard",
-        USER: "/dashboard",
+        Admin: "/admin/employees",
+        Employee: "/employees",
     },
 }));
 
@@ -34,7 +34,52 @@ describe("getSignupFormSchema (Validation)", () => {
     const mockT = (key: string) => key;
     const schema = getSignupFormSchema(mockT);
 
-    it("should return an error if passwords do not match", () => {
+    it("rejects password shorter than 8 characters", () => {
+        const result = schema.safeParse({
+            email: "test@test.com",
+            password: "Ab1!",
+            confirmPassword: "Ab1!",
+        });
+        expect(result.success).toBe(false);
+    });
+
+    it("rejects password without uppercase letter", () => {
+        const result = schema.safeParse({
+            email: "test@test.com",
+            password: "password1!",
+            confirmPassword: "password1!",
+        });
+        expect(result.success).toBe(false);
+    });
+
+    it("rejects password without lowercase letter", () => {
+        const result = schema.safeParse({
+            email: "test@test.com",
+            password: "PASSWORD1!",
+            confirmPassword: "PASSWORD1!",
+        });
+        expect(result.success).toBe(false);
+    });
+
+    it("rejects password without digit", () => {
+        const result = schema.safeParse({
+            email: "test@test.com",
+            password: "Password!@",
+            confirmPassword: "Password!@",
+        });
+        expect(result.success).toBe(false);
+    });
+
+    it("rejects password without special character", () => {
+        const result = schema.safeParse({
+            email: "test@test.com",
+            password: "Password12",
+            confirmPassword: "Password12",
+        });
+        expect(result.success).toBe(false);
+    });
+
+    it("rejects mismatched passwords", () => {
         const result = schema.safeParse({
             email: "test@test.com",
             password: "Password123!",
@@ -48,7 +93,7 @@ describe("getSignupFormSchema (Validation)", () => {
         }
     });
 
-    it("should successfully validate with correct data", () => {
+    it("accepts valid strong password with matching confirm", () => {
         const result = schema.safeParse({
             email: "test@test.com",
             password: "Password123!",
@@ -57,7 +102,7 @@ describe("getSignupFormSchema (Validation)", () => {
         expect(result.success).toBe(true);
     });
 
-    it("should return an error for invalid email", () => {
+    it("rejects invalid email", () => {
         const result = schema.safeParse({
             email: "not-an-email",
             password: "Password123!",
@@ -66,18 +111,6 @@ describe("getSignupFormSchema (Validation)", () => {
         expect(result.success).toBe(false);
         if (!result.success) {
             expect(result.error.issues[0].message).toBe("wrong_email");
-        }
-    });
-
-    it("should return an error if password is less than 6 characters", () => {
-        const result = schema.safeParse({
-            email: "test@test.com",
-            password: "123",
-            confirmPassword: "123",
-        });
-        expect(result.success).toBe(false);
-        if (!result.success) {
-            expect(result.error.issues[0].message).toBe("wrong_password");
         }
     });
 });
@@ -110,19 +143,18 @@ describe("SignupForm Component (UI)", () => {
 
         await waitFor(() => {
             expect(screen.getByText("wrong_email")).toBeInTheDocument();
-            expect(screen.getByText("wrong_password")).toBeInTheDocument();
         });
 
         expect(apiClient.post).not.toHaveBeenCalled();
     });
 
-    it("shows error if passwords do not match on input", async () => {
+    it("shows error if passwords do not match", async () => {
         const user = userEvent.setup();
         render(<SignupForm />);
 
         await user.type(screen.getByPlaceholderText("email"), "test@test.com");
-        await user.type(screen.getByPlaceholderText("password"), "Pass123!");
-        await user.type(screen.getByPlaceholderText("confirm_password"), "Pass456!");
+        await user.type(screen.getByPlaceholderText("password"), "StrongPass1!");
+        await user.type(screen.getByPlaceholderText("confirm_password"), "DifferentPass1!");
         await user.click(screen.getByRole("button", { name: "sign_up" }));
 
         await waitFor(() => {
@@ -132,10 +164,10 @@ describe("SignupForm Component (UI)", () => {
         expect(apiClient.post).not.toHaveBeenCalled();
     });
 
-    it("successfully submits data, updates user and redirects", async () => {
+    it("successfully signs up Admin and redirects to /admin/employees", async () => {
         const user = userEvent.setup();
 
-        const mockUser = { id: "1", role: "ADMIN", email: "test@test.com" };
+        const mockUser = { id: "1", role: "Admin", email: "test@test.com" };
         (apiClient.post as jest.Mock).mockResolvedValueOnce({
             data: { user: mockUser },
         });
@@ -154,7 +186,31 @@ describe("SignupForm Component (UI)", () => {
                 password: "ValidPass123!",
             });
             expect(mockSetUser).toHaveBeenCalledWith(mockUser);
-            expect(mockPush).toHaveBeenCalledWith("/admin-dashboard");
+            expect(mockPush).toHaveBeenCalledWith("/admin/employees");
+        });
+    });
+
+    it("does not send confirmPassword to the API", async () => {
+        const user = userEvent.setup();
+
+        (apiClient.post as jest.Mock).mockResolvedValueOnce({
+            data: { user: { id: "1", role: "Employee", email: "test@test.com" } },
+        });
+
+        render(<SignupForm />);
+
+        await user.type(screen.getByPlaceholderText("email"), "test@test.com");
+        await user.type(screen.getByPlaceholderText("password"), "ValidPass123!");
+        await user.type(screen.getByPlaceholderText("confirm_password"), "ValidPass123!");
+        await user.click(screen.getByRole("button", { name: "sign_up" }));
+
+        await waitFor(() => {
+            const callArgs = (apiClient.post as jest.Mock).mock.calls[0][1];
+            expect(callArgs).not.toHaveProperty("confirmPassword");
+            expect(callArgs).toEqual({
+                email: "test@test.com",
+                password: "ValidPass123!",
+            });
         });
     });
 
@@ -182,7 +238,7 @@ describe("SignupForm Component (UI)", () => {
         expect(mockPush).not.toHaveBeenCalled();
     });
 
-    it("should switch the password visibility when clicking on the 'eye' icon", async () => {
+    it("toggles password visibility on the password field", async () => {
         const user = userEvent.setup();
         render(<SignupForm />);
 
@@ -194,7 +250,6 @@ describe("SignupForm Component (UI)", () => {
         const togglePasswordButton = allButtons[0];
 
         await user.click(togglePasswordButton);
-
         expect(passwordInput).toHaveAttribute("type", "text");
 
         await user.click(togglePasswordButton);
