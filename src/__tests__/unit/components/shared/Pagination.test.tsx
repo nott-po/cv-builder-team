@@ -25,45 +25,53 @@ describe("Pagination Component", () => {
         expect(screen.getByText("Rows per page:")).toBeInTheDocument();
         expect(screen.getByText("Page 2 of 5")).toBeInTheDocument();
 
-        // Check if all 4 navigation buttons are present
-        expect(screen.getByRole("button", { name: "First page" })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Previous page" })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Next page" })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Last page" })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "first_page" })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "previous_page" })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "next_page" })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "last_page" })).toBeInTheDocument();
     });
 
     it("disables previous and first page buttons when on the first page", () => {
         render(<Pagination {...defaultProps} page={1} />);
 
-        expect(screen.getByRole("button", { name: "First page" })).toBeDisabled();
-        expect(screen.getByRole("button", { name: "Previous page" })).toBeDisabled();
-        expect(screen.getByRole("button", { name: "Next page" })).not.toBeDisabled();
-        expect(screen.getByRole("button", { name: "Last page" })).not.toBeDisabled();
+        expect(screen.getByRole("button", { name: "first_page" })).toBeDisabled();
+        expect(screen.getByRole("button", { name: "previous_page" })).toBeDisabled();
+        expect(screen.getByRole("button", { name: "next_page" })).not.toBeDisabled();
+        expect(screen.getByRole("button", { name: "last_page" })).not.toBeDisabled();
     });
 
     it("disables next and last page buttons when on the last page", () => {
         render(<Pagination {...defaultProps} page={5} />);
 
-        expect(screen.getByRole("button", { name: "Next page" })).toBeDisabled();
-        expect(screen.getByRole("button", { name: "Last page" })).toBeDisabled();
-        expect(screen.getByRole("button", { name: "First page" })).not.toBeDisabled();
-        expect(screen.getByRole("button", { name: "Previous page" })).not.toBeDisabled();
+        expect(screen.getByRole("button", { name: "next_page" })).toBeDisabled();
+        expect(screen.getByRole("button", { name: "last_page" })).toBeDisabled();
+        expect(screen.getByRole("button", { name: "first_page" })).not.toBeDisabled();
+        expect(screen.getByRole("button", { name: "previous_page" })).not.toBeDisabled();
     });
 
     it("calls onPageChange with correct values when navigation buttons are clicked", async () => {
         const user = userEvent.setup();
         render(<Pagination {...defaultProps} />);
 
-        await user.click(screen.getByRole("button", { name: "First page" }));
+        await user.click(screen.getByRole("button", { name: "first_page" }));
         expect(defaultProps.onPageChange).toHaveBeenCalledWith(1);
 
-        await user.click(screen.getByRole("button", { name: "Previous page" }));
+        await user.click(screen.getByRole("button", { name: "previous_page" }));
         expect(defaultProps.onPageChange).toHaveBeenCalledWith(1); // 2 - 1 = 1
 
-        await user.click(screen.getByRole("button", { name: "Next page" }));
+        await user.click(screen.getByRole("button", { name: "next_page" }));
         expect(defaultProps.onPageChange).toHaveBeenCalledWith(3); // 2 + 1 = 3
 
-        await user.click(screen.getByRole("button", { name: "Last page" }));
+        await user.click(screen.getByRole("button", { name: "last_page" }));
         expect(defaultProps.onPageChange).toHaveBeenCalledWith(5);
+    });
+
+    it("disables all buttons when there is only one page", () => {
+        render(<Pagination {...defaultProps} page={1} totalPages={1} />);
+
+        expect(screen.getByRole("button", { name: "first_page" })).toBeDisabled();
+        expect(screen.getByRole("button", { name: "previous_page" })).toBeDisabled();
+        expect(screen.getByRole("button", { name: "next_page" })).toBeDisabled();
+        expect(screen.getByRole("button", { name: "last_page" })).toBeDisabled();
     });
 });
