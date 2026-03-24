@@ -18,7 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { UserRole } from "@/generated/graphql";
+import { UserRole } from "@/lib/constants/roles";
 
 const baseSchema = z.object({
     email: z.string(),

@@ -1,19 +1,16 @@
 "use client";
 
-import { fetcher } from "@/lib/graphql/fetcher";
-import { POSITIONS_QUERY } from "@/lib/graphql/operations/positions";
+import { STALE_TIME_REFERENCE } from "@/lib/constants/query";
+import { gqlClient } from "@/lib/graphql/fetcher";
+import {
+    POSITIONS_QUERY,
+    positionsListKey,
+    type PositionRow,
+    type PositionsQueryResult,
+} from "@/lib/graphql/operations/positions";
 import { useSimpleTable } from "@/lib/hooks/useSimpleTable";
 
-export type PositionRow = {
-    id: string;
-    name: string;
-};
-
-export type PositionsQueryResult = {
-    positions: PositionRow[];
-};
-
-export const positionsListKey = () => ["positions", "list"] as const;
+export { positionsListKey, type PositionRow, type PositionsQueryResult };
 
 const getPositionRows = (data: PositionsQueryResult) => data.positions;
 const filterPositionRow = (row: PositionRow, lower: string) =>
@@ -23,9 +20,10 @@ export function usePositionTable(basePath = "/admin/positions") {
     const { state, paginatedRows } = useSimpleTable<PositionsQueryResult, PositionRow>({
         basePath,
         queryKey: positionsListKey(),
-        queryFn: () => fetcher<PositionsQueryResult, Record<string, never>>(POSITIONS_QUERY)(),
+        queryFn: () => gqlClient.request<PositionsQueryResult>(POSITIONS_QUERY),
         getRows: getPositionRows,
         filterRow: filterPositionRow,
+        staleTime: STALE_TIME_REFERENCE,
     });
 
     return { state, paginatedPositions: paginatedRows };

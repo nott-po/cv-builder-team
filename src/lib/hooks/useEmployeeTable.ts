@@ -1,16 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
-
-import { useQuery } from "@tanstack/react-query";
-
-import type { UserRole } from "@/generated/graphql";
 import { useRouter } from "@/i18n/routing";
-import { fetcher } from "@/lib/graphql/fetcher";
+import { STALE_TIME_ENTITY } from "@/lib/constants/query";
+import type { UserRole } from "@/lib/constants/roles";
+import { ROUTES } from "@/lib/constants/routes";
+import { gqlClient } from "@/lib/graphql/fetcher";
 import { USERS_QUERY } from "@/lib/graphql/operations/employees";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
-import { useTablePagination } from "@/lib/hooks/useTablePagination";
-import type { SortDir, TableState } from "@/types/table";
+import { useSortableTable } from "@/lib/hooks/useSortableTable";
+import type { SortDir } from "@/types/table";
 
 export type EmployeeRow = {
     id: string;
@@ -33,80 +31,50 @@ type UsersQueryResult = {
 
 export const employeesListKey = () => ["employees", "list"] as const;
 
+const getRows = (data: UsersQueryResult) => data.users;
+const filterRow = (row: EmployeeRow, lower: string) =>
+    [
+        row.profile.first_name,
+        row.profile.last_name,
+        row.email,
+        row.department_name,
+        row.position_name,
+    ].some((v) => v?.toLowerCase().includes(lower));
+const sortRow = (a: EmployeeRow, b: EmployeeRow, dir: SortDir) => {
+    const aDept = a.department_name ?? "";
+    const bDept = b.department_name ?? "";
+    return dir === "asc" ? aDept.localeCompare(bDept) : bDept.localeCompare(aDept);
+};
+
 export function useEmployeeTable(basePath = "/employees") {
     const router = useRouter();
-    const { page, setPage, pageSize, handlePageChange, handlePageSizeChange } =
-        useTablePagination(basePath);
     const { user } = useCurrentUser();
 
-    const [search, setSearch] = useState("");
-    const [sortDir, setSortDir] = useState<SortDir>("desc");
-
-    const { data, isLoading, isError } = useQuery<UsersQueryResult>({
+    const { state, paginatedRows, sortDir, handleSortToggle } = useSortableTable<
+        UsersQueryResult,
+        EmployeeRow
+    >({
+        basePath,
         queryKey: employeesListKey(),
-        queryFn: () => fetcher<UsersQueryResult, Record<string, never>>(USERS_QUERY)(),
+        queryFn: () => gqlClient.request<UsersQueryResult>(USERS_QUERY),
+        getRows,
+        filterRow,
+        sortRow,
+        defaultSortDir: "desc",
+        staleTime: STALE_TIME_ENTITY,
     });
-
-    const employees = useMemo(() => {
-        if (!data?.users) return [];
-
-        let result = data.users;
-
-        if (search.trim()) {
-            const lower = search.toLowerCase();
-            result = result.filter((u) =>
-                [
-                    u.profile.first_name,
-                    u.profile.last_name,
-                    u.email,
-                    u.department_name,
-                    u.position_name,
-                ].some((v) => v?.toLowerCase().includes(lower)),
-            );
-        }
-
-        return [...result].sort((a, b) => {
-            const aDept = a.department_name ?? "";
-            const bDept = b.department_name ?? "";
-            return sortDir === "asc" ? aDept.localeCompare(bDept) : bDept.localeCompare(aDept);
-        });
-    }, [data, search, sortDir]);
-
-    const totalPages = Math.max(1, Math.ceil(employees.length / pageSize));
-    const paginatedEmployees = employees.slice((page - 1) * pageSize, page * pageSize);
-
-    function handleSearchChange(value: string) {
-        setSearch(value);
-        setPage(1);
-    }
-
-    function handleSortToggle() {
-        setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-        setPage(1);
-    }
 
     function handleRowClick(id: string) {
         if (user?.id === id) {
-            router.push("/profile");
-        } else router.push(`${basePath}/${id}`);
+            router.push(ROUTES.PROFILE);
+        } else {
+            router.push(`${basePath}/${id}`);
+        }
     }
-
-    const state: TableState = {
-        isLoading,
-        isError,
-        isEmpty: employees.length === 0,
-        search,
-        onSearchChange: handleSearchChange,
-        page,
-        pageSize,
-        totalPages,
-        onPageChange: handlePageChange,
-        onPageSizeChange: handlePageSizeChange,
-    };
 
     return {
         state,
-        paginatedEmployees,
+        paginatedEmployees: paginatedRows,
         sortDir,
         handleSortToggle,
         handleRowClick,

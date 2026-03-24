@@ -12,6 +12,7 @@ import { RemoveProfileItemModal } from "@/components/shared/RemoveProfileItemMod
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
 import { PROFICIENCY_COLOR } from "@/lib/constants/proficiency";
+import { STALE_TIME_REFERENCE } from "@/lib/constants/query";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { LANGUAGES_QUERY } from "@/lib/graphql/operations/languages";
 import { DELETE_PROFILE_LANGUAGE_MUTATION } from "@/lib/graphql/operations/profile";
@@ -42,7 +43,7 @@ export function ProfileLanguageTable({ userId, readOnly = false }: ProfileLangua
     const { data: allLanguagesData, isLoading: isLoadingAll } = useQuery<LanguagesQueryResult>({
         queryKey: languagesListKey(),
         queryFn: () => gqlClient.request<LanguagesQueryResult>(LANGUAGES_QUERY),
-        staleTime: Infinity,
+        staleTime: STALE_TIME_REFERENCE,
         enabled: !readOnly,
     });
 

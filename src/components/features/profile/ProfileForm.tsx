@@ -7,18 +7,12 @@ import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ClientError } from "graphql-request";
-import * as z from "zod";
+import { z } from "zod";
 
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { Button } from "@/components/ui/button";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
+import { FloatingLabelWrapper, floatingInputClass } from "@/components/ui/floating-label-wrapper";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
     Select,
@@ -33,8 +27,7 @@ import {
     UPDATE_FULL_PROFILE_MUTATION,
     UPLOAD_AVATAR_MUTATION,
 } from "@/lib/graphql/operations/employee";
-import { CURRENT_USER_KEY } from "@/lib/hooks/useCurrentUser";
-import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
+import { CURRENT_USER_KEY, useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useDepartments } from "@/lib/hooks/useDepartments";
 import { usePositions } from "@/lib/hooks/usePositions";
 import { useUserData } from "@/lib/hooks/useUserData";
@@ -42,10 +35,10 @@ import { useUserData } from "@/lib/hooks/useUserData";
 import { AvatarUpload, compressAvatar } from "./AvatarUpload";
 
 const profileSchema = z.object({
-    first_name: z.string().min(1, "First name is required").optional().or(z.literal("")),
-    last_name: z.string().min(1, "Last name is required").optional().or(z.literal("")),
-    department_name: z.string().optional().or(z.literal("")),
-    position_name: z.string().optional().or(z.literal("")),
+    first_name: z.string().optional().or(z.literal("")),
+    last_name: z.string().optional().or(z.literal("")),
+    departmentId: z.string().optional().or(z.literal("")),
+    positionId: z.string().optional().or(z.literal("")),
     avatar: z.any().optional(),
 });
 
@@ -77,13 +70,10 @@ export function ProfileForm() {
                 });
             }
 
-            const selectedDept = departments.find((d) => d.name === values.department_name);
-            const selectedPos = positions.find((p) => p.name === values.position_name);
-
             const updateUserInput = {
                 userId: currentUserId,
-                ...(selectedDept?.id && { departmentId: selectedDept.id }),
-                ...(selectedPos?.id && { positionId: selectedPos.id }),
+                ...(values.departmentId && { departmentId: values.departmentId }),
+                ...(values.positionId && { positionId: values.positionId }),
             };
 
             const updateProfileInput = {
@@ -121,22 +111,17 @@ export function ProfileForm() {
         values: {
             first_name: data?.profile?.first_name || "",
             last_name: data?.profile?.last_name || "",
-            department_name: data?.department_name || "",
-            position_name: data?.position_name || "",
+            departmentId: data?.department?.id || "",
+            positionId: data?.position?.id || "",
         },
     });
 
     const avatarFile = useWatch({ control: form.control, name: "avatar" });
 
-    const watchedDept = useWatch({ control: form.control, name: "department_name" });
-    const watchedPos = useWatch({ control: form.control, name: "position_name" });
-
     const { isDirty } = form.formState;
 
     const hasChanges = isDirty || avatarFile instanceof File;
-    const hasValidSelects = Boolean(watchedDept) && Boolean(watchedPos);
-
-    const isSubmitEnabled = hasChanges && hasValidSelects;
+    const isSubmitEnabled = hasChanges;
 
     function onSubmit(values: ProfileFormValues) {
         updateProfileMutation.mutate(values);
@@ -208,18 +193,16 @@ export function ProfileForm() {
                                 control={form.control}
                                 name="first_name"
                                 render={({ field }) => (
-                                    <FormItem className="relative">
-                                        <FormLabel className="bg-surface text-muted-foreground absolute -top-2.5 left-3 z-10 px-1 text-xs leading-none">
-                                            {t("first_name")}
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                variant="default"
-                                                {...field}
-                                                size="default"
-                                                className="relative z-0 text-base"
-                                            />
-                                        </FormControl>
+                                    <FormItem>
+                                        <FloatingLabelWrapper label={t("first_name")}>
+                                            <FormControl>
+                                                <Input
+                                                    variant="default"
+                                                    className={floatingInputClass}
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                        </FloatingLabelWrapper>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -229,17 +212,16 @@ export function ProfileForm() {
                                 control={form.control}
                                 name="last_name"
                                 render={({ field }) => (
-                                    <FormItem className="relative">
-                                        <FormLabel className="bg-surface text-muted-foreground absolute -top-2.5 left-3 z-10 px-1 text-xs leading-none">
-                                            {t("last_name")}
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                variant="default"
-                                                className="relative z-0 text-base"
-                                                {...field}
-                                            />
-                                        </FormControl>
+                                    <FormItem>
+                                        <FloatingLabelWrapper label={t("last_name")}>
+                                            <FormControl>
+                                                <Input
+                                                    variant="default"
+                                                    className={floatingInputClass}
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                        </FloatingLabelWrapper>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -247,42 +229,45 @@ export function ProfileForm() {
 
                             <FormField
                                 control={form.control}
-                                name="department_name"
+                                name="departmentId"
                                 render={({ field }) => (
-                                    <FormItem className="relative">
-                                        <FormLabel className="bg-surface text-muted-foreground absolute -top-2.5 left-3 z-10 px-1 text-xs leading-none">
-                                            {t("department")}
-                                        </FormLabel>
-                                        <Select
-                                            onValueChange={field.onChange}
-                                            value={field.value || undefined}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger className="border-border-input-default relative z-0 h-auto min-h-[56px] rounded-none border px-3 py-4 shadow-none focus:ring-0">
-                                                    <SelectValue />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent side="bottom" avoidCollisions={false}>
-                                                {isDepartmentsLoading ? (
-                                                    <SelectItem value="loading" disabled>
-                                                        Loading...
-                                                    </SelectItem>
-                                                ) : departments.length === 0 ? (
-                                                    <SelectItem value="none" disabled>
-                                                        No departments
-                                                    </SelectItem>
-                                                ) : (
-                                                    departments.map((department) => (
-                                                        <SelectItem
-                                                            key={department.id}
-                                                            value={department.name}
-                                                        >
-                                                            {department.name}
+                                    <FormItem>
+                                        <FloatingLabelWrapper label={t("department")}>
+                                            <Select
+                                                onValueChange={field.onChange}
+                                                value={field.value || undefined}
+                                            >
+                                                <FormControl>
+                                                    <SelectTrigger className={floatingInputClass}>
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent
+                                                    side="bottom"
+                                                    avoidCollisions={false}
+                                                    className="max-h-48"
+                                                >
+                                                    {isDepartmentsLoading ? (
+                                                        <SelectItem value="loading" disabled>
+                                                            {t("loading")}
                                                         </SelectItem>
-                                                    ))
-                                                )}
-                                            </SelectContent>
-                                        </Select>
+                                                    ) : departments.length === 0 ? (
+                                                        <SelectItem value="none" disabled>
+                                                            {t("no_departments")}
+                                                        </SelectItem>
+                                                    ) : (
+                                                        departments.map((department) => (
+                                                            <SelectItem
+                                                                key={department.id}
+                                                                value={department.id}
+                                                            >
+                                                                {department.name}
+                                                            </SelectItem>
+                                                        ))
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+                                        </FloatingLabelWrapper>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -290,42 +275,45 @@ export function ProfileForm() {
 
                             <FormField
                                 control={form.control}
-                                name="position_name"
+                                name="positionId"
                                 render={({ field }) => (
-                                    <FormItem className="relative">
-                                        <FormLabel className="bg-surface text-muted-foreground absolute -top-2.5 left-3 z-10 px-1 text-xs leading-none">
-                                            {t("position")}
-                                        </FormLabel>
-                                        <Select
-                                            onValueChange={field.onChange}
-                                            value={field.value || undefined}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger className="border-border-input-default relative z-0 h-auto min-h-[56px] rounded-none border px-3 py-4 shadow-none focus:ring-0">
-                                                    <SelectValue />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent side="bottom" avoidCollisions={false}>
-                                                {isPositionsLoading ? (
-                                                    <SelectItem value="loading" disabled>
-                                                        Loading...
-                                                    </SelectItem>
-                                                ) : positions.length === 0 ? (
-                                                    <SelectItem value="none" disabled>
-                                                        No positions
-                                                    </SelectItem>
-                                                ) : (
-                                                    positions.map((position) => (
-                                                        <SelectItem
-                                                            key={position.id}
-                                                            value={position.name}
-                                                        >
-                                                            {position.name}
+                                    <FormItem>
+                                        <FloatingLabelWrapper label={t("position")}>
+                                            <Select
+                                                onValueChange={field.onChange}
+                                                value={field.value || undefined}
+                                            >
+                                                <FormControl>
+                                                    <SelectTrigger className={floatingInputClass}>
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent
+                                                    side="bottom"
+                                                    avoidCollisions={false}
+                                                    className="max-h-48"
+                                                >
+                                                    {isPositionsLoading ? (
+                                                        <SelectItem value="loading" disabled>
+                                                            {t("loading")}
                                                         </SelectItem>
-                                                    ))
-                                                )}
-                                            </SelectContent>
-                                        </Select>
+                                                    ) : positions.length === 0 ? (
+                                                        <SelectItem value="none" disabled>
+                                                            {t("no_positions")}
+                                                        </SelectItem>
+                                                    ) : (
+                                                        positions.map((position) => (
+                                                            <SelectItem
+                                                                key={position.id}
+                                                                value={position.id}
+                                                            >
+                                                                {position.name}
+                                                            </SelectItem>
+                                                        ))
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+                                        </FloatingLabelWrapper>
                                         <FormMessage />
                                     </FormItem>
                                 )}
