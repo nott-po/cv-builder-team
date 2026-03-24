@@ -132,6 +132,7 @@
         "start_date": "Start Date",
         "start_date_required": "Start date is required",
         "end_date": "End Date",
+        "end_date_before_start": "End date must not be before start date",
         "description": "Description",
         "environment": "Environment",
         "add_skill": "Add skill",
