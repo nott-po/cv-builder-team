@@ -132,6 +132,7 @@
         "start_date": "Data rozpoczęcia",
         "start_date_required": "Data rozpoczęcia jest wymagana",
         "end_date": "Data zakończenia",
+        "end_date_before_start": "Data zakończenia nie może być wcześniejsza niż data rozpoczęcia",
         "description": "Opis",
         "environment": "Środowisko",
         "add_skill": "Dodaj umiejętność",
