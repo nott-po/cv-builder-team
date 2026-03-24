@@ -83,13 +83,17 @@ export function LoginForm() {
                         <FormField
                             control={form.control}
                             name="email"
-                            render={({ field }) => (
+                            render={({ field, fieldState }) => (
                                 <FormItem>
                                     <FormLabel className="sr-only">{t("email")}</FormLabel>
                                     <FormControl>
                                         <Input
                                             size="default"
-                                            variant="default"
+                                            variant={
+                                                fieldState.error || form.formState.errors.root
+                                                    ? "error"
+                                                    : "default"
+                                            }
                                             type="email"
                                             autoComplete="email"
                                             placeholder={t("email")}
@@ -104,14 +108,18 @@ export function LoginForm() {
                         <FormField
                             control={form.control}
                             name="password"
-                            render={({ field }) => (
+                            render={({ field, fieldState }) => (
                                 <FormItem>
                                     <FormLabel className="sr-only">{t("password")}</FormLabel>
                                     <FormControl>
                                         <div className="relative">
                                             <Input
                                                 size="default"
-                                                variant="default"
+                                                variant={
+                                                    fieldState.error || form.formState.errors.root
+                                                        ? "error"
+                                                        : "default"
+                                                }
                                                 type={showPassword ? "text" : "password"}
                                                 autoComplete="current-password"
                                                 placeholder={t("password")}

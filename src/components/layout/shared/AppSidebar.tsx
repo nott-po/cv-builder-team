@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import apiClient from "@/lib/api/client";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
+import { useUserData } from "@/lib/hooks/useUserData";
 import { cn } from "@/lib/utils";
 
 export type NavItem = {
@@ -41,7 +42,7 @@ function DesktopNavList({ navGroups }: { navGroups: NavItem[][] }) {
                                     className={cn(
                                         "flex h-14 items-center rounded-tr-full rounded-br-full transition-colors",
                                         isActive
-                                            ? "bg-hover-sm text-basic-text"
+                                            ? "bg-background text-basic-text"
                                             : "text-text-secondary hover:bg-hover-xs",
                                     )}
                                 >
@@ -65,12 +66,14 @@ function MobileBottomNav({
     userDisplayName,
     logOutLabel,
     onLogout,
+    avatar,
 }: {
     navGroups: NavItem[][];
     userInitial: string;
     userDisplayName: string;
     logOutLabel: string;
     onLogout: () => void;
+    avatar?: string | null;
 }) {
     const pathname = usePathname();
     const flatItems = navGroups.flat();
@@ -89,7 +92,7 @@ function MobileBottomNav({
                         className={cn(
                             "flex flex-1 items-center justify-center gap-2 rounded-full px-2 py-2 transition-colors sm:px-3",
                             isActive
-                                ? "bg-hover-sm text-basic-text"
+                                ? "bg-background text-basic-text"
                                 : "text-text-secondary hover:bg-hover-xs",
                         )}
                     >
@@ -102,7 +105,7 @@ function MobileBottomNav({
             })}
 
             <div className="ml-1 flex shrink-0 items-center gap-2 px-1 sm:ml-2 sm:px-2">
-                <EmployeeAvatar initial={userInitial} size="sm" variant="primary" />
+                <EmployeeAvatar initial={userInitial} avatar={avatar} size="sm" variant="primary" />
                 <span className="text-small text-basic-text tracking-standard hidden max-w-20 truncate font-normal sm:inline">
                     {userDisplayName}
                 </span>
@@ -121,8 +124,12 @@ function MobileBottomNav({
 
 export function AppSidebar({ navGroups, userInitial, userDisplayName }: AppSidebarProps) {
     const t = useTranslations("Common");
-    const { clearUser } = useCurrentUser();
+    const { user, clearUser } = useCurrentUser();
     const router = useRouter();
+
+    const currentUserId = user?.id as string;
+    const { data } = useUserData(currentUserId);
+    const displayAvatar = data?.profile?.avatar;
 
     async function handleLogout() {
         await apiClient.post("/auth/logout");
@@ -138,12 +145,19 @@ export function AppSidebar({ navGroups, userInitial, userDisplayName }: AppSideb
                 <div className="flex-1" />
 
                 {/* User profile */}
-                <div className="ml-2 flex h-14 items-center overflow-hidden rounded-tr-full rounded-br-full">
-                    <EmployeeAvatar initial={userInitial} variant="primary" />
+                <Link
+                    href="/profile"
+                    className="ml-2 flex h-14 items-center overflow-hidden rounded-tr-full rounded-br-full"
+                >
+                    <EmployeeAvatar
+                        initial={userInitial}
+                        avatar={displayAvatar}
+                        variant="primary"
+                    />
                     <span className="text-body text-basic-text tracking-standard ml-3 truncate pr-2">
                         {userDisplayName}
                     </span>
-                </div>
+                </Link>
 
                 <Separator className="mt-2" />
 
@@ -163,6 +177,7 @@ export function AppSidebar({ navGroups, userInitial, userDisplayName }: AppSideb
                 userDisplayName={userDisplayName}
                 logOutLabel={t("log_out")}
                 onLogout={handleLogout}
+                avatar={displayAvatar}
             />
         </>
     );

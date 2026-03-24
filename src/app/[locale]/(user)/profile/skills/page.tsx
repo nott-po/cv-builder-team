@@ -1,3 +1,0 @@
-export default function ProfileSkillsPage() {
-    return null;
-}

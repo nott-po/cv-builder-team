@@ -2,19 +2,24 @@
 
 import { useMemo, useState } from "react";
 
-import { useSearchParams } from "next/navigation";
-
 import { useQuery } from "@tanstack/react-query";
 
+import type { UserRole } from "@/generated/graphql";
 import { useRouter } from "@/i18n/routing";
 import { fetcher } from "@/lib/graphql/fetcher";
 import { USERS_QUERY } from "@/lib/graphql/operations/employees";
+import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
+import { useTablePagination } from "@/lib/hooks/useTablePagination";
+import type { SortDir, TableState } from "@/types/table";
 
 export type EmployeeRow = {
     id: string;
     email: string;
+    role: UserRole;
     department_name: string | null;
+    department?: { id: string } | null;
     position_name: string | null;
+    position?: { id: string } | null;
     profile: {
         first_name: string | null;
         last_name: string | null;
@@ -26,22 +31,19 @@ type UsersQueryResult = {
     users: EmployeeRow[];
 };
 
-type SortDir = "asc" | "desc";
+export const employeesListKey = () => ["employees", "list"] as const;
 
-export const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
-export const DEFAULT_PAGE_SIZE = 10;
-
-export function useEmployeeTable() {
+export function useEmployeeTable(basePath = "/employees") {
     const router = useRouter();
-    const searchParams = useSearchParams();
+    const { page, setPage, pageSize, handlePageChange, handlePageSizeChange } =
+        useTablePagination(basePath);
+    const { user } = useCurrentUser();
 
     const [search, setSearch] = useState("");
-    const [sortDir, setSortDir] = useState<SortDir>("asc");
-    const [page, setPage] = useState(1);
-    const pageSize = Number(searchParams.get("pageSize")) || 10;
+    const [sortDir, setSortDir] = useState<SortDir>("desc");
 
     const { data, isLoading, isError } = useQuery<UsersQueryResult>({
-        queryKey: ["employees", "list"],
+        queryKey: employeesListKey(),
         queryFn: () => fetcher<UsersQueryResult, Record<string, never>>(USERS_QUERY)(),
     });
 
@@ -83,30 +85,30 @@ export function useEmployeeTable() {
         setPage(1);
     }
 
-    function handlePageSizeChange(size: number) {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("pageSize", String(size));
-        router.push(`/employees?${params.toString()}`);
-        setPage(1);
-    }
-
     function handleRowClick(id: string) {
-        router.push(`/employees/${id}`);
+        if (user?.id === id) {
+            router.push("/profile");
+        } else router.push(`${basePath}/${id}`);
     }
 
-    return {
-        paginatedEmployees,
+    const state: TableState = {
         isLoading,
         isError,
+        isEmpty: employees.length === 0,
         search,
-        handleSearchChange,
-        sortDir,
-        handleSortToggle,
+        onSearchChange: handleSearchChange,
         page,
         pageSize,
         totalPages,
-        setPage,
-        handlePageSizeChange,
+        onPageChange: handlePageChange,
+        onPageSizeChange: handlePageSizeChange,
+    };
+
+    return {
+        state,
+        paginatedEmployees,
+        sortDir,
+        handleSortToggle,
         handleRowClick,
     };
 }
