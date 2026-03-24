@@ -1,13 +1,14 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useTranslations } from "next-intl";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
-import { z } from "zod";
+import { Eye, EyeOff } from "lucide-react";
+import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +20,6 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/ui/password-input";
 import { useRouter } from "@/i18n/routing";
 import apiClient from "@/lib/api/client";
 import { ROLE_HOME } from "@/lib/constants/roles";
@@ -57,6 +57,8 @@ export function SignupForm() {
     const t = useTranslations("Auth");
     const router = useRouter();
     const { setUser } = useCurrentUser();
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
     const formSchema = useMemo(() => getSignupFormSchema(t), [t]);
 
@@ -123,17 +125,33 @@ export function SignupForm() {
                                 <FormItem>
                                     <FormLabel className="sr-only">{t("password")}</FormLabel>
                                     <FormControl>
-                                        <PasswordInput
-                                            size="default"
-                                            variant={
-                                                fieldState.error || form.formState.errors.root
-                                                    ? "error"
-                                                    : "default"
-                                            }
-                                            autoComplete="new-password"
-                                            placeholder={t("password")}
-                                            {...field}
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                size="default"
+                                                variant={
+                                                    fieldState.error || form.formState.errors.root
+                                                        ? "error"
+                                                        : "default"
+                                                }
+                                                type={showPassword ? "text" : "password"}
+                                                autoComplete="new-password"
+                                                placeholder={t("password")}
+                                                {...field}
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute top-1/2 right-5 h-8 w-8 -translate-y-1/2 p-0 hover:bg-transparent [&_svg]:size-6"
+                                            >
+                                                {showPassword ? (
+                                                    <EyeOff className="text-password-eye" />
+                                                ) : (
+                                                    <Eye className="text-password-eye" />
+                                                )}
+                                            </Button>
+                                        </div>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -149,17 +167,35 @@ export function SignupForm() {
                                         {t("confirm_password")}
                                     </FormLabel>
                                     <FormControl>
-                                        <PasswordInput
-                                            size="default"
-                                            variant={
-                                                fieldState.error || form.formState.errors.root
-                                                    ? "error"
-                                                    : "default"
-                                            }
-                                            autoComplete="new-password"
-                                            placeholder={t("confirm_password")}
-                                            {...field}
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                size="default"
+                                                variant={
+                                                    fieldState.error || form.formState.errors.root
+                                                        ? "error"
+                                                        : "default"
+                                                }
+                                                type={showPasswordConfirm ? "text" : "password"}
+                                                autoComplete="new-password"
+                                                placeholder={t("confirm_password")}
+                                                {...field}
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() =>
+                                                    setShowPasswordConfirm(!showPasswordConfirm)
+                                                }
+                                                className="absolute top-1/2 right-5 h-8 w-8 -translate-y-1/2 p-0 hover:bg-transparent [&_svg]:size-6"
+                                            >
+                                                {showPasswordConfirm ? (
+                                                    <EyeOff className="text-password-eye" />
+                                                ) : (
+                                                    <Eye className="text-password-eye" />
+                                                )}
+                                            </Button>
+                                        </div>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
