@@ -4,10 +4,11 @@ import type React from "react";
 
 import { useTranslations } from "next-intl";
 
-import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import { DataTable } from "@/components/shared/DataTable";
 import { EmployeeAvatar } from "@/components/shared/EmployeeAvatar";
+import { SortableColumnHeader } from "@/components/shared/SortableColumnHeader";
 import { useEmployeeTable, type EmployeeRow } from "@/lib/hooks/useEmployeeTable";
 
 import { EmployeeTableSkeleton } from "./EmployeeTableSkeleton";
@@ -51,19 +52,11 @@ export function EmployeeTable({ basePath, actions, renderRowActions }: EmployeeT
                         <span className={thClass}>{t("email")}</span>
                     </th>
 
-                    <th className="py-4 text-left">
-                        <button
-                            onClick={handleSortToggle}
-                            className={`${thClass} flex cursor-pointer items-center gap-1 transition-opacity hover:opacity-70`}
-                        >
-                            {t("department")}
-                            {sortDir === "asc" ? (
-                                <ChevronUp className="size-4.5" />
-                            ) : (
-                                <ChevronDown className="size-4.5" />
-                            )}
-                        </button>
-                    </th>
+                    <SortableColumnHeader
+                        label={t("department")}
+                        sortDir={sortDir}
+                        onToggle={handleSortToggle}
+                    />
 
                     <th className="py-4 text-left">
                         <span className={thClass}>{t("position")}</span>

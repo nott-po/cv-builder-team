@@ -1,13 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
-
-import { useQuery } from "@tanstack/react-query";
-
-import { fetcher } from "@/lib/graphql/fetcher";
+import { STALE_TIME_ENTITY } from "@/lib/constants/query";
+import { gqlClient } from "@/lib/graphql/fetcher";
 import { PROJECTS_QUERY } from "@/lib/graphql/operations/projects";
-import { useTablePagination } from "@/lib/hooks/useTablePagination";
-import type { SortDir, TableState } from "@/types/table";
+import { useSortableTable } from "@/lib/hooks/useSortableTable";
+import type { SortDir } from "@/types/table";
 
 export type ProjectRow = {
     id: string;
@@ -25,60 +22,25 @@ export type ProjectsQueryResult = {
 
 export const projectsListKey = () => ["projects", "list"] as const;
 
+const getRows = (data: ProjectsQueryResult) => data.projects;
+const filterRow = (row: ProjectRow, lower: string) =>
+    [row.name, row.domain, row.description].some((v) => v?.toLowerCase().includes(lower));
+const sortRow = (a: ProjectRow, b: ProjectRow, dir: SortDir) =>
+    dir === "asc" ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+
 export function useProjectTable(basePath = "/admin/projects") {
-    const { page, setPage, pageSize, handlePageChange, handlePageSizeChange } =
-        useTablePagination(basePath);
-
-    const [search, setSearch] = useState("");
-    const [sortDir, setSortDir] = useState<SortDir>("asc");
-
-    const { data, isLoading, isError } = useQuery<ProjectsQueryResult>({
+    const { state, paginatedRows, sortDir, handleSortToggle } = useSortableTable<
+        ProjectsQueryResult,
+        ProjectRow
+    >({
+        basePath,
         queryKey: projectsListKey(),
-        queryFn: () => fetcher<ProjectsQueryResult, Record<string, never>>(PROJECTS_QUERY)(),
+        queryFn: () => gqlClient.request<ProjectsQueryResult>(PROJECTS_QUERY),
+        getRows,
+        filterRow,
+        sortRow,
+        staleTime: STALE_TIME_ENTITY,
     });
 
-    const projects = useMemo(() => {
-        if (!data?.projects) return [];
-
-        let result = data.projects;
-
-        if (search.trim()) {
-            const lower = search.toLowerCase();
-            result = result.filter((p) =>
-                [p.name, p.domain, p.description].some((v) => v?.toLowerCase().includes(lower)),
-            );
-        }
-
-        return [...result].sort((a, b) =>
-            sortDir === "asc" ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name),
-        );
-    }, [data, search, sortDir]);
-
-    const totalPages = Math.max(1, Math.ceil(projects.length / pageSize));
-    const paginatedProjects = projects.slice((page - 1) * pageSize, page * pageSize);
-
-    function handleSearchChange(value: string) {
-        setSearch(value);
-        setPage(1);
-    }
-
-    function handleSortToggle() {
-        setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-        setPage(1);
-    }
-
-    const state: TableState = {
-        isLoading,
-        isError,
-        isEmpty: projects.length === 0,
-        search,
-        onSearchChange: handleSearchChange,
-        page,
-        pageSize,
-        totalPages,
-        onPageChange: handlePageChange,
-        onPageSizeChange: handlePageSizeChange,
-    };
-
-    return { state, paginatedProjects, sortDir, handleSortToggle };
+    return { state, paginatedProjects: paginatedRows, sortDir, handleSortToggle };
 }

@@ -19,7 +19,7 @@ import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 
 export function AdminSidebar() {
     const t = useTranslations("Admin");
-    const { user } = useCurrentUser();
+    const { initial, displayName } = useCurrentUser();
 
     const navGroups = [
         [
@@ -35,9 +35,6 @@ export function AdminSidebar() {
         ],
         [{ href: ROUTES.ADMIN.SETTINGS, label: t("settings"), Icon: Settings }],
     ];
-
-    const initial = user?.email?.[0]?.toUpperCase() ?? "?";
-    const displayName = user?.email ?? "";
 
     return <AppSidebar navGroups={navGroups} userInitial={initial} userDisplayName={displayName} />;
 }

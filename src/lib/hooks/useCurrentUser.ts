@@ -35,5 +35,9 @@ export function useCurrentUser() {
         queryClient.setQueryData(CURRENT_USER_KEY, null);
     }
 
-    return { user: user ?? null, isLoading, setUser, clearUser };
+    const currentUser = user ?? null;
+    const displayName = currentUser?.email ?? "";
+    const initial = currentUser?.email?.[0]?.toUpperCase() ?? "?";
+
+    return { user: currentUser, displayName, initial, isLoading, setUser, clearUser };
 }

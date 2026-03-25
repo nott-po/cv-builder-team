@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 export type BreadcrumbItem = {
     label?: string;
     href?: string;
-    Icon?: React.ElementType; // <-- 1. Добавили возможность передать иконку
+    Icon?: React.ElementType;
 };
 
 interface PageHeaderProps {

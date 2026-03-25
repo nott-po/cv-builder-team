@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import type { Mastery } from "@/generated/graphql";
+import { STALE_TIME_ENTITY } from "@/lib/constants/query";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { PROFILE_SKILLS_QUERY } from "@/lib/graphql/operations/profile";
 
@@ -26,6 +27,7 @@ export function useProfileSkills(userId: string) {
         queryFn: () =>
             gqlClient.request<ProfileSkillsQueryResult>(PROFILE_SKILLS_QUERY, { userId }),
         enabled: !!userId,
+        staleTime: STALE_TIME_ENTITY,
     });
 
     return {

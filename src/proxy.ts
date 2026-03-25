@@ -7,6 +7,7 @@ import { routing } from "@/i18n/routing";
 import { isPublicPath, canAccess } from "@/lib/auth/permissions";
 import { SESSION_OPTIONS } from "@/lib/auth/tokens";
 import { ROLE_HOME } from "@/lib/constants/roles";
+import { REFRESH_MUTATION } from "@/lib/graphql/operations/auth";
 import type { SessionData } from "@/types/auth";
 
 const intlMiddleware = createIntlMiddleware(routing);
@@ -15,8 +16,6 @@ const nonDefaultLocales = routing.locales.filter((l) => l !== routing.defaultLoc
 const localePattern = new RegExp(`^\\/(${nonDefaultLocales.join("|")})(?=\\/|$)`);
 
 const GRAPHQL_URL = process.env.GRAPHQL_URL ?? "http://localhost:3001/api/graphql";
-const REFRESH_MUTATION = "mutation UpdateToken { updateToken { access_token refresh_token } }";
-
 const REFRESH_BUFFER_SECONDS = 60;
 
 function getLocalePrefix(pathname: string): string {
