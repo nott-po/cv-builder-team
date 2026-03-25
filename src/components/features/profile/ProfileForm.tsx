@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import { useTranslations } from "next-intl";
@@ -9,6 +10,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ClientError } from "graphql-request";
 import { z } from "zod";
 
+import { DeleteConfirmModal } from "@/components/shared/DeleteConfirmModal";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { Button } from "@/components/ui/button";
 import { FloatingLabelWrapper, floatingInputClass } from "@/components/ui/floating-label-wrapper";
@@ -24,6 +26,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import {
+    DELETE_AVATAR_MUTATION,
     UPDATE_FULL_PROFILE_MUTATION,
     UPLOAD_AVATAR_MUTATION,
 } from "@/lib/graphql/operations/employee";
@@ -54,7 +57,25 @@ export function ProfileForm() {
     const { data: departments = [], isLoading: isDepartmentsLoading } = useDepartments();
     const { data: positions = [], isLoading: isPositionsLoading } = usePositions();
 
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
+
     const { data, isLoading, isError } = useUserData(currentUserId);
+
+    const deleteAvatarMutation = useMutation({
+        mutationFn: () =>
+            gqlClient.request(DELETE_AVATAR_MUTATION, { avatar: { userId: currentUserId } }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["employee", currentUserId] });
+            queryClient.invalidateQueries({ queryKey: CURRENT_USER_KEY });
+            setDeleteModalOpen(false);
+            setDeleteError(null);
+        },
+        onError: () => {
+            setDeleteError(t("delete_avatar_error"));
+        },
+    });
+
     const updateProfileMutation = useMutation({
         mutationFn: async (values: ProfileFormValues) => {
             if (values.avatar instanceof File) {
@@ -156,6 +177,7 @@ export function ProfileForm() {
                                         ).toUpperCase()}
                                         avatarFile={avatarFile instanceof File ? avatarFile : null}
                                         onChange={onChange}
+                                        onDeleteRequest={() => setDeleteModalOpen(true)}
                                         fieldProps={fieldProps}
                                     />
                                 )}
@@ -335,6 +357,19 @@ export function ProfileForm() {
                         </div>
                     </form>
                 </Form>
+
+                <DeleteConfirmModal
+                    open={deleteModalOpen}
+                    onOpenChange={(open) => {
+                        setDeleteModalOpen(open);
+                        if (!open) setDeleteError(null);
+                    }}
+                    title={t("delete_avatar_title")}
+                    description={t("delete_avatar_confirm")}
+                    onConfirm={() => deleteAvatarMutation.mutate()}
+                    isPending={deleteAvatarMutation.isPending}
+                    error={deleteError}
+                />
             </div>
         </div>
     );

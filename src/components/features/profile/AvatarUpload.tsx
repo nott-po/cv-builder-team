@@ -1,14 +1,18 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useTranslations } from "next-intl";
 
-import { Upload } from "lucide-react";
+import { Trash2, Upload } from "lucide-react";
 
 import { EmployeeAvatar } from "@/components/shared/EmployeeAvatar";
 import { FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+
+const ACCEPTED_TYPES = ["image/png", "image/jpeg", "image/gif"];
+const MAX_FILE_SIZE = 500 * 1024; // 500 KB
 
 export type CompressedAvatar = { base64: string; size: number; type: string };
 
@@ -57,11 +61,18 @@ export const compressAvatar = (file: File): Promise<CompressedAvatar> => {
     });
 };
 
+function validateFile(file: File, t: (key: string) => string): string | null {
+    if (!ACCEPTED_TYPES.includes(file.type)) return t("avatar_invalid_format");
+    if (file.size > MAX_FILE_SIZE) return t("avatar_file_too_large");
+    return null;
+}
+
 interface AvatarUploadProps {
     currentAvatar?: string | null;
     initial: string;
     avatarFile?: File | null;
     onChange: (file: File) => void;
+    onDeleteRequest?: () => void;
     fieldProps?: Record<string, unknown>;
 }
 
@@ -70,9 +81,12 @@ export function AvatarUpload({
     initial,
     avatarFile,
     onChange,
+    onDeleteRequest,
     fieldProps,
 }: AvatarUploadProps) {
     const t = useTranslations("User");
+    const [fileError, setFileError] = useState<string | null>(null);
+    const [isDragging, setIsDragging] = useState(false);
 
     const previewUrl = useMemo(() => {
         if (avatarFile instanceof File) {
@@ -89,20 +103,71 @@ export function AvatarUpload({
         };
     }, [previewUrl]);
 
+    const handleFile = useCallback(
+        (file: File) => {
+            const error = validateFile(file, t);
+            setFileError(error);
+            if (!error) onChange(file);
+        },
+        [onChange, t],
+    );
+
+    const handleDragOver = useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(true);
+    }, []);
+
+    const handleDragLeave = useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(false);
+    }, []);
+
+    const handleDrop = useCallback(
+        (e: React.DragEvent) => {
+            e.preventDefault();
+            setIsDragging(false);
+            const file = e.dataTransfer.files[0];
+            if (file) handleFile(file);
+        },
+        [handleFile],
+    );
+
+    const showDeleteButton = !!(currentAvatar || avatarFile);
+
     return (
-        <div className="mb-8 flex items-center justify-center gap-6">
-            <EmployeeAvatar size="xl" avatar={previewUrl} initial={initial} />
+        <div
+            className={cn(
+                "mb-8 flex items-center justify-center gap-6 rounded-lg border-2 border-dashed p-4 transition-colors",
+                isDragging ? "border-red-primary bg-hover-xs" : "border-transparent",
+            )}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+        >
+            <div className="relative">
+                <EmployeeAvatar size="xl" avatar={previewUrl} initial={initial} />
+                {showDeleteButton && onDeleteRequest && (
+                    <button
+                        type="button"
+                        onClick={onDeleteRequest}
+                        className="bg-destructive absolute -right-1 -bottom-1 flex size-8 items-center justify-center rounded-full text-white shadow-md transition-opacity hover:opacity-80"
+                        aria-label={t("delete_avatar_title")}
+                    >
+                        <Trash2 className="size-4" />
+                    </button>
+                )}
+            </div>
 
             <FormItem>
                 <FormControl>
                     <Input
                         id="my-avatar-upload"
                         type="file"
-                        accept="image/png, image/jpeg, image/gif, image/webp"
+                        accept=".png,.jpg,.jpeg,.gif"
                         className="hidden"
                         onChange={(e) => {
                             const file = e.target.files?.[0];
-                            if (file) onChange(file);
+                            if (file) handleFile(file);
                         }}
                         {...fieldProps}
                     />
@@ -117,8 +182,15 @@ export function AvatarUpload({
                     </div>
                     <span className="text-text-secondary text-sm font-normal">
                         {t("upload_avatar_rules")}
+<<<<<<< fix/code-review-fixes
+                    </span>
+                    <span className="text-text-secondary text-sm font-normal">
+                        {t("avatar_drop_hint")}
+=======
+>>>>>>> develop
                     </span>
                 </FormLabel>
+                {fileError && <p className="text-destructive text-sm">{fileError}</p>}
                 <FormMessage />
             </FormItem>
         </div>
