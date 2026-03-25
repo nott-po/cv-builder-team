@@ -42,3 +42,9 @@ export const UPLOAD_AVATAR_MUTATION = `
         uploadAvatar(avatar: $avatar)
     }
 `;
+
+export const DELETE_AVATAR_MUTATION = `
+    mutation DeleteAvatar($avatar: DeleteAvatarInput!) {
+        deleteAvatar(avatar: $avatar)
+    }
+`;
