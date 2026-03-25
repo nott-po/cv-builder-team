@@ -198,6 +198,12 @@
         "remove_skill_title": "Usuń umiejętność",
         "remove_skill_confirm": "Czy na pewno chcesz usunąć",
         "remove_skill_error": "Nie udało się usunąć umiejętności. Spróbuj ponownie.",
+        "avatar_file_too_large": "Rozmiar pliku nie może przekraczać 500 KB",
+        "avatar_invalid_format": "Obsługiwane są tylko pliki PNG, JPG, JPEG i GIF",
+        "avatar_drop_hint": "lub przeciągnij i upuść",
+        "delete_avatar_title": "Usuń avatar",
+        "delete_avatar_confirm": "Czy na pewno chcesz usunąć swój avatar?",
+        "delete_avatar_error": "Nie udało się usunąć avatara. Spróbuj ponownie.",
         "settings": "Ustawienia"
     },
     "Settings": {
