@@ -32,31 +32,33 @@ type SignupFormValues = {
     confirmPassword: string;
 };
 
+export const getSignupFormSchema = (t: (key: string) => string) => {
+    return z
+        .object({
+            email: z.string().email({
+                message: t("wrong_email"),
+            }),
+            password: z
+                .string()
+                .min(8, { message: t("password_weak") })
+                .regex(/[A-Z]/, { message: t("password_weak") })
+                .regex(/[a-z]/, { message: t("password_weak") })
+                .regex(/[0-9]/, { message: t("password_weak") })
+                .regex(/[^A-Za-z0-9]/, { message: t("password_weak") }),
+            confirmPassword: z.string(),
+        })
+        .refine((data) => data.password === data.confirmPassword, {
+            message: t("passwords_do_not_match"),
+            path: ["confirmPassword"],
+        });
+};
+
 export function SignupForm() {
     const t = useTranslations("Auth");
     const router = useRouter();
     const { setUser } = useCurrentUser();
 
-    const formSchema = useMemo(() => {
-        return z
-            .object({
-                email: z.string().email({
-                    message: t("wrong_email"),
-                }),
-                password: z
-                    .string()
-                    .min(8, { message: t("password_weak") })
-                    .regex(/[A-Z]/, { message: t("password_weak") })
-                    .regex(/[a-z]/, { message: t("password_weak") })
-                    .regex(/[0-9]/, { message: t("password_weak") })
-                    .regex(/[^A-Za-z0-9]/, { message: t("password_weak") }),
-                confirmPassword: z.string(),
-            })
-            .refine((data) => data.password === data.confirmPassword, {
-                message: t("passwords_do_not_match"),
-                path: ["confirmPassword"],
-            });
-    }, [t]);
+    const formSchema = useMemo(() => getSignupFormSchema(t), [t]);
 
     const form = useForm<SignupFormValues>({
         resolver: zodResolver(formSchema),
