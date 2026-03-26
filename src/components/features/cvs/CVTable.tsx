@@ -10,7 +10,6 @@ import { CreateCVModal } from "@/components/features/cvs/CreateCVModal";
 import { DeleteCVModal } from "@/components/features/cvs/DeleteCVModal";
 import { CVTableSkeleton } from "@/components/shared/CVTableSkeleton";
 import { DataTable } from "@/components/shared/DataTable";
-// <--- ИМПОРТИРУЕМ НАШ DATATABLE
 import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useCVTable, type CvRow } from "@/lib/hooks/useCVTable";
@@ -40,7 +39,7 @@ export function CVTable() {
         totalPages,
         handlePageChange,
         handlePageSizeChange,
-    } = useCVTable(currentUserId, "/admin/cvs", isAdmin);
+    } = useCVTable(currentUserId, `${isAdmin ? "/admin" : ""}/cvs`, isAdmin);
 
     const isDataLoading = isLoading || !user;
 

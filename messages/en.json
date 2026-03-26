@@ -246,6 +246,7 @@
         "generating": "Generating",
         "software_engineer": "Software engineer",
         "error_loading": "Error Loading",
-        "failed_to_load": "Failed to load CVs"
+        "failed_to_load": "Failed to load CVs",
+        "no_skills": "No skills"
     }
 }

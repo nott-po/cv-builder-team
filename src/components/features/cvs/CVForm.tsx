@@ -44,7 +44,10 @@ export function CvForm({ onSubmit, onCancel, isSubmitting, error }: CvFormProps)
             education: "",
             description: "",
         },
+        mode: "onChange",
     });
+
+    const { isDirty, isValid } = form.formState;
 
     return (
         <Form {...form}>
@@ -52,14 +55,18 @@ export function CvForm({ onSubmit, onCancel, isSubmitting, error }: CvFormProps)
                 <FormField
                     control={form.control}
                     name="name"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                         <FormItem className="relative">
                             <FormLabel className="bg-surface text-muted-foreground absolute -top-2.5 left-3 z-10 px-1 text-xs leading-none">
                                 {t("name")}
                             </FormLabel>
                             <FormControl>
                                 <Input
-                                    variant="default"
+                                    variant={
+                                        fieldState.error || form.formState.errors.root
+                                            ? "error"
+                                            : "default"
+                                    }
                                     size="default"
                                     className="relative z-0 text-base"
                                     autoComplete="off"
@@ -74,14 +81,18 @@ export function CvForm({ onSubmit, onCancel, isSubmitting, error }: CvFormProps)
                 <FormField
                     control={form.control}
                     name="education"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                         <FormItem className="relative">
                             <FormLabel className="bg-surface text-muted-foreground absolute -top-2.5 left-3 z-10 px-1 text-xs leading-none">
                                 {t("education")}
                             </FormLabel>
                             <FormControl>
                                 <Input
-                                    variant="default"
+                                    variant={
+                                        fieldState.error || form.formState.errors.root
+                                            ? "error"
+                                            : "default"
+                                    }
                                     size="default"
                                     className="relative z-0 text-base"
                                     autoComplete="off"
@@ -96,7 +107,7 @@ export function CvForm({ onSubmit, onCancel, isSubmitting, error }: CvFormProps)
                 <FormField
                     control={form.control}
                     name="description"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                         <FormItem className="relative">
                             <FormLabel className="bg-surface text-muted-foreground absolute -top-2.5 left-3 z-10 px-1 text-xs leading-none">
                                 {t("description")}
@@ -107,6 +118,10 @@ export function CvForm({ onSubmit, onCancel, isSubmitting, error }: CvFormProps)
                                         "border-border-input-default text-input-default flex w-full rounded-none border bg-transparent px-3 py-4 text-base shadow-none transition-colors",
                                         "min-h-[160px] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none",
                                         "relative z-0",
+                                        {
+                                            "border-destructive":
+                                                fieldState.error || form.formState.errors.root,
+                                        },
                                     )}
                                     autoComplete="off"
                                     {...field}
@@ -131,9 +146,9 @@ export function CvForm({ onSubmit, onCancel, isSubmitting, error }: CvFormProps)
                     </Button>
                     <Button
                         type="submit"
-                        variant="grayBg"
+                        variant={isSubmitting || !isDirty || !isValid ? "grayBg" : "redPrimary"}
                         className="px-8 py-4"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || !isDirty || !isValid}
                     >
                         {t("create")}
                     </Button>
