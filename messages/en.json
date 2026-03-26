@@ -233,6 +233,17 @@
         "environment": "Environment",
         "domain": "Domain",
         "roles": "Roles",
-        "responsibilities": "Responsibilities"
+        "responsibilities": "Responsibilities",
+        "language_proficiency": "Language proficiency",
+        "domains": "Domains",
+        "project_roles": "Project roles",
+        "period": "Period",
+        "experience_in_years": "Experience in years",
+        "export_pdf": "Export PDF",
+        "professional_skills": "Professional skills",
+        "category": "Category",
+        "other": "Other",
+        "generating": "Generating",
+        "software_engineer": "Software engineer"
     }
 }

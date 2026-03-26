@@ -118,7 +118,7 @@ export function CVProjectTable({ cvId, readOnly = false }: CVProjectTableProps) 
                         />
                         <th className="py-4 text-left">
                             <span className="text-small text-basic-text tracking-standard px-4 font-medium whitespace-nowrap">
-                                Roles
+                                {t("roles")}
                             </span>
                         </th>
                         <th className="py-4 text-left">

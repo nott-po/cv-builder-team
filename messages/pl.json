@@ -233,6 +233,17 @@
         "environment": "Środowisko",
         "domain": "Domena",
         "roles": "Role",
-        "responsibilities": "Obowiązki"
+        "responsibilities": "Obowiązki",
+        "language_proficiency": "Znajomość języków",
+        "domains": "Dziedziny",
+        "project_roles": "Role w projektach",
+        "period": "Okres",
+        "experience_in_years": "Doświadczenie w latach",
+        "export_pdf": "Eksportuj do PDF",
+        "professional_skills": "Umiejętności zawodowe",
+        "category": "Kategoria",
+        "other": "Inne",
+        "generating": "Generowanie",
+        "software_engineer": "Inżynier oprogramowania"
     }
 }

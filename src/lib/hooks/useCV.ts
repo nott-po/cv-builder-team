@@ -15,6 +15,9 @@ export type CvDetail = {
     user?: {
         id: string;
         email?: string;
+        profile: {
+            full_name: string;
+        };
     } | null;
     projects?: {
         id: string;
