@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { AddProfileLanguageModal } from "@/components/features/languages/profile/AddProfileLanguageModal";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
@@ -130,5 +131,43 @@ describe("AddProfileLanguageModal", () => {
         );
 
         expect(screen.getByRole("button", { name: "save" })).toBeInTheDocument();
+    });
+
+    it("calls handleOpenChange(false) on cancel", async () => {
+        const user = userEvent.setup();
+        render(
+            <AddProfileLanguageModal
+                open={true}
+                userId="user-1"
+                existingLanguages={[]}
+                editingLanguage={null}
+                onOpenChange={jest.fn()}
+            />,
+        );
+
+        await user.click(screen.getByRole("button", { name: "cancel" }));
+
+        expect(mockHandleOpenChange).toHaveBeenCalledWith(false);
+    });
+
+    it("displays error when submitError is set", () => {
+        (useModalMutation as jest.Mock).mockReturnValue({
+            isPending: false,
+            submitError: "Failed to add language",
+            handleOpenChange: mockHandleOpenChange,
+            handleMutate: mockHandleMutate,
+        });
+
+        render(
+            <AddProfileLanguageModal
+                open={true}
+                userId="user-1"
+                existingLanguages={[]}
+                editingLanguage={null}
+                onOpenChange={jest.fn()}
+            />,
+        );
+
+        expect(screen.getByText("Failed to add language")).toBeInTheDocument();
     });
 });

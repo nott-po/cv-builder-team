@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { AddProfileSkillModal } from "@/components/features/skills/profile/AddProfileSkillModal";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
@@ -154,5 +155,43 @@ describe("AddProfileSkillModal", () => {
         );
 
         expect(screen.getByRole("button", { name: "save" })).toBeInTheDocument();
+    });
+
+    it("calls handleOpenChange(false) on cancel", async () => {
+        const user = userEvent.setup();
+        render(
+            <AddProfileSkillModal
+                open={true}
+                userId="user-1"
+                existingSkills={[]}
+                editingSkill={null}
+                onOpenChange={jest.fn()}
+            />,
+        );
+
+        await user.click(screen.getByRole("button", { name: "cancel" }));
+
+        expect(mockHandleOpenChange).toHaveBeenCalledWith(false);
+    });
+
+    it("displays error when submitError is set", () => {
+        (useModalMutation as jest.Mock).mockReturnValue({
+            isPending: false,
+            submitError: "Failed to add skill",
+            handleOpenChange: mockHandleOpenChange,
+            handleMutate: mockHandleMutate,
+        });
+
+        render(
+            <AddProfileSkillModal
+                open={true}
+                userId="user-1"
+                existingSkills={[]}
+                editingSkill={null}
+                onOpenChange={jest.fn()}
+            />,
+        );
+
+        expect(screen.getByText("Failed to add skill")).toBeInTheDocument();
     });
 });

@@ -87,12 +87,6 @@ describe("AdminLanguageTable", () => {
         expect(screen.getByText("—")).toBeInTheDocument();
     });
 
-    it("renders create language button", () => {
-        render(<AdminLanguageTable />);
-
-        expect(screen.getByText("create_language")).toBeInTheDocument();
-    });
-
     it("opens create modal when create button is clicked", async () => {
         const user = userEvent.setup();
         render(<AdminLanguageTable />);
@@ -151,5 +145,16 @@ describe("AdminLanguageTable", () => {
         render(<AdminLanguageTable />);
 
         expect(screen.getByTestId("skeleton")).toBeInTheDocument();
+    });
+
+    it("renders error message when data fails to load", () => {
+        (useLanguageTable as jest.Mock).mockReturnValue({
+            state: makeState({ isError: true }),
+            paginatedLanguages: [],
+        });
+
+        render(<AdminLanguageTable />);
+
+        expect(screen.getByTestId("error")).toBeInTheDocument();
     });
 });

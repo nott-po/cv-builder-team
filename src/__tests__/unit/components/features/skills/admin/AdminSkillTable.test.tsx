@@ -111,12 +111,6 @@ describe("AdminSkillTable", () => {
         expect(dashes).toHaveLength(2);
     });
 
-    it("renders create skill button", () => {
-        render(<AdminSkillTable />);
-
-        expect(screen.getByText("create_skill")).toBeInTheDocument();
-    });
-
     it("opens create modal when create button is clicked", async () => {
         const user = userEvent.setup();
         render(<AdminSkillTable />);
@@ -172,5 +166,18 @@ describe("AdminSkillTable", () => {
         render(<AdminSkillTable />);
 
         expect(screen.getByTestId("skeleton")).toBeInTheDocument();
+    });
+
+    it("renders error message when data fails to load", () => {
+        (useSkillTable as jest.Mock).mockReturnValue({
+            state: makeState({ isError: true }),
+            paginatedSkills: [],
+            sortDir: "asc",
+            handleSortToggle: noop,
+        });
+
+        render(<AdminSkillTable />);
+
+        expect(screen.getByTestId("error")).toBeInTheDocument();
     });
 });

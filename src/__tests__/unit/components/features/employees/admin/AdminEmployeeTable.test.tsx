@@ -80,12 +80,6 @@ describe("AdminEmployeeTable", () => {
         expect(useEmployeeTable).toHaveBeenCalledWith("/admin/employees");
     });
 
-    it("renders create user button", () => {
-        render(<AdminEmployeeTable />);
-
-        expect(screen.getByText("create_user")).toBeInTheDocument();
-    });
-
     it("opens create modal when create button is clicked", async () => {
         const user = userEvent.setup();
         render(<AdminEmployeeTable />);
@@ -125,5 +119,19 @@ describe("AdminEmployeeTable", () => {
         const deleteModal = screen.getByTestId("delete-modal");
         expect(deleteModal).toBeInTheDocument();
         expect(deleteModal.textContent).toContain("emp-1");
+    });
+
+    it("renders error message when data fails to load", () => {
+        (useEmployeeTable as jest.Mock).mockReturnValue({
+            state: makeState({ isError: true }),
+            paginatedEmployees: [],
+            sortDir: "desc",
+            handleSortToggle: noop,
+            handleRowClick: noop,
+        });
+
+        render(<AdminEmployeeTable />);
+
+        expect(screen.getByTestId("error")).toBeInTheDocument();
     });
 });

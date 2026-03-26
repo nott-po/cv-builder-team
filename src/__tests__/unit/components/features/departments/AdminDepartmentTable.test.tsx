@@ -77,12 +77,6 @@ describe("AdminDepartmentTable", () => {
         expect(screen.getByText("HR")).toBeInTheDocument();
     });
 
-    it("renders create department button", () => {
-        render(<AdminDepartmentTable />);
-
-        expect(screen.getByText("create_department")).toBeInTheDocument();
-    });
-
     it("opens create modal when create button is clicked", async () => {
         const user = userEvent.setup();
         render(<AdminDepartmentTable />);
@@ -139,5 +133,16 @@ describe("AdminDepartmentTable", () => {
         render(<AdminDepartmentTable />);
 
         expect(screen.getByTestId("skeleton")).toBeInTheDocument();
+    });
+
+    it("renders error message when data fails to load", () => {
+        (useDepartmentTable as jest.Mock).mockReturnValue({
+            state: makeState({ isError: true }),
+            paginatedDepartments: [],
+        });
+
+        render(<AdminDepartmentTable />);
+
+        expect(screen.getByTestId("error")).toBeInTheDocument();
     });
 });

@@ -77,12 +77,6 @@ describe("AdminPositionTable", () => {
         expect(screen.getByText("Manager")).toBeInTheDocument();
     });
 
-    it("renders create position button", () => {
-        render(<AdminPositionTable />);
-
-        expect(screen.getByText("create_position")).toBeInTheDocument();
-    });
-
     it("opens create modal when create button is clicked", async () => {
         const user = userEvent.setup();
         render(<AdminPositionTable />);
@@ -139,5 +133,16 @@ describe("AdminPositionTable", () => {
         render(<AdminPositionTable />);
 
         expect(screen.getByTestId("skeleton")).toBeInTheDocument();
+    });
+
+    it("renders error message when data fails to load", () => {
+        (usePositionTable as jest.Mock).mockReturnValue({
+            state: makeState({ isError: true }),
+            paginatedPositions: [],
+        });
+
+        render(<AdminPositionTable />);
+
+        expect(screen.getByTestId("error")).toBeInTheDocument();
     });
 });

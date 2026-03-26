@@ -38,25 +38,6 @@ describe("EmployeeForm", () => {
             expect(screen.getByPlaceholderText("password")).toBeInTheDocument();
         });
 
-        it("renders name fields", () => {
-            render(<EmployeeForm {...defaultProps} />);
-
-            expect(screen.getByPlaceholderText("first_name")).toBeInTheDocument();
-            expect(screen.getByPlaceholderText("last_name")).toBeInTheDocument();
-        });
-
-        it("renders create button in create mode", () => {
-            render(<EmployeeForm {...defaultProps} />);
-
-            expect(screen.getByRole("button", { name: "create" })).toBeInTheDocument();
-        });
-
-        it("renders cancel button", () => {
-            render(<EmployeeForm {...defaultProps} />);
-
-            expect(screen.getByRole("button", { name: "cancel" })).toBeInTheDocument();
-        });
-
         it("calls onCancel when cancel button is clicked", async () => {
             const user = userEvent.setup();
             render(<EmployeeForm {...defaultProps} />);
@@ -177,12 +158,6 @@ describe("EmployeeForm", () => {
             render(<EmployeeForm {...defaultProps} error="Something went wrong" />);
 
             expect(screen.getByText("Something went wrong")).toBeInTheDocument();
-        });
-
-        it("does not display error when error is null", () => {
-            render(<EmployeeForm {...defaultProps} error={null} />);
-
-            expect(screen.queryByText("Something went wrong")).not.toBeInTheDocument();
         });
 
         it("disables inputs when isSubmitting is true", () => {

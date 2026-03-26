@@ -105,12 +105,6 @@ describe("AdminProjectTable", () => {
         expect(screen.getByText("Node.js")).toBeInTheDocument();
     });
 
-    it("renders create project button", () => {
-        render(<AdminProjectTable />);
-
-        expect(screen.getByText("create_project")).toBeInTheDocument();
-    });
-
     it("opens create modal when create button is clicked", async () => {
         const user = userEvent.setup();
         render(<AdminProjectTable />);
@@ -173,5 +167,18 @@ describe("AdminProjectTable", () => {
         render(<AdminProjectTable />);
 
         expect(screen.getByTestId("skeleton")).toBeInTheDocument();
+    });
+
+    it("renders error message when data fails to load", () => {
+        (useProjectTable as jest.Mock).mockReturnValue({
+            state: makeState({ isError: true }),
+            paginatedProjects: [],
+            sortDir: "asc",
+            handleSortToggle: noop,
+        });
+
+        render(<AdminProjectTable />);
+
+        expect(screen.getByTestId("error")).toBeInTheDocument();
     });
 });
