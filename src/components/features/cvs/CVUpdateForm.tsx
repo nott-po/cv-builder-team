@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useCv } from "@/lib/hooks/useCV";
 import { useUpdateCV } from "@/lib/hooks/useUpdateCV";
 import { cn } from "@/lib/utils";
@@ -38,6 +39,9 @@ export function CVUpdateForm() {
     const params = useParams();
     const cvId = params.id as string;
     const t = useTranslations("CV");
+
+    const { user } = useCurrentUser();
+    const isAdmin = user?.role === "Admin";
 
     const { cv, isLoading: isFetching, isError: isFetchError } = useCv(cvId);
 
@@ -102,11 +106,16 @@ export function CVUpdateForm() {
 
     return (
         <div>
-            <PageHeader items={[{ label: t("cvs"), href: "/cvs" }, { label: cv.name }]} />
+            <PageHeader
+                items={[
+                    { label: t("cvs"), href: `${isAdmin ? "/admin" : ""}/cvs` },
+                    { label: cv.name },
+                ]}
+            />
 
             <div className="mb-4 px-6">
                 <div className="mb-8">
-                    <UserCVHeader mode="details" />
+                    <UserCVHeader mode="details" isAdmin={isAdmin} />
                 </div>
 
                 <Form {...form}>

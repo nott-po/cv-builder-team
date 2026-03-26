@@ -6,9 +6,10 @@ import { Link } from "@/i18n/routing";
 
 interface Props {
     mode: "details" | "skills" | "projects" | "preview";
+    isAdmin?: boolean;
 }
 
-export function UserCVHeader({ mode }: Props) {
+export function UserCVHeader({ mode, isAdmin = false }: Props) {
     const t = useTranslations("CV");
 
     const params = useParams();
@@ -21,28 +22,30 @@ export function UserCVHeader({ mode }: Props) {
                 variant={mode === "details" ? "redUnderline_active" : "redUnderline_inactive"}
                 size="headerButtons"
             >
-                <Link href={`/cvs/${cvId}`}>{t("details")}</Link>
+                <Link href={`${isAdmin ? "/admin" : ""}/cvs/${cvId}`}>{t("details")}</Link>
             </Button>
             <Button
                 asChild
                 variant={mode === "skills" ? "redUnderline_active" : "redUnderline_inactive"}
                 size="headerButtons"
             >
-                <Link href={`/cvs/${cvId}/skills`}>{t("skills")}</Link>
+                <Link href={`${isAdmin ? "/admin" : ""}/cvs/${cvId}/skills`}>{t("skills")}</Link>
             </Button>
             <Button
                 asChild
                 variant={mode === "projects" ? "redUnderline_active" : "redUnderline_inactive"}
                 size="headerButtons"
             >
-                <Link href={`/cvs/${cvId}/projects`}>{t("projects")}</Link>
+                <Link href={`${isAdmin ? "/admin" : ""}/cvs/${cvId}/projects`}>
+                    {t("projects")}
+                </Link>
             </Button>
             <Button
                 asChild
                 variant={mode === "preview" ? "redUnderline_active" : "redUnderline_inactive"}
                 size="headerButtons"
             >
-                <Link href={`/cvs/${cvId}/preview`}>{t("preview")}</Link>
+                <Link href={`${isAdmin ? "/admin" : ""}/cvs/${cvId}/preview`}>{t("preview")}</Link>
             </Button>
         </div>
     );

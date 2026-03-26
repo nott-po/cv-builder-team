@@ -21,6 +21,8 @@ export function CVTable() {
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [selectedCv, setSelectedCv] = useState<CvRow | null>(null);
 
+    const isAdmin = user?.role === "Admin";
+
     const currentUserId = user?.id as string;
     const {
         paginatedCvs,
@@ -30,7 +32,7 @@ export function CVTable() {
         handleSortToggle,
         sortDir,
         handleRowClick,
-    } = useCVTable(currentUserId);
+    } = useCVTable(currentUserId, "/admin/cvs", isAdmin);
 
     const isDataLoading = isLoading || !user;
 

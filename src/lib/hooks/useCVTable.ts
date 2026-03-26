@@ -31,7 +31,7 @@ type SortDir = "asc" | "desc";
 
 export const cvsListKey = (userId: string) => ["cvs", userId] as const;
 
-export function useCVTable(userId: string, basePath = "/cvs") {
+export function useCVTable(userId: string, basePath = "/cvs", isAdmin: boolean = false) {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -45,7 +45,9 @@ export function useCVTable(userId: string, basePath = "/cvs") {
         queryKey: cvsListKey(userId),
         queryFn: async () => {
             const response = await gqlClient.request<CvsQueryResult>(USER_CVS_QUERY);
-            const filteredCvs = response.cvs.filter((cv) => cv.user?.id === userId);
+            const filteredCvs = isAdmin
+                ? response.cvs
+                : response.cvs.filter((cv) => cv.user?.id === userId);
             return { cvs: filteredCvs };
         },
     });
