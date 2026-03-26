@@ -6,6 +6,19 @@ import type { Mastery } from "@/generated/graphql";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { CV_QUERY } from "@/lib/graphql/operations/cvs";
 
+export type CvProject = {
+    id: string;
+    name: string;
+    start_date: string;
+    end_date: string | null;
+    description: string;
+    domain: string;
+    responsibilities: string[];
+    roles: string[];
+    environment: string[];
+    project: { id: string };
+};
+
 export type CvDetail = {
     id: string;
     created_at: string;
@@ -15,21 +28,12 @@ export type CvDetail = {
     user?: {
         id: string;
         email?: string;
+        position_name?: string | null;
         profile: {
             full_name: string;
         };
     } | null;
-    projects?: {
-        id: string;
-        name: string;
-        start_date: string;
-        end_date: string | null;
-        description: string;
-        domain: string;
-        responsibilities: string[];
-        roles: string[];
-        environment: string[];
-    }[];
+    projects?: CvProject[];
     skills?: {
         name: string;
         mastery: Mastery;

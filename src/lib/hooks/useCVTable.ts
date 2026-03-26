@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "@/i18n/routing";
 import { DEFAULT_PAGE_SIZE } from "@/lib/constants/table";
 import { gqlClient } from "@/lib/graphql/fetcher";
-import { USER_CVS_QUERY } from "@/lib/graphql/operations/cvs";
+import { ALL_CVS_QUERY, USER_CVS_QUERY } from "@/lib/graphql/operations/cvs";
 
 export type CvRow = {
     id: string;
@@ -23,8 +23,14 @@ export type CvRow = {
     } | null;
 };
 
-type CvsQueryResult = {
+type AllCvsQueryResult = {
     cvs: CvRow[];
+};
+
+type UserCvsQueryResult = {
+    user: {
+        cvs: CvRow[];
+    };
 };
 
 type SortDir = "asc" | "desc";
@@ -40,22 +46,25 @@ export function useCVTable(userId: string, basePath = "/cvs", isAdmin: boolean =
     const [page, setPage] = useState(1);
     const pageSize = Number(searchParams.get("pageSize")) || DEFAULT_PAGE_SIZE;
 
-    const { data, isLoading, isError, refetch } = useQuery<CvsQueryResult>({
+    const { data, isLoading, isError, refetch } = useQuery<CvRow[]>({
         enabled: Boolean(userId),
         queryKey: cvsListKey(userId),
         queryFn: async () => {
-            const response = await gqlClient.request<CvsQueryResult>(USER_CVS_QUERY);
-            const filteredCvs = isAdmin
-                ? response.cvs
-                : response.cvs.filter((cv) => cv.user?.id === userId);
-            return { cvs: filteredCvs };
+            if (isAdmin) {
+                const response = await gqlClient.request<AllCvsQueryResult>(ALL_CVS_QUERY);
+                return response.cvs;
+            }
+            const response = await gqlClient.request<UserCvsQueryResult>(USER_CVS_QUERY, {
+                userId,
+            });
+            return response.user.cvs;
         },
     });
 
     const processedCvs = useMemo(() => {
-        if (!data?.cvs) return [];
+        if (!data) return [];
 
-        let result = data.cvs;
+        let result = data;
 
         if (search.trim()) {
             const lower = search.toLowerCase();

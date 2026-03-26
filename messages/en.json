@@ -198,8 +198,10 @@
         "employee": "Employee",
         "description": "Description",
         "create_cv": "Create CV",
+        "create_cv_error": "Failed to create CV. Please try again.",
         "delete_cv": "Delete CV",
         "delete_cv_text": "Are you sure you want to delete CV",
+        "delete_cv_error": "Failed to delete CV. Please try again.",
         "confirm": "Confirm",
         "create": "Create",
         "cancel": "Cancel",
@@ -247,6 +249,16 @@
         "software_engineer": "Software engineer",
         "error_loading": "Error Loading",
         "failed_to_load": "Failed to load CVs",
-        "no_skills": "No skills"
+        "no_skills": "No skills",
+        "export_error": "Failed to export PDF. Please try again.",
+        "edit_project": "Edit project",
+        "add_project_error": "Failed to add project. Please try again.",
+        "edit_project_error": "Failed to update project. Please try again.",
+        "name_required": "Name is required",
+        "description_required": "Description is required",
+        "project_required": "Project is required",
+        "start_date_required": "Start date is required",
+        "role_required": "Role is required",
+        "responsibilities_required": "Responsibilities are required"
     }
 }

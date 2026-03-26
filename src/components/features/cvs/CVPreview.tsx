@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { gqlClient } from "@/lib/graphql/fetcher";
@@ -37,7 +38,7 @@ export function CVPreview() {
         setIsExporting(true);
         try {
             const cvElement = document.getElementById("cv-wrapper");
-            if (!cvElement) throw new Error("Не найден элемент резюме");
+            if (!cvElement) throw new Error("CV element not found");
 
             const clone = cvElement.cloneNode(true) as HTMLElement;
             const btn = clone.querySelector("#export-button");
@@ -56,7 +57,7 @@ export function CVPreview() {
                         const css = await res.text();
                         inlineStyles += `<style>${css}</style>\n`;
                     } catch (e) {
-                        console.warn("Не удалось загрузить стиль:", e);
+                        console.warn("Failed to load stylesheet:", e);
                     }
                 }
             }
@@ -86,11 +87,16 @@ export function CVPreview() {
             downloadLink.click();
         } catch (error) {
             console.error("Export failed:", error);
-            alert("Ошибка при экспорте PDF");
+            toast.error(t("export_error"));
         } finally {
             setIsExporting(false);
         }
     };
+
+    const uniqueDomains = useMemo(
+        () => [...new Set((cv?.projects ?? []).map((p) => p.domain).filter(Boolean))],
+        [cv?.projects],
+    );
 
     const grouped = useMemo<SkillGroup[]>(() => {
         if (!cv || !cv.skills || cv.skills.length === 0) return [];
@@ -151,7 +157,9 @@ export function CVPreview() {
                 <div className="flex w-full justify-between">
                     <div>
                         <p className="text-[34px]">{cv?.user?.profile.full_name}</p>
-                        <p className="uppercase">{t("software_engineer")}</p>
+                        {cv.user?.position_name && (
+                            <p className="uppercase">{cv.user.position_name}</p>
+                        )}
                     </div>
                     <div id="export-button">
                         <Button
@@ -174,11 +182,27 @@ export function CVPreview() {
                             </div>
                             <div className="flex flex-col gap-2">
                                 <p className="font-bold">{t("language_proficiency")}</p>
-                                <p />
+                                {cv.languages && cv.languages.length > 0 ? (
+                                    <ul className="space-y-1">
+                                        {cv.languages.map((lang) => (
+                                            <li key={lang.name} className="text-sm">
+                                                {lang.name} — {lang.proficiency}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : null}
                             </div>
                             <div className="flex flex-col gap-2">
                                 <p className="font-bold">{t("domains")}</p>
-                                <p />
+                                {uniqueDomains.length > 0 ? (
+                                    <ul className="space-y-1">
+                                        {uniqueDomains.map((domain) => (
+                                            <li key={domain} className="text-sm">
+                                                {domain}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : null}
                             </div>
                         </div>
 
@@ -193,7 +217,7 @@ export function CVPreview() {
                             <div className="flex flex-col gap-2">
                                 {cv?.skills?.length === 0 ? (
                                     <p className="text-body text-text-secondary py-16 text-center">
-                                        no skills
+                                        {t("no_skills")}
                                     </p>
                                 ) : (
                                     <div className="space-y-4">
@@ -203,7 +227,7 @@ export function CVPreview() {
                                                 className="flex flex-col gap-2"
                                             >
                                                 <p className="font-bold">
-                                                    {group.categoryName ?? "Other"}
+                                                    {group.categoryName ?? t("other")}
                                                 </p>
                                                 <p>
                                                     {group.skills

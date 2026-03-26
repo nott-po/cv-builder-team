@@ -17,15 +17,21 @@ import {
     FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
-const cvSchema = z.object({
-    name: z.string().min(1, "Name is required"),
-    education: z.string().optional(),
-    description: z.string().min(1, "Description is required"),
-});
+export type CreateCvFormData = {
+    name: string;
+    education?: string;
+    description: string;
+};
 
-export type CreateCvFormData = z.infer<typeof cvSchema>;
+export function cvBaseSchemaFields(t: (key: string) => string) {
+    return {
+        name: z.string().min(1, t("name_required")),
+        education: z.string().optional(),
+    };
+}
 
 interface CvFormProps {
     onSubmit: (data: CreateCvFormData) => Promise<void>;
@@ -36,6 +42,11 @@ interface CvFormProps {
 
 export function CvForm({ onSubmit, onCancel, isSubmitting, error }: CvFormProps) {
     const t = useTranslations("CV");
+
+    const cvSchema = z.object({
+        ...cvBaseSchemaFields(t),
+        description: z.string().min(1, t("description_required")),
+    });
 
     const form = useForm<CreateCvFormData>({
         resolver: zodResolver(cvSchema),
@@ -113,10 +124,10 @@ export function CvForm({ onSubmit, onCancel, isSubmitting, error }: CvFormProps)
                                 {t("description")}
                             </FormLabel>
                             <FormControl>
-                                <textarea
+                                <Textarea
                                     className={cn(
-                                        "border-border-input-default text-input-default flex w-full rounded-none border bg-transparent px-3 py-4 text-base shadow-none transition-colors",
-                                        "min-h-[160px] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none",
+                                        "border-border-input-default text-input-default min-h-[160px] rounded-none border px-3 py-4 text-base shadow-none transition-colors",
+                                        "focus-visible:ring-0 focus-visible:ring-offset-0",
                                         "relative z-0",
                                         {
                                             "border-destructive":

@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
+import { cvBaseSchemaFields } from "@/components/features/cvs/CVForm";
 import { UserCVHeader } from "@/components/features/cvs/UserCVHeader";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { PageHeader } from "@/components/shared/PageHeader";
@@ -22,26 +23,31 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
+import { UserRole } from "@/lib/constants/roles";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useCv } from "@/lib/hooks/useCV";
 import { useUpdateCV } from "@/lib/hooks/useUpdateCV";
 import { cn } from "@/lib/utils";
 
-const cvSchema = z.object({
-    name: z.string().min(1, "Name is required"),
-    education: z.string().optional(),
-    description: z.string().optional(),
-});
-
-export type UpdateCvFormData = z.infer<typeof cvSchema>;
+export type UpdateCvFormData = {
+    name: string;
+    education?: string;
+    description?: string;
+};
 
 export function CVUpdateForm() {
     const params = useParams();
     const cvId = params.id as string;
     const t = useTranslations("CV");
 
+    const cvSchema = z.object({
+        ...cvBaseSchemaFields(t),
+        description: z.string().optional(),
+    });
+
     const { user } = useCurrentUser();
-    const isAdmin = user?.role === "Admin";
+    const isAdmin = user?.role === UserRole.Admin;
 
     const { cv, isLoading: isFetching, isError: isFetchError } = useCv(cvId);
 
@@ -184,10 +190,10 @@ export function CVUpdateForm() {
                                         {t("description")}
                                     </FormLabel>
                                     <FormControl>
-                                        <textarea
+                                        <Textarea
                                             className={cn(
-                                                "border-border-input-default text-input-default flex w-full rounded-none border bg-transparent px-3 py-4 text-base shadow-none transition-colors",
-                                                "min-h-[160px] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none",
+                                                "border-border-input-default text-input-default min-h-[160px] rounded-none border px-3 py-4 text-base shadow-none transition-colors",
+                                                "focus-visible:ring-0 focus-visible:ring-offset-0",
                                                 "relative z-0",
                                             )}
                                             autoComplete="off"

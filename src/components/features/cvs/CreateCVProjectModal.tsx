@@ -8,13 +8,25 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { ADD_CV_PROJECT_MUTATION } from "@/lib/graphql/operations/cvs";
 import { PROJECTS_QUERY } from "@/lib/graphql/operations/projects";
-import { cvDetailKey } from "@/lib/hooks/useCV";
+import { cvDetailKey, type CvProject } from "@/lib/hooks/useCV";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
 import { projectsListKey, type ProjectsQueryResult } from "@/lib/hooks/useProjectTable";
 
 import { CVProjectForm, type CVProjectFormValues } from "./CVProjectForm";
 
-export function CreateCVProjectModal({ open, cvId, existingProjects = [], onOpenChange }: any) {
+interface CreateCVProjectModalProps {
+    open: boolean;
+    cvId: string;
+    existingProjects: CvProject[];
+    onOpenChange: (open: boolean) => void;
+}
+
+export function CreateCVProjectModal({
+    open,
+    cvId,
+    existingProjects,
+    onOpenChange,
+}: CreateCVProjectModalProps) {
     const queryClient = useQueryClient();
     const t = useTranslations("CV");
 
@@ -24,9 +36,8 @@ export function CreateCVProjectModal({ open, cvId, existingProjects = [], onOpen
         enabled: open,
     });
 
-    const safeExistingProjects = existingProjects || [];
     const availableProjects = (data?.projects ?? []).filter(
-        (globalProj) => !safeExistingProjects.some((cvProj: any) => cvProj.id === globalProj.id),
+        (globalProj) => !existingProjects.some((cvProj) => cvProj.project.id === globalProj.id),
     );
 
     const { isPending, submitError, handleOpenChange, handleMutate } = useModalMutation({
@@ -69,7 +80,7 @@ export function CreateCVProjectModal({ open, cvId, existingProjects = [], onOpen
                         responsibilities: "",
                     }}
                     availableProjects={availableProjects}
-                    onSubmit={(data) => handleMutate(data, "Error")}
+                    onSubmit={(data) => handleMutate(data, t("add_project_error"))}
                     onCancel={() => handleOpenChange(false)}
                     isSubmitting={isPending}
                     error={submitError}

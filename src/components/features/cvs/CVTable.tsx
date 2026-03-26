@@ -11,6 +11,7 @@ import { DeleteCVModal } from "@/components/features/cvs/DeleteCVModal";
 import { CVTableSkeleton } from "@/components/shared/CVTableSkeleton";
 import { DataTable } from "@/components/shared/DataTable";
 import { Button } from "@/components/ui/button";
+import { UserRole } from "@/lib/constants/roles";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useCVTable, type CvRow } from "@/lib/hooks/useCVTable";
 
@@ -22,7 +23,7 @@ export function CVTable() {
     const [selectedCv, setSelectedCv] = useState<CvRow | null>(null);
     const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-    const isAdmin = user?.role === "Admin";
+    const isAdmin = user?.role === UserRole.Admin;
     const currentUserId = user?.id as string;
 
     const {

@@ -198,8 +198,10 @@
         "employee": "Pracownik",
         "description": "Opis",
         "create_cv": "Utwórz CV",
+        "create_cv_error": "Nie udało się utworzyć CV. Spróbuj ponownie.",
         "delete_cv": "Usuń CV",
         "delete_cv_text": "Czy na pewno chcesz usunąć CV",
+        "delete_cv_error": "Nie udało się usunąć CV. Spróbuj ponownie.",
         "confirm": "Potwierdź",
         "create": "Utwórz",
         "cancel": "Anuluj",
@@ -247,6 +249,16 @@
         "software_engineer": "Inżynier oprogramowania",
         "error_loading": "Błąd ładowania",
         "failed_to_load": "Nie udało się załadować CV",
-        "no_skills": "Brak umiejętności"
+        "no_skills": "Brak umiejętności",
+        "export_error": "Nie udało się wyeksportować PDF. Spróbuj ponownie.",
+        "edit_project": "Edytuj projekt",
+        "add_project_error": "Nie udało się dodać projektu. Spróbuj ponownie.",
+        "edit_project_error": "Nie udało się zaktualizować projektu. Spróbuj ponownie.",
+        "name_required": "Nazwa jest wymagana",
+        "description_required": "Opis jest wymagany",
+        "project_required": "Projekt jest wymagany",
+        "start_date_required": "Data rozpoczęcia jest wymagana",
+        "role_required": "Rola jest wymagana",
+        "responsibilities_required": "Obowiązki są wymagane"
     }
 }

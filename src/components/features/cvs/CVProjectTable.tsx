@@ -17,7 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { REMOVE_CV_PROJECT_MUTATION } from "@/lib/graphql/operations/cvs";
-import { useCv, cvDetailKey } from "@/lib/hooks/useCV";
+import { useCv, cvDetailKey, type CvProject } from "@/lib/hooks/useCV";
 import { formatDateForDisplay } from "@/lib/utils/date";
 import type { SortDir, TableState } from "@/types/table";
 
@@ -33,8 +33,8 @@ export function CVProjectTable({ cvId, readOnly = false }: CVProjectTableProps) 
     const [addOpen, setAddOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
     const [removeOpen, setRemoveOpen] = useState(false);
-    const [editingProject, setEditingProject] = useState<any | null>(null);
-    const [removingProject, setRemovingProject] = useState<any | null>(null);
+    const [editingProject, setEditingProject] = useState<CvProject | null>(null);
+    const [removingProject, setRemovingProject] = useState<CvProject | null>(null);
 
     const [sortDir, setSortDir] = useState<SortDir>("asc");
     const [search, setSearch] = useState("");
@@ -95,7 +95,7 @@ export function CVProjectTable({ cvId, readOnly = false }: CVProjectTableProps) 
             <DataTable
                 state={tableState}
                 messages={{
-                    empty: t("no_projects", { fallback: t("no_projects") }),
+                    empty: t("no_projects"),
                     error: t("error"),
                 }}
                 searchPlaceholder={t("name")}
@@ -183,7 +183,7 @@ export function CVProjectTable({ cvId, readOnly = false }: CVProjectTableProps) 
                                 )}
                                 {project.environment && project.environment.length > 0 && (
                                     <div className="mt-2 flex flex-wrap gap-2">
-                                        {project.environment.map((tag: string) => (
+                                        {project.environment.map((tag) => (
                                             <Badge key={tag} variant="outline" className="text-xs">
                                                 {tag}
                                             </Badge>

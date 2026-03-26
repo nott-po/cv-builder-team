@@ -21,20 +21,25 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-export const cvProjectFormSchema = z.object({
-    projectId: z.string().min(1, "Project is required"),
-    start_date: z.string().min(1, "Start date is required"),
-    end_date: z.string().optional(),
-    roles: z.string().min(1, "Role is required"),
-    responsibilities: z.string().min(1, "Responsibilities are required"),
-});
+export type AvailableProject = {
+    id: string;
+    name: string;
+    domain: string;
+    environment: string[];
+};
 
-export type CVProjectFormValues = z.infer<typeof cvProjectFormSchema>;
+export type CVProjectFormValues = {
+    projectId: string;
+    start_date: string;
+    end_date?: string;
+    roles: string;
+    responsibilities: string;
+};
 
 interface CVProjectFormProps {
     mode: "add" | "edit";
     defaultValues: CVProjectFormValues;
-    availableProjects: any[];
+    availableProjects: AvailableProject[];
     onSubmit: (data: CVProjectFormValues) => void;
     onCancel: () => void;
     isSubmitting: boolean;
@@ -51,6 +56,14 @@ export function CVProjectForm({
     error,
 }: CVProjectFormProps) {
     const t = useTranslations("CV");
+
+    const cvProjectFormSchema = z.object({
+        projectId: z.string().min(1, t("project_required")),
+        start_date: z.string().min(1, t("start_date_required")),
+        end_date: z.string().optional(),
+        roles: z.string().min(1, t("role_required")),
+        responsibilities: z.string().min(1, t("responsibilities_required")),
+    });
 
     const form = useForm<CVProjectFormValues>({
         resolver: zodResolver(cvProjectFormSchema),
@@ -85,7 +98,7 @@ export function CVProjectForm({
                                         <SelectTrigger
                                             className={`${floatingInputClass} h-14 w-full`}
                                         >
-                                            <SelectValue placeholder="Project" />
+                                            <SelectValue placeholder={t("select_a_project")} />
                                         </SelectTrigger>
                                         <SelectContent className="max-h-48 w-full">
                                             {availableProjects.map((p) => (
@@ -153,7 +166,7 @@ export function CVProjectForm({
                             >
                                 {selectedProjectInfo?.environment &&
                                     selectedProjectInfo.environment.length > 0 &&
-                                    selectedProjectInfo.environment.map((item: string) => (
+                                    selectedProjectInfo.environment.map((item) => (
                                         <span
                                             key={item}
                                             className="bg-secondary text-secondary-foreground inline-flex items-center rounded-sm border px-2 py-1 text-xs font-medium shadow-sm"
@@ -227,7 +240,7 @@ export function CVProjectForm({
                         size="redButton"
                         disabled={isSubmitting || !form.formState.isDirty}
                     >
-                        {mode === "add" ? t("add") : "update"}
+                        {mode === "add" ? t("add") : t("update")}
                     </Button>
                 </div>
             </form>

@@ -1,6 +1,4 @@
-import { gql } from "graphql-request";
-
-export const USER_CVS_QUERY = `
+export const ALL_CVS_QUERY = `
     query GetAllCvs {
         cvs {
             id
@@ -11,14 +9,22 @@ export const USER_CVS_QUERY = `
                 id
                 email
             }
-            skills {
-                mastery
+        }
+    }
+`;
+
+export const USER_CVS_QUERY = `
+    query GetUserCvs($userId: ID!) {
+        user(userId: $userId) {
+            cvs {
+                id
                 name
-                categoryId
-            }
-            languages {
-                name
-                proficiency
+                education
+                description
+                user {
+                    id
+                    email
+                }
             }
         }
     }
@@ -59,6 +65,7 @@ export const CV_QUERY = `
       user {
         id
         email
+        position_name
         profile {
             full_name
         }
@@ -148,7 +155,7 @@ export const REMOVE_CV_PROJECT_MUTATION = `
   }
 `;
 
-export const EXPORT_PDF_MUTATION = gql`
+export const EXPORT_PDF_MUTATION = `
     mutation ExportPdf($pdf: ExportPdfInput!) {
         exportPdf(pdf: $pdf)
     }
