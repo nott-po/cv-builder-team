@@ -8,7 +8,7 @@ import { Link } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 export type BreadcrumbItem = {
-    label?: string;
+    label: string;
     href?: string;
     Icon?: React.ElementType;
 };
@@ -28,7 +28,7 @@ export function PageHeader({ items }: PageHeaderProps) {
 
                 let textColorClass = "";
                 if (isSecondElement) {
-                    textColorClass = "text-red-primary";
+                    textColorClass = "text-pink";
                 } else {
                     textColorClass = isLast ? "text-header-item" : "text-input-default";
                 }

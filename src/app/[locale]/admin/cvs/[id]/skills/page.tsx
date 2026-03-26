@@ -26,15 +26,15 @@ export default function CvSkillsPage() {
             ) : (
                 <PageHeader
                     items={[
-                        { label: t("cvs"), href: "/cvs" },
-                        { label: cv?.name || "", href: `/cvs/${cv?.id}` },
+                        { label: t("cvs"), href: "/admin/cvs" },
+                        { label: cv?.name || "", href: `/admin/cvs/${cv?.id}` },
                         { label: t("skills") },
                     ]}
                 />
             )}
 
             <div className="mb-4 px-6">
-                <UserCVHeader mode="skills" />
+                <UserCVHeader mode="skills" isAdmin />
             </div>
 
             <div>

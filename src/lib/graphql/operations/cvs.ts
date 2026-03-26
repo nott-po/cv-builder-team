@@ -1,0 +1,162 @@
+export const ALL_CVS_QUERY = `
+    query GetAllCvs {
+        cvs {
+            id
+            name
+            education
+            description
+            user {
+                id
+                email
+            }
+        }
+    }
+`;
+
+export const USER_CVS_QUERY = `
+    query GetUserCvs($userId: ID!) {
+        user(userId: $userId) {
+            cvs {
+                id
+                name
+                education
+                description
+                user {
+                    id
+                    email
+                }
+            }
+        }
+    }
+`;
+
+export const CREATE_CV_MUTATION = `
+    mutation CreateCv($cv: CreateCvInput!) {
+        createCv(cv: $cv) {
+            id
+            created_at
+            name
+            education
+            description
+            user {
+                id
+                email
+            }
+        }
+    }
+`;
+
+export const DELETE_CV_MUTATION = `
+  mutation DeleteCv($cv: DeleteCvInput!) {
+    deleteCv(cv: $cv) {
+      affected
+    }
+  }
+`;
+
+export const CV_QUERY = `
+  query GetCv($cvId: ID!) {
+    cv(cvId: $cvId) {
+      id
+      created_at
+      name
+      education
+      description
+      user {
+        id
+        email
+        position_name
+        profile {
+            full_name
+        }
+      }
+      projects {
+        id
+        project { 
+            id
+        }
+        name
+        domain
+        start_date
+        end_date
+        roles
+        responsibilities
+        description
+        environment
+      }
+      skills {
+        name
+        mastery
+      }
+      languages {
+        name
+        proficiency
+      }
+    }
+  }
+`;
+
+export const UPDATE_CV_MUTATION = `
+  mutation UpdateCv($cv: UpdateCvInput!) {
+    updateCv(cv: $cv) {
+      id
+      name
+      education
+      description
+    }
+  }
+`;
+
+export const ADD_CV_SKILL_MUTATION = `
+  mutation AddCvSkill($skill: AddCvSkillInput!) {
+    addCvSkill(skill: $skill) {
+      id
+    }
+  }
+`;
+
+export const UPDATE_CV_SKILL_MUTATION = `
+  mutation UpdateCvSkill($skill: UpdateCvSkillInput!) {
+    updateCvSkill(skill: $skill) {
+      id
+    }
+  }
+`;
+
+export const DELETE_CV_SKILL_MUTATION = `
+  mutation DeleteCvSkill($skill: DeleteCvSkillInput!) {
+    deleteCvSkill(skill: $skill) {
+      id
+    }
+  }
+`;
+
+export const ADD_CV_PROJECT_MUTATION = `
+  mutation AddCvProject($project: AddCvProjectInput!) {
+    addCvProject(project: $project) {
+      id
+    }
+  }
+`;
+
+export const UPDATE_CV_PROJECT_MUTATION = `
+  mutation UpdateCvProject($project: UpdateCvProjectInput!) {
+    updateCvProject(project: $project) {
+      id
+    }
+  }
+`;
+
+export const REMOVE_CV_PROJECT_MUTATION = `
+  mutation RemoveCvProject($project: RemoveCvProjectInput!) {
+    removeCvProject(project: $project) {
+      id
+    }
+  }
+`;
+
+export const EXPORT_PDF_MUTATION = `
+    mutation ExportPdf($pdf: ExportPdfInput!) {
+        exportPdf(pdf: $pdf)
+    }
+`;

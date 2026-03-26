@@ -1,3 +1,9 @@
-export default function AdminCvEditPage() {
-    return null;
+import { CVUpdateForm } from "@/components/features/cvs/CVUpdateForm";
+
+export default function CvEditPage() {
+    return (
+        <div>
+            <CVUpdateForm />
+        </div>
+    );
 }

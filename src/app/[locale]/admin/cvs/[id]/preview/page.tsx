@@ -3,13 +3,13 @@
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 
-import { CVSkillTable } from "@/components/features/cvs/CVSkillTable";
+import { CVPreview } from "@/components/features/cvs/CVPreview";
 import { UserCVHeader } from "@/components/features/cvs/UserCVHeader";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCv } from "@/lib/hooks/useCV";
 
-export default function CvSkillsPage() {
+export default function CvPreviewPage() {
     const params = useParams();
     const cvId = params.id as string;
     const t = useTranslations("CV");
@@ -26,20 +26,18 @@ export default function CvSkillsPage() {
             ) : (
                 <PageHeader
                     items={[
-                        { label: t("cvs"), href: "/cvs" },
-                        { label: cv?.name || "", href: `/cvs/${cv?.id}` },
-                        { label: t("skills") },
+                        { label: t("cvs"), href: "/admin/cvs" },
+                        { label: cv?.name || "", href: `/admin/cvs/${cv?.id}` },
+                        { label: t("preview") },
                     ]}
                 />
             )}
 
             <div className="mb-4 px-6">
-                <UserCVHeader mode="skills" />
+                <UserCVHeader mode="preview" isAdmin />
             </div>
 
-            <div>
-                <CVSkillTable cvId={cvId} />
-            </div>
+            <CVPreview />
         </div>
     );
 }
