@@ -5,7 +5,13 @@ export const USER_QUERY = `
             created_at
             email
             department_name
+            department {
+                id
+            }
             position_name
+            position {
+                id
+            }
             profile {
                 first_name
                 last_name
@@ -34,5 +40,11 @@ export const UPDATE_FULL_PROFILE_MUTATION = `
 export const UPLOAD_AVATAR_MUTATION = `
     mutation UploadAvatar($avatar: UploadAvatarInput!) {
         uploadAvatar(avatar: $avatar)
+    }
+`;
+
+export const DELETE_AVATAR_MUTATION = `
+    mutation DeleteAvatar($avatar: DeleteAvatarInput!) {
+        deleteAvatar(avatar: $avatar)
     }
 `;

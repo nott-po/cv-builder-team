@@ -19,17 +19,25 @@ import { parseDateForInput } from "@/lib/utils/date";
 import { EnvironmentSelect } from "./EnvironmentSelect";
 
 function buildProjectSchema(t: (key: string) => string) {
-    return z.object({
-        name: z.string().min(1, { message: t("name_required") }),
-        domain: z.string().min(1, { message: t("domain_required") }),
-        start_date: z.string().min(1, { message: t("start_date_required") }),
-        end_date: z
-            .string()
-            .optional()
-            .transform((val) => val || undefined),
-        description: z.string(),
-        environment: z.array(z.string()),
-    });
+    return z
+        .object({
+            name: z.string().min(1, { message: t("name_required") }),
+            domain: z.string().min(1, { message: t("domain_required") }),
+            start_date: z.string().min(1, { message: t("start_date_required") }),
+            end_date: z
+                .string()
+                .optional()
+                .transform((val) => val || undefined),
+            description: z.string(),
+            environment: z.array(z.string()),
+        })
+        .refine(
+            (data) => {
+                if (!data.end_date || !data.start_date) return true;
+                return new Date(data.end_date) >= new Date(data.start_date);
+            },
+            { message: t("end_date_before_start"), path: ["end_date"] },
+        );
 }
 
 export type ProjectFormData = z.output<ReturnType<typeof buildProjectSchema>>;

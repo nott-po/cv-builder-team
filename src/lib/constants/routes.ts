@@ -8,6 +8,7 @@ export const ROUTES = {
     SKILLS: "/skills",
     LANGUAGES: "/languages",
     CVS: "/cvs",
+    SETTINGS: "/settings",
     ADMIN: {
         EMPLOYEES: "/admin/employees",
         DEPARTMENTS: "/admin/departments",
@@ -16,6 +17,7 @@ export const ROUTES = {
         LANGUAGES: "/admin/languages",
         PROJECTS: "/admin/projects",
         CVS: "/admin/cvs",
+        SETTINGS: "/admin/settings",
     },
 } as const;
 

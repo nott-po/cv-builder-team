@@ -6,7 +6,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ClientError } from "graphql-request";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { fetcher, gqlClient } from "@/lib/graphql/fetcher";
+import { gqlClient } from "@/lib/graphql/fetcher";
 import { DEPARTMENTS_QUERY } from "@/lib/graphql/operations/departments";
 import { UPDATE_PROFILE_MUTATION, UPDATE_USER_MUTATION } from "@/lib/graphql/operations/employees";
 import { POSITIONS_QUERY } from "@/lib/graphql/operations/positions";
@@ -29,13 +29,13 @@ export function EditUserModal({ open, employee, onOpenChange }: EditUserModalPro
 
     const { data: departmentsData } = useQuery<DepartmentsQueryResult>({
         queryKey: departmentsListKey(),
-        queryFn: () => fetcher<DepartmentsQueryResult, Record<string, never>>(DEPARTMENTS_QUERY)(),
+        queryFn: () => gqlClient.request<DepartmentsQueryResult>(DEPARTMENTS_QUERY),
         enabled: open,
     });
 
     const { data: positionsData } = useQuery<PositionsQueryResult>({
         queryKey: positionsListKey(),
-        queryFn: () => fetcher<PositionsQueryResult, Record<string, never>>(POSITIONS_QUERY)(),
+        queryFn: () => gqlClient.request<PositionsQueryResult>(POSITIONS_QUERY),
         enabled: open,
     });
 

@@ -12,6 +12,7 @@ import { RemoveProfileItemModal } from "@/components/shared/RemoveProfileItemMod
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
 import { MASTERY_COLOR } from "@/lib/constants/proficiency";
+import { STALE_TIME_REFERENCE } from "@/lib/constants/query";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { DELETE_PROFILE_SKILL_MUTATION } from "@/lib/graphql/operations/profile";
 import { SKILLS_QUERY } from "@/lib/graphql/operations/skills";
@@ -39,7 +40,7 @@ export function ProfileSkillTable({ userId, readOnly = false }: ProfileSkillTabl
     const { data: allSkillsData, isLoading: isLoadingAllSkills } = useQuery<SkillsQueryResult>({
         queryKey: skillsListKey(),
         queryFn: () => gqlClient.request<SkillsQueryResult>(SKILLS_QUERY),
-        staleTime: Infinity,
+        staleTime: STALE_TIME_REFERENCE,
     });
 
     const canAddMoreSkills =

@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import type { Proficiency } from "@/generated/graphql";
+import { STALE_TIME_ENTITY } from "@/lib/constants/query";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { PROFILE_LANGUAGES_QUERY } from "@/lib/graphql/operations/profile";
 
@@ -26,6 +27,7 @@ export function useProfileLanguages(userId: string) {
         queryFn: () =>
             gqlClient.request<ProfileLanguagesQueryResult>(PROFILE_LANGUAGES_QUERY, { userId }),
         enabled: !!userId,
+        staleTime: STALE_TIME_ENTITY,
     });
 
     return {

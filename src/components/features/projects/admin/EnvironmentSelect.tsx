@@ -12,7 +12,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FloatingLabelWrapper, floatingInputClass } from "@/components/ui/floating-label-wrapper";
-import { fetcher } from "@/lib/graphql/fetcher";
+import { STALE_TIME_REFERENCE } from "@/lib/constants/query";
+import { gqlClient } from "@/lib/graphql/fetcher";
 import { SKILLS_QUERY } from "@/lib/graphql/operations/skills";
 import { skillsListKey } from "@/lib/hooks/useSkillTable";
 import { cn } from "@/lib/utils";
@@ -33,8 +34,8 @@ export function EnvironmentSelect({ value, onChange, disabled, error }: Environm
 
     const { data: skillsData } = useQuery<SkillsResult>({
         queryKey: skillsListKey(),
-        queryFn: fetcher<SkillsResult, Record<string, never>>(SKILLS_QUERY),
-        staleTime: Infinity,
+        queryFn: () => gqlClient.request<SkillsResult>(SKILLS_QUERY),
+        staleTime: STALE_TIME_REFERENCE,
     });
 
     const availableOptions = (skillsData?.skills.map((s) => s.name) ?? []).filter(
