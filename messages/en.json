@@ -244,6 +244,8 @@
         "category": "Category",
         "other": "Other",
         "generating": "Generating",
-        "software_engineer": "Software engineer"
+        "software_engineer": "Software engineer",
+        "error_loading": "Error Loading",
+        "failed_to_load": "Failed to load CVs"
     }
 }

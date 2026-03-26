@@ -244,6 +244,8 @@
         "category": "Kategoria",
         "other": "Inne",
         "generating": "Generowanie",
-        "software_engineer": "Inżynier oprogramowania"
+        "software_engineer": "Inżynier oprogramowania",
+        "error_loading": "Błąd ładowania",
+        "failed_to_load": "Nie udało się załadować CV"
     }
 }
