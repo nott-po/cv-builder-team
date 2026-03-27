@@ -15,6 +15,9 @@
         "test": "jest --config jest.config.js",
         "test:coverage": "jest --config jest.config.js --coverage",
         "test:watch": "jest --config jest.config.js --watch",
+        "e2e": "npx playwright test",
+        "e2e:headed": "npx playwright test --headed",
+        "e2e:ui": "npx playwright test --ui",
         "prepare": "husky"
     },
     "dependencies": {
