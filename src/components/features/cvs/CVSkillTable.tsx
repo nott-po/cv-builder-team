@@ -13,7 +13,7 @@ import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { RemoveProfileItemModal } from "@/components/shared/RemoveProfileItemModal";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
-import { MASTERY_COLOR } from "@/lib/constants/proficiency";
+import { MASTERY_COLOR, MASTERY_TRACK_COLOR, MASTERY_WIDTH } from "@/lib/constants/proficiency";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { DELETE_CV_SKILL_MUTATION } from "@/lib/graphql/operations/cvs";
 import { SKILLS_QUERY } from "@/lib/graphql/operations/skills";
@@ -104,20 +104,24 @@ export function CVSkillTable({ cvId, readOnly = false }: CVSkillTableProps) {
                                         {group.categoryName}
                                     </h3>
                                 )}
-                                <div className="grid grid-cols-2 gap-x-8 gap-y-2 sm:grid-cols-3">
+                                <div className="grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
                                     {group.skills.map((skill) => (
                                         <div
                                             key={skill.name}
-                                            className={`flex items-center gap-3 rounded px-2 py-2 ${
+                                            className={`flex min-w-0 items-center gap-3 rounded px-2 py-2 ${
                                                 readOnly
                                                     ? ""
                                                     : "hover:bg-hover-xs transition-colors"
                                             }`}
                                         >
                                             <span
-                                                className={`h-1.5 w-16 flex-shrink-0 rounded-sm ${MASTERY_COLOR[skill.mastery]}`}
-                                            />
-                                            <span className="text-small text-basic-text tracking-standard flex-1 truncate">
+                                                className={`h-1.5 w-10 flex-shrink-0 rounded-sm sm:w-16 ${MASTERY_TRACK_COLOR[skill.mastery]}`}
+                                            >
+                                                <span
+                                                    className={`block h-full rounded-sm ${MASTERY_COLOR[skill.mastery]} ${MASTERY_WIDTH[skill.mastery]}`}
+                                                />
+                                            </span>
+                                            <span className="text-small text-basic-text tracking-standard min-w-0 flex-1 truncate">
                                                 {skill.name}
                                             </span>
                                             {!readOnly && (
