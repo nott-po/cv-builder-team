@@ -7,58 +7,66 @@ import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 
+import { ProfileSkillTableSkeleton } from "@/components/features/skills/profile/ProfileSkillTableSkeleton";
+import { AddCVSkillModal } from "@/components/shared/AddCVSkillModal";
 import { ErrorMessage } from "@/components/shared/ErrorMessage";
 import { RemoveProfileItemModal } from "@/components/shared/RemoveProfileItemModal";
 import { RowActionsDropdown } from "@/components/shared/RowActionsDropdown";
 import { Button } from "@/components/ui/button";
 import { MASTERY_COLOR, MASTERY_TRACK_COLOR, MASTERY_WIDTH } from "@/lib/constants/proficiency";
-import { STALE_TIME_REFERENCE } from "@/lib/constants/query";
 import { gqlClient } from "@/lib/graphql/fetcher";
-import { DELETE_PROFILE_SKILL_MUTATION } from "@/lib/graphql/operations/profile";
+import { DELETE_CV_SKILL_MUTATION } from "@/lib/graphql/operations/cvs";
 import { SKILLS_QUERY } from "@/lib/graphql/operations/skills";
-import { useProfileSkills, type ProfileSkillRow } from "@/lib/hooks/useProfileSkills";
-import { profileSkillsKey } from "@/lib/hooks/useProfileSkills";
+import { useCv, cvDetailKey } from "@/lib/hooks/useCV";
 import { skillsListKey, type SkillsQueryResult } from "@/lib/hooks/useSkillTable";
 
-import { AddProfileSkillModal } from "./AddProfileSkillModal";
-import { ProfileSkillTableSkeleton } from "./ProfileSkillTableSkeleton";
+type CvSkillRow = {
+    name: string;
+    mastery: keyof typeof MASTERY_COLOR;
+};
 
 type SkillGroup = {
     categoryName: string | null;
-    skills: ProfileSkillRow[];
+    skills: CvSkillRow[];
 };
 
-interface ProfileSkillTableProps {
-    userId: string;
+interface CVSkillTableProps {
+    cvId: string;
     readOnly?: boolean;
 }
 
-export function ProfileSkillTable({ userId, readOnly = false }: ProfileSkillTableProps) {
-    const tUser = useTranslations("User");
-    const { skills, isLoading, isError } = useProfileSkills(userId);
+export function CVSkillTable({ cvId, readOnly = false }: CVSkillTableProps) {
+    const t = useTranslations("CV");
+
+    const { cv, isLoading: isCvLoading, isError: isCvError } = useCv(cvId);
+    const cvSkills = useMemo(() => cv?.skills || [], [cv?.skills]);
 
     const { data: allSkillsData, isLoading: isLoadingAllSkills } = useQuery<SkillsQueryResult>({
         queryKey: skillsListKey(),
         queryFn: () => gqlClient.request<SkillsQueryResult>(SKILLS_QUERY),
-        staleTime: STALE_TIME_REFERENCE,
+        staleTime: Infinity,
     });
 
     const canAddMoreSkills =
         !readOnly &&
-        (isLoadingAllSkills || (allSkillsData && skills.length < allSkillsData.skills.length));
+        (isLoadingAllSkills || (allSkillsData && cvSkills.length < allSkillsData.skills.length));
 
     const grouped = useMemo<SkillGroup[]>(() => {
-        if (skills.length === 0) return [];
+        if (cvSkills.length === 0) return [];
 
         const skillMap = new Map((allSkillsData?.skills ?? []).map((s) => [s.name, s]));
+        const groups = new Map<string | null, CvSkillRow[]>();
 
-        const groups = new Map<string | null, ProfileSkillRow[]>();
-
-        for (const skill of skills) {
+        for (const skill of cvSkills) {
             const info = skillMap.get(skill.name);
             const category = info?.category_parent_name ?? info?.category_name ?? null;
-            if (!groups.has(category)) groups.set(category, []);
-            groups.get(category)!.push(skill);
+            if (!groups.has(category)) {
+                groups.set(category, []);
+            }
+            const group = groups.get(category);
+            if (group) {
+                group.push(skill);
+            }
         }
 
         return [...groups.entries()]
@@ -68,24 +76,24 @@ export function ProfileSkillTable({ userId, readOnly = false }: ProfileSkillTabl
                 return a.localeCompare(b);
             })
             .map(([categoryName, groupSkills]) => ({ categoryName, skills: groupSkills }));
-    }, [skills, allSkillsData]);
+    }, [cvSkills, allSkillsData]);
 
     const [addOpen, setAddOpen] = useState(false);
-    const [editingSkill, setEditingSkill] = useState<ProfileSkillRow | null>(null);
+    const [editingSkill, setEditingSkill] = useState<CvSkillRow | null>(null);
     const [removeOpen, setRemoveOpen] = useState(false);
-    const [removingSkill, setRemovingSkill] = useState<ProfileSkillRow | null>(null);
+    const [removingSkill, setRemovingSkill] = useState<CvSkillRow | null>(null);
 
-    if (isError) return <ErrorMessage message={tUser("error")} />;
+    if (isCvError) return <ErrorMessage message={t("error")} />;
 
     return (
         <div>
             {/* Content */}
             <div className="px-6 py-4">
-                {isLoading ? (
+                {isCvLoading ? (
                     <ProfileSkillTableSkeleton />
-                ) : skills.length === 0 ? (
+                ) : cvSkills.length === 0 ? (
                     <p className="text-body text-text-secondary py-16 text-center">
-                        {tUser("no_skills")}
+                        {t("no_skills")}
                     </p>
                 ) : (
                     <div className="space-y-8">
@@ -100,7 +108,11 @@ export function ProfileSkillTable({ userId, readOnly = false }: ProfileSkillTabl
                                     {group.skills.map((skill) => (
                                         <div
                                             key={skill.name}
-                                            className={`flex min-w-0 items-center gap-3 rounded px-2 py-2 ${readOnly ? "" : "hover:bg-hover-xs transition-colors"}`}
+                                            className={`flex min-w-0 items-center gap-3 rounded px-2 py-2 ${
+                                                readOnly
+                                                    ? ""
+                                                    : "hover:bg-hover-xs transition-colors"
+                                            }`}
                                         >
                                             <span
                                                 className={`h-1.5 w-10 flex-shrink-0 rounded-sm sm:w-16 ${MASTERY_TRACK_COLOR[skill.mastery]}`}
@@ -114,7 +126,7 @@ export function ProfileSkillTable({ userId, readOnly = false }: ProfileSkillTabl
                                             </span>
                                             {!readOnly && (
                                                 <RowActionsDropdown
-                                                    ariaLabel={tUser("skill_actions")}
+                                                    ariaLabel={t("skill_actions")}
                                                     onEdit={() => {
                                                         setEditingSkill(skill);
                                                         setAddOpen(true);
@@ -145,7 +157,7 @@ export function ProfileSkillTable({ userId, readOnly = false }: ProfileSkillTabl
                         }}
                     >
                         <Plus />
-                        {tUser("add_skill")}
+                        {t("add_skill")}
                     </Button>
                 </div>
             )}
@@ -153,10 +165,10 @@ export function ProfileSkillTable({ userId, readOnly = false }: ProfileSkillTabl
             {/* Modals */}
             {!readOnly && (
                 <>
-                    <AddProfileSkillModal
+                    <AddCVSkillModal
                         open={addOpen}
-                        userId={userId}
-                        existingSkills={skills}
+                        cvId={cvId}
+                        existingSkills={cvSkills}
                         editingSkill={editingSkill}
                         onOpenChange={(v) => {
                             setAddOpen(v);
@@ -170,16 +182,16 @@ export function ProfileSkillTable({ userId, readOnly = false }: ProfileSkillTabl
                             setRemoveOpen(v);
                             if (!v) setRemovingSkill(null);
                         }}
-                        title={tUser("remove_skill_title")}
-                        confirmText={tUser("remove_skill_confirm")}
+                        title={t("remove_skill_title")}
+                        confirmText={t("remove_skill_confirm")}
                         itemName={removingSkill?.name}
-                        errorMessage={tUser("remove_skill_error")}
+                        errorMessage={t("remove_skill_error")}
                         mutationFn={(name) =>
-                            gqlClient.request(DELETE_PROFILE_SKILL_MUTATION, {
-                                skill: { userId, name: [name] },
+                            gqlClient.request(DELETE_CV_SKILL_MUTATION, {
+                                skill: { cvId, name: [name] },
                             })
                         }
-                        queryKey={profileSkillsKey(userId)}
+                        queryKey={cvDetailKey(cvId)}
                     />
                 </>
             )}

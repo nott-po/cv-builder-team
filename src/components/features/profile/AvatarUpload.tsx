@@ -183,9 +183,6 @@ export function AvatarUpload({
                     <span className="text-text-secondary text-sm font-normal">
                         {t("upload_avatar_rules")}
                     </span>
-                    <span className="text-text-secondary text-sm font-normal">
-                        {t("avatar_drop_hint")}
-                    </span>
                 </FormLabel>
                 {fileError && <p className="text-destructive text-sm">{fileError}</p>}
                 <FormMessage />
