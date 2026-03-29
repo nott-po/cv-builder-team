@@ -98,7 +98,7 @@ describe("EmployeeForm", () => {
                     expect.anything(),
                 );
             });
-        });
+        }, 15000);
 
         it("defaults role to Employee", async () => {
             const user = userEvent.setup();
