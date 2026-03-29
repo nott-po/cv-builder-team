@@ -93,15 +93,12 @@ export function EmployeeTable({ basePath, actions, renderRowActions }: EmployeeT
 
                     <td className={tdClass}>{employee.position_name ?? "—"}</td>
 
-                    <td className="w-18 py-4">
+                    <td className="w-18 py-4" onClick={(e) => e.stopPropagation()}>
                         {renderRowActions ? (
                             renderRowActions(employee)
                         ) : (
                             <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRowClick(employee.id);
-                                }}
+                                onClick={() => handleRowClick(employee.id)}
                                 className="hover:bg-hover-md ml-4 flex size-10 items-center justify-center rounded-full transition-colors"
                                 aria-label={t("view_employee")}
                             >
