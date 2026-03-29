@@ -238,6 +238,53 @@ describe("SignupForm Component (UI)", () => {
         expect(mockPush).not.toHaveBeenCalled();
     });
 
+    it("shows generic error when server returns non-axios error", async () => {
+        const user = userEvent.setup();
+
+        (apiClient.post as jest.Mock).mockRejectedValueOnce(new Error("Network error"));
+
+        render(<SignupForm />);
+
+        await user.type(screen.getByPlaceholderText("email"), "test@test.com");
+        await user.type(screen.getByPlaceholderText("password"), "ValidPass123!");
+        await user.type(screen.getByPlaceholderText("confirm_password"), "ValidPass123!");
+
+        await user.click(screen.getByRole("button", { name: "sign_up" }));
+
+        await waitFor(() => {
+            expect(screen.getByText("server_error")).toBeInTheDocument();
+        });
+    });
+
+    it("disables submit button while submitting", async () => {
+        const user = userEvent.setup();
+
+        let resolvePost: (value: unknown) => void;
+        (apiClient.post as jest.Mock).mockReturnValueOnce(
+            new Promise((resolve) => {
+                resolvePost = resolve;
+            }),
+        );
+
+        render(<SignupForm />);
+
+        await user.type(screen.getByPlaceholderText("email"), "test@test.com");
+        await user.type(screen.getByPlaceholderText("password"), "ValidPass123!");
+        await user.type(screen.getByPlaceholderText("confirm_password"), "ValidPass123!");
+
+        await user.click(screen.getByRole("button", { name: "sign_up" }));
+
+        await waitFor(() => {
+            expect(screen.getByRole("button", { name: "loading" })).toBeDisabled();
+        });
+
+        resolvePost!({ data: { user: { id: "1", role: "Employee", email: "test@test.com" } } });
+
+        await waitFor(() => {
+            expect(screen.getByRole("button", { name: "sign_up" })).not.toBeDisabled();
+        });
+    });
+
     it("toggles password visibility on the password field", async () => {
         const user = userEvent.setup();
         render(<SignupForm />);
