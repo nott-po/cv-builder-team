@@ -40,7 +40,9 @@ function buildProjectSchema(t: (key: string) => string) {
         );
 }
 
-export type ProjectFormData = z.output<ReturnType<typeof buildProjectSchema>>;
+type SchemaType = ReturnType<typeof buildProjectSchema>;
+type ProjectFormInput = z.input<SchemaType>; // Тип ДО трансформации (для формы)
+export type ProjectFormData = z.output<SchemaType>; // Тип ПОСЛЕ трансформации (для onSubmit)
 
 type ProjectFormProps = {
     submitLabel: string;
@@ -64,7 +66,7 @@ export function ProjectForm({
 
     const schema = useMemo(() => buildProjectSchema(t), [t]);
 
-    const form = useForm<ProjectFormData>({
+    const form = useForm<ProjectFormInput, any, ProjectFormData>({
         resolver: zodResolver(schema),
         defaultValues: {
             name: initialData?.name ?? "",

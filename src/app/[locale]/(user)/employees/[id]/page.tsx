@@ -39,7 +39,7 @@ export default function EmployeeDetailsPage() {
                 <PageHeader
                     items={[
                         { label: t("employees"), href: "/employees" },
-                        { label: data?.email, href: `/employees/${employeeId}`, Icon: User },
+                        { label: data?.email ?? "", href: `/employees/${employeeId}`, Icon: User },
                         { label: t(currentMode) },
                     ]}
                 />

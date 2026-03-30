@@ -39,7 +39,11 @@ export default function AdminEmployeeEditPage() {
                 <PageHeader
                     items={[
                         { label: t("employees"), href: "/admin/employees" },
-                        { label: data?.email, href: `/admin/employees/${employeeId}`, Icon: User },
+                        {
+                            label: data?.email ?? "",
+                            href: `/admin/employees/${employeeId}`,
+                            Icon: User,
+                        },
                         { label: t(currentMode) },
                     ]}
                 />

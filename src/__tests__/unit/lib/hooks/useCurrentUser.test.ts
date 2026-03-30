@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { renderHook, act } from "@testing-library/react";
 
 import apiClient from "@/lib/api/client";
+import { UserRole } from "@/lib/constants/roles";
 import { useCurrentUser, fetchCurrentUser, CURRENT_USER_KEY } from "@/lib/hooks/useCurrentUser";
 
 jest.mock("@tanstack/react-query", () => ({
@@ -140,7 +141,7 @@ describe("useCurrentUser hook", () => {
 
         const { result } = renderHook(() => useCurrentUser());
 
-        const newUser = { id: "2", email: "new@test.com", role: "Admin" as const };
+        const newUser = { id: "2", email: "new@test.com", role: UserRole.Admin };
         act(() => {
             result.current.setUser(newUser);
         });
