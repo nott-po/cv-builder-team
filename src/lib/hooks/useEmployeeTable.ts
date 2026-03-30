@@ -2,7 +2,7 @@
 
 import { useRouter } from "@/i18n/routing";
 import { STALE_TIME_ENTITY } from "@/lib/constants/query";
-import type { UserRole } from "@/lib/constants/roles";
+import { UserRole } from "@/lib/constants/roles";
 import { ROUTES } from "@/lib/constants/routes";
 import { gqlClient } from "@/lib/graphql/fetcher";
 import { USERS_QUERY } from "@/lib/graphql/operations/employees";
@@ -49,6 +49,7 @@ const sortRow = (a: EmployeeRow, b: EmployeeRow, dir: SortDir) => {
 export function useEmployeeTable(basePath = "/employees") {
     const router = useRouter();
     const { user } = useCurrentUser();
+    const isAdmin = user?.role === UserRole.Admin;
 
     const { state, paginatedRows, sortDir, handleSortToggle } = useSortableTable<
         UsersQueryResult,
@@ -66,7 +67,7 @@ export function useEmployeeTable(basePath = "/employees") {
 
     function handleRowClick(id: string) {
         if (user?.id === id) {
-            router.push(ROUTES.PROFILE);
+            router.push(isAdmin ? ROUTES.ADMIN.PROFILE : ROUTES.PROFILE);
         } else {
             router.push(`${basePath}/${id}`);
         }
