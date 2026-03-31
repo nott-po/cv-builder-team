@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { EditUserModal } from "@/components/features/employees/admin/EditUserModal";
+import { UserRole } from "@/lib/constants/roles";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
 
 jest.mock("next-intl");
@@ -45,7 +46,7 @@ jest.mock("@/components/features/employees/admin/EmployeeForm", () => ({
 const mockEmployee = {
     id: "u1",
     email: "test@test.com",
-    role: "Employee",
+    role: UserRole.Employee,
     department: { id: "d1" },
     position: { id: "p1" },
     profile: { first_name: "John", last_name: "Doe", avatar: null },

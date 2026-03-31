@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 
 import { AddCVSkillModal } from "@/components/shared/AddCVSkillModal";
+import { Mastery } from "@/generated/graphql";
 
 jest.mock("next-intl");
 jest.mock("@/i18n/routing", () => ({
@@ -95,7 +96,7 @@ describe("AddCVSkillModal", () => {
                 open={true}
                 cvId="cv-1"
                 existingSkills={[]}
-                editingSkill={{ name: "React", mastery: "Novice" }}
+                editingSkill={{ name: "React", mastery: Mastery.Novice }}
                 onOpenChange={jest.fn()}
             />,
         );
@@ -122,7 +123,7 @@ describe("AddCVSkillModal", () => {
                 open={true}
                 cvId="cv-1"
                 existingSkills={[]}
-                editingSkill={{ name: "React", mastery: "Novice" }}
+                editingSkill={{ name: "React", mastery: Mastery.Novice }}
                 onOpenChange={jest.fn()}
             />,
         );
@@ -148,7 +149,7 @@ describe("AddCVSkillModal", () => {
             <AddCVSkillModal
                 open={true}
                 cvId="cv-1"
-                existingSkills={[{ name: "React", mastery: "Novice" }]}
+                existingSkills={[{ name: "React", mastery: Mastery.Novice }]}
                 onOpenChange={jest.fn()}
             />,
         );
@@ -164,8 +165,8 @@ describe("AddCVSkillModal", () => {
             <AddCVSkillModal
                 open={true}
                 cvId="cv-1"
-                existingSkills={[{ name: "React", mastery: "Novice" }]}
-                editingSkill={{ name: "React", mastery: "Novice" }}
+                existingSkills={[{ name: "React", mastery: Mastery.Novice }]}
+                editingSkill={{ name: "React", mastery: Mastery.Novice }}
                 onOpenChange={jest.fn()}
             />,
         );
@@ -182,7 +183,7 @@ describe("AddCVSkillModal", () => {
                 open={true}
                 cvId="cv-1"
                 existingSkills={[]}
-                editingSkill={{ name: "React", mastery: "Novice" }}
+                editingSkill={{ name: "React", mastery: Mastery.Novice }}
                 onOpenChange={jest.fn()}
             />,
         );

@@ -204,7 +204,8 @@
         "delete_avatar_title": "Delete avatar",
         "delete_avatar_confirm": "Are you sure you want to delete your avatar?",
         "delete_avatar_error": "Failed to delete avatar. Please try again.",
-        "settings": "Settings"
+        "settings": "Settings",
+        "save": "Save"
     },
     "Settings": {
         "title": "Settings",

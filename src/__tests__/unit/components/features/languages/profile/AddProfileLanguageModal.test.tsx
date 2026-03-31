@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { AddProfileLanguageModal } from "@/components/features/languages/profile/AddProfileLanguageModal";
+import { Proficiency } from "@/generated/graphql";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
 
 jest.mock("next-intl");
@@ -83,7 +84,7 @@ describe("AddProfileLanguageModal", () => {
                 open={true}
                 userId="user-1"
                 existingLanguages={[]}
-                editingLanguage={{ name: "English", proficiency: "Native" as const }}
+                editingLanguage={{ name: "English", proficiency: Proficiency.Native }}
                 onOpenChange={jest.fn()}
             />,
         );
@@ -125,7 +126,7 @@ describe("AddProfileLanguageModal", () => {
                 open={true}
                 userId="user-1"
                 existingLanguages={[]}
-                editingLanguage={{ name: "English", proficiency: "Native" as const }}
+                editingLanguage={{ name: "English", proficiency: Proficiency.Native }}
                 onOpenChange={jest.fn()}
             />,
         );

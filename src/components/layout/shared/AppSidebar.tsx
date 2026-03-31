@@ -8,6 +8,7 @@ import { EmployeeAvatar } from "@/components/shared/EmployeeAvatar";
 import { Separator } from "@/components/ui/separator";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import apiClient from "@/lib/api/client";
+import { UserRole } from "@/lib/constants/roles";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useUserData } from "@/lib/hooks/useUserData";
 import { cn } from "@/lib/utils";
@@ -67,6 +68,7 @@ function MobileBottomNav({
     logOutLabel,
     onLogout,
     avatar,
+    isAdmin,
 }: {
     navGroups: NavItem[][];
     userInitial: string;
@@ -74,6 +76,7 @@ function MobileBottomNav({
     logOutLabel: string;
     onLogout: () => void;
     avatar?: string | null;
+    isAdmin: boolean;
 }) {
     const pathname = usePathname();
     const flatItems = navGroups.flat();
@@ -104,12 +107,15 @@ function MobileBottomNav({
                 );
             })}
 
-            <div className="ml-1 flex shrink-0 items-center gap-2 px-1 sm:ml-2 sm:px-2">
+            <Link
+                href={`${isAdmin ? "/admin" : ""}/profile`}
+                className="ml-1 flex shrink-0 items-center gap-2 px-1 sm:ml-2 sm:px-2"
+            >
                 <EmployeeAvatar initial={userInitial} avatar={avatar} size="sm" variant="primary" />
                 <span className="text-small text-basic-text tracking-standard hidden max-w-20 truncate font-normal sm:inline">
                     {userDisplayName}
                 </span>
-            </div>
+            </Link>
 
             <button
                 onClick={onLogout}
@@ -125,8 +131,8 @@ function MobileBottomNav({
 export function AppSidebar({ navGroups, userInitial, userDisplayName }: AppSidebarProps) {
     const t = useTranslations("Common");
     const { user, clearUser } = useCurrentUser();
+    const isAdmin = user?.role === UserRole.Admin;
     const router = useRouter();
-
     const currentUserId = user?.id as string;
     const { data } = useUserData(currentUserId);
     const displayAvatar = data?.profile?.avatar;
@@ -146,7 +152,7 @@ export function AppSidebar({ navGroups, userInitial, userDisplayName }: AppSideb
 
                 {/* User profile */}
                 <Link
-                    href="/profile"
+                    href={`${isAdmin ? "/admin" : ""}/profile`}
                     className="ml-2 flex h-14 items-center overflow-hidden rounded-tr-full rounded-br-full"
                 >
                     <EmployeeAvatar
@@ -178,6 +184,7 @@ export function AppSidebar({ navGroups, userInitial, userDisplayName }: AppSideb
                 logOutLabel={t("log_out")}
                 onLogout={handleLogout}
                 avatar={displayAvatar}
+                isAdmin={isAdmin}
             />
         </>
     );

@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { AddProfileSkillModal } from "@/components/features/skills/profile/AddProfileSkillModal";
+import { Mastery } from "@/generated/graphql";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
 
 jest.mock("next-intl");
@@ -77,7 +78,7 @@ describe("AddProfileSkillModal", () => {
                 open={true}
                 userId="user-1"
                 existingSkills={[]}
-                editingSkill={{ name: "React", mastery: "Advanced" as const }}
+                editingSkill={{ name: "React", mastery: Mastery.Advanced }}
                 onOpenChange={jest.fn()}
             />,
         );
@@ -90,7 +91,7 @@ describe("AddProfileSkillModal", () => {
             <AddProfileSkillModal
                 open={true}
                 userId="user-1"
-                existingSkills={[{ name: "React", mastery: "Advanced" as const }]}
+                existingSkills={[{ name: "React", mastery: Mastery.Advanced }]}
                 editingSkill={null}
                 onOpenChange={jest.fn()}
             />,
@@ -105,8 +106,8 @@ describe("AddProfileSkillModal", () => {
             <AddProfileSkillModal
                 open={true}
                 userId="user-1"
-                existingSkills={[{ name: "React", mastery: "Advanced" as const }]}
-                editingSkill={{ name: "React", mastery: "Advanced" as const }}
+                existingSkills={[{ name: "React", mastery: Mastery.Advanced }]}
+                editingSkill={{ name: "React", mastery: Mastery.Advanced }}
                 onOpenChange={jest.fn()}
             />,
         );
@@ -149,7 +150,7 @@ describe("AddProfileSkillModal", () => {
                 open={true}
                 userId="user-1"
                 existingSkills={[]}
-                editingSkill={{ name: "React", mastery: "Advanced" as const }}
+                editingSkill={{ name: "React", mastery: Mastery.Advanced }}
                 onOpenChange={jest.fn()}
             />,
         );

@@ -7,8 +7,8 @@ jest.mock("@/lib/constants/routes", () => ({
 
 jest.mock("@/lib/constants/roles", () => ({
     UserRole: {
-        Admin: "ADMIN",
-        User: "USER",
+        Admin: "Admin",
+        Employee: "Employee",
     },
 }));
 
@@ -45,11 +45,11 @@ describe("Permissions Utilities", () => {
         });
 
         it("denies non-admin users from accessing admin paths", () => {
-            expect(canAccess("/admin/settings", UserRole.User)).toBe(false);
+            expect(canAccess("/admin/settings", UserRole.Employee)).toBe(false);
         });
 
         it("allows any user to access non-admin paths", () => {
-            expect(canAccess("/dashboard", UserRole.User)).toBe(true);
+            expect(canAccess("/dashboard", UserRole.Employee)).toBe(true);
             expect(canAccess("/profile", UserRole.Admin)).toBe(true);
         });
     });
