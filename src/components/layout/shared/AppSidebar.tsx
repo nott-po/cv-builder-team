@@ -6,9 +6,9 @@ import { LogOut } from "lucide-react";
 
 import { EmployeeAvatar } from "@/components/shared/EmployeeAvatar";
 import { Separator } from "@/components/ui/separator";
-import { UserRole } from "@/generated/graphql";
 import { Link, usePathname, useRouter } from "@/i18n/routing";
 import apiClient from "@/lib/api/client";
+import { UserRole } from "@/lib/constants/roles";
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useUserData } from "@/lib/hooks/useUserData";
 import { cn } from "@/lib/utils";
