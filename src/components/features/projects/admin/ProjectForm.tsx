@@ -41,8 +41,8 @@ function buildProjectSchema(t: (key: string) => string) {
 }
 
 type SchemaType = ReturnType<typeof buildProjectSchema>;
-type ProjectFormInput = z.input<SchemaType>; // Тип ДО трансформации (для формы)
-export type ProjectFormData = z.output<SchemaType>; // Тип ПОСЛЕ трансформации (для onSubmit)
+type ProjectFormInput = z.input<SchemaType>;
+export type ProjectFormData = z.output<SchemaType>;
 
 type ProjectFormProps = {
     submitLabel: string;

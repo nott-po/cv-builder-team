@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-// Проверь правильность пути, если он отличается
 import { EditUserModal } from "@/components/features/employees/admin/EditUserModal";
 import { UserRole } from "@/lib/constants/roles";
 import { useModalMutation } from "@/lib/hooks/useModalMutation";
