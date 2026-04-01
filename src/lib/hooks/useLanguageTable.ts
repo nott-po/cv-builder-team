@@ -1,0 +1,36 @@
+"use client";
+
+import { STALE_TIME_REFERENCE } from "@/lib/constants/query";
+import { gqlClient } from "@/lib/graphql/fetcher";
+import { LANGUAGES_QUERY } from "@/lib/graphql/operations/languages";
+import { useSimpleTable } from "@/lib/hooks/useSimpleTable";
+
+export type LanguageRow = {
+    id: string;
+    iso2: string;
+    name: string;
+    native_name: string | null;
+};
+
+export type LanguagesQueryResult = {
+    languages: LanguageRow[];
+};
+
+export const languagesListKey = () => ["languages", "list"] as const;
+
+const getLanguageRows = (data: LanguagesQueryResult) => data.languages;
+const filterLanguageRow = (row: LanguageRow, lower: string) =>
+    [row.name, row.iso2, row.native_name].some((v) => v?.toLowerCase().includes(lower));
+
+export function useLanguageTable(basePath = "/admin/languages") {
+    const { state, paginatedRows } = useSimpleTable<LanguagesQueryResult, LanguageRow>({
+        basePath,
+        queryKey: languagesListKey(),
+        queryFn: () => gqlClient.request<LanguagesQueryResult>(LANGUAGES_QUERY),
+        getRows: getLanguageRows,
+        filterRow: filterLanguageRow,
+        staleTime: STALE_TIME_REFERENCE,
+    });
+
+    return { state, paginatedLanguages: paginatedRows };
+}

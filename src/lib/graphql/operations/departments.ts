@@ -1,0 +1,46 @@
+export type DepartmentRow = {
+    id: string;
+    name: string;
+};
+
+export type DepartmentsQueryResult = {
+    departments: DepartmentRow[];
+};
+
+export const departmentsListKey = () => ["departments", "list"] as const;
+
+export const DEPARTMENTS_QUERY = `
+    query Departments {
+        departments {
+            id
+            created_at
+            name
+        }
+    }
+`;
+
+export const CREATE_DEPARTMENT_MUTATION = `
+    mutation CreateDepartment($department: CreateDepartmentInput!) {
+        createDepartment(department: $department) {
+            id
+            name
+        }
+    }
+`;
+
+export const UPDATE_DEPARTMENT_MUTATION = `
+    mutation UpdateDepartment($department: UpdateDepartmentInput!) {
+        updateDepartment(department: $department) {
+            id
+            name
+        }
+    }
+`;
+
+export const DELETE_DEPARTMENT_MUTATION = `
+    mutation DeleteDepartment($department: DeleteDepartmentInput!) {
+        deleteDepartment(department: $department) {
+            affected
+        }
+    }
+`;
